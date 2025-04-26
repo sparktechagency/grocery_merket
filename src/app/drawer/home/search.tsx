@@ -63,7 +63,7 @@ const Search = () => {
                 touched
                 errorText={errors?.history?.message}
                 textInputProps={{
-                  placeholder: "Benjamin Wilkison",
+                  placeholder: "Search for product or stores...",
                 }}
                 containerStyle={tw`rounded-full w-full`}
               />

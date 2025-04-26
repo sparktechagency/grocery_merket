@@ -5,12 +5,12 @@ import { OtpInput } from "react-native-otp-entry";
 import { Link, router } from "expo-router";
 import TButton from "@/src/lib/buttons/TButton";
 import { PrimaryColor } from "@/utils/utils";
-import BackWithTitle from "@/src/lib/backHeader/BackWithTitle";
+import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 
 const OTPCode = () => {
   return (
     <View style={tw`flex-1`}>
-      <BackWithTitle onPress={() => router.back()} title="Verify code" />
+      <BackWithComponent onPress={() => router.back()} title="Verify code" />
 
       <View style={tw`px-6 flex-1 justify-center items-center`}>
         <Text style={tw`font-PoppinsRegular text-sm text-regularText mb-11`}>

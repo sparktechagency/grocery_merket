@@ -5,7 +5,7 @@ import InputText from "@/src/lib/inputs/InputText";
 import tw from "@/src/lib/tailwind";
 import TButton from "@/src/lib/buttons/TButton";
 import { router } from "expo-router";
-import BackWithTitle from "@/src/lib/backHeader/BackWithTitle";
+import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 
 const forgetPassword = () => {
   const {
@@ -24,7 +24,10 @@ const forgetPassword = () => {
 
   return (
     <View style={tw`flex-1`}>
-      <BackWithTitle onPress={() => router.back()} title="Forgot Password?" />
+      <BackWithComponent
+        onPress={() => router.back()}
+        title="Forgot Password?"
+      />
 
       <View style={tw`px-6`}>
         <Text

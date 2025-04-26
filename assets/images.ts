@@ -22,3 +22,18 @@ export const ImgSpices = require("@/assets/images/categoryImg/spices.png");
 
 export const ImgBestSellerOne = require("@/assets/images/bestSeller/imageOne.png"); 
 export const ImgBestSellerTwo = require("@/assets/images/bestSeller/imageTwo.png"); 
+
+
+export const ImgFruit = require(`@/assets/images/categoryFilterImg/fruit.png`);
+export const ImgBread = require(`@/assets/images/categoryFilterImg/bread.png`);
+export const ImgBurger = require(`@/assets/images/categoryFilterImg/burger.png`);
+export const ImgDairy = require(`@/assets/images/categoryFilterImg/dairy.png`);
+export const ImgDrink = require(`@/assets/images/categoryFilterImg/drink.png`);
+export const ImgProtein = require(`@/assets/images/categoryFilterImg/protein.png`);
+export const ImgSnack = require(`@/assets/images/categoryFilterImg/snack.png`);
+export const ImgVegetable = require(`@/assets/images/categoryFilterImg/vegetable.png`);
+
+
+
+export const ImgStoreOne = require(`@/assets/images/storeImg/storeOne.png`);
+export const ImgStoreTwo = require(`@/assets/images/storeImg/storeTwo.png`);

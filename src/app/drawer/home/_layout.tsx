@@ -12,8 +12,14 @@ import {
 import {
   IconHome,
   IconHomeSelected,
+  IconLoveWishlist,
+  IconLoveWishlistSelected,
+  IconProfile,
+  IconProfileSelected,
   IconSearch,
   IconSearchSelected,
+  IconStores,
+  IconStoresSelected,
 } from "@/assets/icon";
 import { SvgXml } from "react-native-svg";
 import { BottomTabNavigationEventMap } from "@react-navigation/bottom-tabs";
@@ -65,6 +71,12 @@ function MyTabBar({ state, descriptors, navigation }: MyTabBarProps) {
                 return isFocused ? IconHomeSelected : IconHome;
               case "search":
                 return isFocused ? IconSearchSelected : IconSearch;
+              case "stores":
+                return isFocused ? IconStoresSelected : IconStores;
+              case "wishlist":
+                return isFocused ? IconLoveWishlistSelected : IconLoveWishlist;
+              case "profile":
+                return isFocused ? IconProfileSelected : IconProfile;
             }
           };
 
@@ -128,6 +140,9 @@ export default function TabLayout() {
         <Tabs.Screen name="index" />
         {/* <Tabs.Screen name="ap" /> */}
         <Tabs.Screen name="search" />
+        <Tabs.Screen name="stores" />
+        <Tabs.Screen name="wishlist" />
+        <Tabs.Screen name="profile" />
       </Tabs>
     </GestureHandlerRootView>
   );
