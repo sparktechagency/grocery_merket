@@ -25,6 +25,8 @@ import {
   ImgSnack,
   ImgVegetable,
 } from "@/assets/images";
+import TButton from "@/src/lib/buttons/TButton";
+import { router } from "expo-router";
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const [sliderState, setSliderState] = React.useState<number>(0);
@@ -176,6 +178,16 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
             )
           )}
         </View>
+      </View>
+
+      <View style={tw`rounded-full h-12`}>
+        <TButton
+          // onPress={handleSubmit(onSubmit)}
+          // onPress={() => router.push("/")}
+          onPress={() => props?.navigation?.closeDrawer()}
+          title="APPLY FILTER"
+          containerStyle={tw`rounded-md`}
+        />
       </View>
     </DrawerContentScrollView>
   );

@@ -37,3 +37,5 @@ export const ImgVegetable = require(`@/assets/images/categoryFilterImg/vegetable
 
 export const ImgStoreOne = require(`@/assets/images/storeImg/storeOne.png`);
 export const ImgStoreTwo = require(`@/assets/images/storeImg/storeTwo.png`);
+
+export const ImgProfileImg = require("@/assets/images/profile.jpg")

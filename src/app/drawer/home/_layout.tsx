@@ -1,7 +1,5 @@
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Drawer } from "expo-router/drawer";
-import { StatusBar, TouchableOpacity, View } from "react-native";
-import { Base } from "@/utils/utils";
+import { TouchableOpacity, View } from "react-native";
 import tw from "@/src/lib/tailwind";
 import { Tabs } from "expo-router";
 import {
