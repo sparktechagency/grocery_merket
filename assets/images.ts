@@ -39,3 +39,17 @@ export const ImgStoreOne = require(`@/assets/images/storeImg/storeOne.png`);
 export const ImgStoreTwo = require(`@/assets/images/storeImg/storeTwo.png`);
 
 export const ImgProfileImg = require("@/assets/images/profile.jpg")
+
+export const ImgNotificationOne = require("@/assets/images/notification/notificationOne.jpg")
+export const ImgNotificationTwo = require("@/assets/images/notification/notificationTwo.jpg")
+export const ImgNotificationThree = require("@/assets/images/notification/notificationThree.jpg")
+export const ImgNotificationFour = require("@/assets/images/notification/notificationFour.png")
+export const ImgNotificationFive = require("@/assets/images/notification/notificationFive.jpg")
+export const ImgNotificationSix = require("@/assets/images/notification/notificationSix.png");
+
+
+
+export const ImgOrderOne = require("@/assets/images/orderOne.png")
+export const ImgOrderTwo = require("@/assets/images/orderTwo.png")
+export const ImgOrderThree = require("@/assets/images/orderThree.png")
+export const ImgOrderFour = require("@/assets/images/orderFour.png")

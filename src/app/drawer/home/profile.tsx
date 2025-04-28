@@ -112,6 +112,7 @@ const profile = () => {
 
       <View style={tw`bg-[#e8eaec] p-3.5 rounded-xl  gap-5`}>
         <TouchableOpacity
+          onPress={() => router.push("/screens/notification/notification")}
           style={tw`flex-row justify-between items-center w-full`}
         >
           <View style={tw`flex-row justify-start items-center  gap-3`}>
@@ -124,7 +125,10 @@ const profile = () => {
               Notifications
             </Text>
           </View>
-          <Pressable style={tw`py-2.5 px-3.5 bg-white rounded-full`}>
+          <Pressable
+            onPress={() => router.push("/screens/notification/notification")}
+            style={tw`py-2.5 px-3.5 bg-white rounded-full`}
+          >
             <SvgXml xml={IconGetterThen} />
           </Pressable>
         </TouchableOpacity>
