@@ -30,6 +30,7 @@ import {
 import { FlatList } from "react-native-gesture-handler";
 import { CartData } from "@/src/components/CardData";
 import { CardItem } from "@/src/components/CardItem";
+import { router } from "expo-router";
 
 const HomeScreen = () => {
   const [notification, setNotification] = React.useState(false);
@@ -106,6 +107,7 @@ const HomeScreen = () => {
 
           <View style={tw`flex-row items-center gap-3`}>
             <TouchableOpacity
+              onPress={() => router.push("/screens/addToCart/cart")}
               style={tw`relative p-3 bg-white shadow-lg rounded-lg`}
             >
               <SvgXml xml={IconAddToCat} />
@@ -118,6 +120,7 @@ const HomeScreen = () => {
               ) : null}
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => router.push("/screens/notification/notification")}
               style={tw`relative p-3 bg-white shadow-lg rounded-lg`}
             >
               <SvgXml xml={IconNotification} />

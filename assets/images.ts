@@ -53,3 +53,9 @@ export const ImgOrderOne = require("@/assets/images/orderOne.png")
 export const ImgOrderTwo = require("@/assets/images/orderTwo.png")
 export const ImgOrderThree = require("@/assets/images/orderThree.png")
 export const ImgOrderFour = require("@/assets/images/orderFour.png")
+
+export const ImgOrderReceived = require("@/assets/images/orderReceived.gif");
+
+
+// export const ImgMasterCard = require("@/assets/images/orderReceived.gif");
+// export const ImgVisaCard = require("@/assets/images/orderReceived.gif");

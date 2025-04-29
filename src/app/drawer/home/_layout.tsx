@@ -127,21 +127,19 @@ function MyTabBar({ state, descriptors, navigation }: MyTabBarProps) {
 
 export default function TabLayout() {
   return (
-    <GestureHandlerRootView style={tw`flex-1`}>
-      <Tabs
-        screenOptions={{
-          headerShown: false,
-          tabBarHideOnKeyboard: true,
-        }}
-        tabBar={(props: any) => <MyTabBar {...props} />}
-      >
-        <Tabs.Screen name="index" />
-        {/* <Tabs.Screen name="ap" /> */}
-        <Tabs.Screen name="search" />
-        <Tabs.Screen name="stores" />
-        <Tabs.Screen name="wishlist" />
-        <Tabs.Screen name="profile" />
-      </Tabs>
-    </GestureHandlerRootView>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarHideOnKeyboard: true,
+      }}
+      tabBar={(props: any) => <MyTabBar {...props} />}
+    >
+      <Tabs.Screen name="index" />
+      {/* <Tabs.Screen name="ap" /> */}
+      <Tabs.Screen name="search" />
+      <Tabs.Screen name="stores" />
+      <Tabs.Screen name="wishlist" />
+      <Tabs.Screen name="profile" />
+    </Tabs>
   );
 }

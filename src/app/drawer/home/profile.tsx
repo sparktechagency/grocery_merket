@@ -132,7 +132,10 @@ const profile = () => {
             <SvgXml xml={IconGetterThen} />
           </Pressable>
         </TouchableOpacity>
-        <TouchableOpacity style={tw`flex-row justify-between items-center`}>
+        <TouchableOpacity
+          onPress={() => router.push("/screens/transactions/transactions")}
+          style={tw`flex-row justify-between items-center`}
+        >
           <View style={tw`flex-row justify-start items-center gap-3`}>
             <View
               style={tw`w-10 h-10 justify-center text-center items-center bg-[#ECFFF1] mr-5 rounded-full`}
@@ -143,11 +146,17 @@ const profile = () => {
               Transactions
             </Text>
           </View>
-          <Pressable style={tw`py-2.5 px-3.5 bg-white rounded-full`}>
+          <Pressable
+            onPress={() => router.push("/screens/transactions/transactions")}
+            style={tw`py-2.5 px-3.5 bg-white rounded-full`}
+          >
             <SvgXml xml={IconGetterThen} />
           </Pressable>
         </TouchableOpacity>
-        <TouchableOpacity style={tw`flex-row justify-between items-center`}>
+        <TouchableOpacity
+          onPress={() => router.push("/screens/settings/settings")}
+          style={tw`flex-row justify-between items-center`}
+        >
           <View style={tw`flex-row justify-start items-center gap-3`}>
             <View
               style={tw`w-10 h-10 justify-center text-center items-center bg-[#ECFFF1] mr-5 rounded-full`}
@@ -158,7 +167,10 @@ const profile = () => {
               Settings
             </Text>
           </View>
-          <Pressable style={tw`py-2.5 px-3.5 bg-white rounded-full`}>
+          <Pressable
+            onPress={() => router.push("/screens/settings/settings")}
+            style={tw`py-2.5 px-3.5 bg-white rounded-full`}
+          >
             <SvgXml xml={IconGetterThen} />
           </Pressable>
         </TouchableOpacity>

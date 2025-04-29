@@ -114,7 +114,7 @@ const login = () => {
           <View style={tw`rounded-full h-12`}>
             <TButton
               // onPress={handleSubmit(onSubmit)}
-              onPress={() => route.push("/")}
+              onPress={() => route.push("/drawer/home")}
               title="Sign in"
               containerStyle={tw`rounded-md`}
             />

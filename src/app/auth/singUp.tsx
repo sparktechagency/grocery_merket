@@ -119,7 +119,7 @@ const singUp = () => {
           <View style={tw`rounded-full h-12`}>
             <TButton
               // onPress={handleSubmit(onSubmit)}
-              onPress={() => route.push("/")}
+              onPress={() => route.push("/drawer/home")}
               title="Register"
               containerStyle={tw`rounded-md`}
             />

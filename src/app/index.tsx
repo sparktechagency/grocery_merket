@@ -8,6 +8,7 @@ const index = () => {
   React.useEffect(() => {
     setTimeout(() => {
       router.push("/drawer/home");
+      // router.push("/onboarding/onboarding");
     }, 1000);
   }, []);
 
