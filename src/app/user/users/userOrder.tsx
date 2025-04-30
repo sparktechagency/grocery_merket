@@ -171,7 +171,7 @@ const userOrder = () => {
 
           <Collapsible collapsed={isCollapsed}>
             <Pressable
-              onPress={() => router.push("/screens/users/userOrderTrack")}
+              onPress={() => router.push("/user/users/userOrderTrack")}
             >
               <View style={tw`px-7 py-2 bg-white rounded-lg gap-2`}>
                 <View style={tw`flex-row justify-between`}>
@@ -305,7 +305,7 @@ const userOrder = () => {
 
           <Collapsible collapsed={isCollapsed}>
             <Pressable
-              onPress={() => router.push("/screens/users/userOrderTrack")}
+              onPress={() => router.push("/user/users/userOrderTrack")}
             >
               <View style={tw`px-7 py-2 bg-white rounded-lg gap-2`}>
                 <View style={tw`flex-row justify-between`}>

@@ -66,7 +66,7 @@ const orderAccept = () => {
           </Text>
           <TButton
             // onPress={handleSubmit(onSubmit)}
-            onPress={() => router.push("/screens/notification/orderReceived")}
+            onPress={() => router.push("/user/notification/orderReceived")}
             title="Receive order"
             containerStyle={tw`rounded-full bg-[#5802D0]`}
           />

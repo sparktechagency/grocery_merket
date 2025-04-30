@@ -30,7 +30,7 @@ const userAddress = () => {
       </View>
       <TButton
         // onPress={handleSubmit(onSubmit)}
-        onPress={() => router.push("/screens/users/editUserDetails")}
+        onPress={() => router.push("/user/users/editUserDetails")}
         title="Edit"
         containerStyle={tw`rounded-md mx-6  mt-10`}
       />

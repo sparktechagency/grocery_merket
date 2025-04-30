@@ -46,7 +46,7 @@ const profile = () => {
 
       <View style={tw`bg-[#e8eaec] p-3.5 rounded-xl  gap-5`}>
         <TouchableOpacity
-          onPress={() => router.push("/screens/users/userDetails")}
+          onPress={() => router.push("/user/users/userDetails")}
           style={tw`flex-row justify-between items-center w-full`}
         >
           <View style={tw`flex-row justify-start items-center  gap-3`}>
@@ -60,14 +60,14 @@ const profile = () => {
             </Text>
           </View>
           <Pressable
-            onPress={() => router.push("/screens/users/userDetails")}
+            onPress={() => router.push("/user/users/userDetails")}
             style={tw`py-2.5 px-3.5 bg-white rounded-full`}
           >
             <SvgXml xml={IconGetterThen} />
           </Pressable>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => router.push("/screens/users/userAddress")}
+          onPress={() => router.push("/user/users/userAddress")}
           style={tw`flex-row justify-between items-center`}
         >
           <View style={tw`flex-row justify-start items-center gap-3`}>
@@ -81,14 +81,14 @@ const profile = () => {
             </Text>
           </View>
           <Pressable
-            onPress={() => router.push("/screens/users/userAddress")}
+            onPress={() => router.push("/user/users/userAddress")}
             style={tw`py-2.5 px-3.5 bg-white rounded-full`}
           >
             <SvgXml xml={IconGetterThen} />
           </Pressable>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => router.push("/screens/users/userOrder")}
+          onPress={() => router.push("/user/users/userOrder")}
           style={tw`flex-row justify-between items-center`}
         >
           <View style={tw`flex-row justify-start items-center gap-3`}>
@@ -102,7 +102,7 @@ const profile = () => {
             </Text>
           </View>
           <Pressable
-            onPress={() => router.push("/screens/users/userOrder")}
+            onPress={() => router.push("/user/users/userOrder")}
             style={tw`py-2.5 px-3.5 bg-white rounded-full`}
           >
             <SvgXml xml={IconGetterThen} />
@@ -112,7 +112,7 @@ const profile = () => {
 
       <View style={tw`bg-[#e8eaec] p-3.5 rounded-xl  gap-5`}>
         <TouchableOpacity
-          onPress={() => router.push("/screens/notification/notification")}
+          onPress={() => router.push("/user/notification/notification")}
           style={tw`flex-row justify-between items-center w-full`}
         >
           <View style={tw`flex-row justify-start items-center  gap-3`}>
@@ -126,14 +126,14 @@ const profile = () => {
             </Text>
           </View>
           <Pressable
-            onPress={() => router.push("/screens/notification/notification")}
+            onPress={() => router.push("/user/notification/notification")}
             style={tw`py-2.5 px-3.5 bg-white rounded-full`}
           >
             <SvgXml xml={IconGetterThen} />
           </Pressable>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => router.push("/screens/transactions/transactions")}
+          onPress={() => router.push("/user/transactions/transactions")}
           style={tw`flex-row justify-between items-center`}
         >
           <View style={tw`flex-row justify-start items-center gap-3`}>
@@ -147,14 +147,14 @@ const profile = () => {
             </Text>
           </View>
           <Pressable
-            onPress={() => router.push("/screens/transactions/transactions")}
+            onPress={() => router.push("/user/transactions/transactions")}
             style={tw`py-2.5 px-3.5 bg-white rounded-full`}
           >
             <SvgXml xml={IconGetterThen} />
           </Pressable>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => router.push("/screens/settings/settings")}
+          onPress={() => router.push("/user/settings/settings")}
           style={tw`flex-row justify-between items-center`}
         >
           <View style={tw`flex-row justify-start items-center gap-3`}>
@@ -168,7 +168,7 @@ const profile = () => {
             </Text>
           </View>
           <Pressable
-            onPress={() => router.push("/screens/settings/settings")}
+            onPress={() => router.push("/user/settings/settings")}
             style={tw`py-2.5 px-3.5 bg-white rounded-full`}
           >
             <SvgXml xml={IconGetterThen} />

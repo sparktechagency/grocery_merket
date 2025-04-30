@@ -34,7 +34,9 @@ const stepOne = () => {
           </Text>
         </TouchableOpacity>
         <SvgXml xml={IconFastStep} />
-        <TouchableOpacity onPress={() => router.push("/onboarding/stepTwo")}>
+        <TouchableOpacity
+          onPress={() => router.push("/user/onboarding/stepTwo")}
+        >
           <SvgXml
             xml={IconRightArrow}
             style={tw`p-5 rounded-full bg-soundery`}

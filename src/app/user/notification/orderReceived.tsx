@@ -34,7 +34,7 @@ const orderReceived = () => {
           title="Order received"
           containerStyle={tw`rounded-full bg-[#006B27] my-7 disabled`}
         />
-        <TouchableOpacity onPress={() => router.push("/drawer/home")}>
+        <TouchableOpacity onPress={() => router.push("/user/drawer/home")}>
           <Text
             style={tw`font-PoppinsSemiBold text-base text-[#006B27] w-full text-center mx-auto px-16 mb-8`}
           >

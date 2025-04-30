@@ -52,7 +52,7 @@ const OTPCode = () => {
 
           <View style={tw`rounded-full h-12 w-full mt-10`}>
             <TButton
-              onPress={() => router.navigate("/drawer/home")}
+              onPress={() => router.navigate("/user/drawer/home")}
               title="Verify"
               containerStyle={tw`rounded-md`}
               titleStyle={tw`font-PoppinsSemiBold text-lg`}

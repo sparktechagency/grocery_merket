@@ -66,7 +66,7 @@ const settings = () => {
           </Pressable>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => router.push("/screens/settings/aboutApp")}
+          onPress={() => router.push("/user/settings/aboutApp")}
           style={tw`flex-row justify-between items-center`}
         >
           <View style={tw`flex-row justify-start items-center gap-3`}>
@@ -80,14 +80,14 @@ const settings = () => {
             </Text>
           </View>
           <Pressable
-            // onPress={() => router.push("/screens/users/userAddress")}
+            // onPress={() => router.push("/user/users/userAddress")}
             style={tw`py-2.5 px-3.5 bg-white rounded-full`}
           >
             <SvgXml xml={IconGetterThen} />
           </Pressable>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => router.push("/screens/settings/FAQ")}
+          onPress={() => router.push("/user/settings/FAQ")}
           style={tw`flex-row justify-between items-center`}
         >
           <View style={tw`flex-row justify-start items-center gap-3`}>
@@ -99,7 +99,7 @@ const settings = () => {
             <Text style={tw`font-PoppinsMedium text-base text-black`}>FAQ</Text>
           </View>
           <Pressable
-            onPress={() => router.push("/screens/settings/FAQ")}
+            onPress={() => router.push("/user/settings/FAQ")}
             style={tw`py-2.5 px-3.5 bg-white rounded-full`}
           >
             <SvgXml xml={IconGetterThen} />

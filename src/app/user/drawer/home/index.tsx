@@ -107,7 +107,7 @@ const HomeScreen = () => {
 
           <View style={tw`flex-row items-center gap-3`}>
             <TouchableOpacity
-              onPress={() => router.push("/screens/addToCart/cart")}
+              onPress={() => router.push("/user/addToCart/cart")}
               style={tw`relative p-3 bg-white shadow-lg rounded-lg`}
             >
               <SvgXml xml={IconAddToCat} />
@@ -120,7 +120,7 @@ const HomeScreen = () => {
               ) : null}
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => router.push("/screens/notification/notification")}
+              onPress={() => router.push("/user/notification/notification")}
               style={tw`relative p-3 bg-white shadow-lg rounded-lg`}
             >
               <SvgXml xml={IconNotification} />

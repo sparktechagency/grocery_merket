@@ -123,7 +123,7 @@ const changePassword = () => {
         <View style={tw`rounded-full`}>
           <TButton
             // onPress={handleSubmit(onSubmit)}
-            onPress={() => router.push("/drawer/home")}
+            onPress={() => router.push("/user/drawer/home")}
             title="Update password"
             containerStyle={tw`rounded-full `}
           />

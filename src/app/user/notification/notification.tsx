@@ -23,9 +23,9 @@ const notification = () => {
             <TouchableOpacity
               onPress={() =>
                 notification.status === "arrived"
-                  ? router.push("/screens/notification/orderAccept")
+                  ? router.push("/user/notification/orderAccept")
                   : notification.status === "pickUp"
-                  ? router.push("/screens/shoppers/beforeChatShopper")
+                  ? router.push("/user/shoppers/beforeChatShopper")
                   : // router.push("/")
                     null
               }
