@@ -1,29 +1,24 @@
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import { View, Text, Image } from "react-native";
 import React from "react";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { Link, router } from "expo-router";
-
+import tw from "@/src/lib/tailwind";
 import { SvgXml } from "react-native-svg";
 import {
   IconCheckout,
   IconLeftLineArrow,
-  IconMuniceButton,
-  IconPayment,
+  IconMasterCard,
+  IconPaymentSelected,
   IconPlaceOrder,
-  IconPlusButton,
 } from "@/assets/icon";
-import tw from "@/src/lib/tailwind";
-import { CartData } from "@/src/components/CardData";
 import TButton from "@/src/lib/buttons/TButton";
 
-const checkOut = () => {
-  const [step, setStep] = React.useState(0);
+const payment = () => {
   return (
     <View style={tw`flex-1`}>
-      <BackWithComponent onPress={() => router.back()} title={"Checkout"} />
-
-      <ScrollView>
-        <View style={tw`mx-5`}>
+      <BackWithComponent onPress={() => router.back()} title={"Payment"} />
+      <View style={tw`mx-5 flex-1 justify-between`}>
+        <View>
           <View style={tw`flex-row items-center justify-between px-4 py-4`}>
             {/* Step 1: Checkout */}
             <View style={tw`items-center`}>
@@ -42,10 +37,12 @@ const checkOut = () => {
             </View>
             {/* Step 2: Payment */}
             <View style={tw`items-center`}>
-              <View
-                style={tw`w-14 h-14 rounded-full border-2 border-primary justify-center items-center`}
-              >
-                <SvgXml xml={IconPayment} width={24} height={24} />
+              <View style={tw`border-2 border-primary rounded-full`}>
+                <View
+                  style={tw`w-14 h-14 rounded-full  bg-primary justify-center items-center m-1`}
+                >
+                  <SvgXml xml={IconPaymentSelected} width={24} height={24} />
+                </View>
               </View>
               <Text style={tw`text-center text-black mt-2`}>Payment</Text>
             </View>
@@ -61,86 +58,6 @@ const checkOut = () => {
                 <SvgXml xml={IconPlaceOrder} width={24} height={24} />
               </View>
               <Text style={tw`text-center text-black mt-2`}>Place order</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={tw`mx-5 mt-3`}>
-          <View
-            style={tw` rounded-md bg-primary flex-row justify-between items-center p-3.5`}
-          >
-            <Text style={tw`font-PoppinsSemiBold text-base text-white`}>
-              Order id:
-            </Text>
-            <Text style={tw`font-PoppinsSemiBold text-base text-white`}>
-              #500
-            </Text>
-          </View>
-
-          <View style={tw`mt-4`}>
-            {CartData.map((data) => (
-              <TouchableOpacity
-                key={data.id}
-                style={tw`flex-row items-center p-3 rounded-2xl bg-white mb-3 shadow-lg`}
-              >
-                <Image
-                  source={data.image}
-                  style={tw`w-14 h-14 rounded-md`}
-                  resizeMode="contain"
-                />
-                <View style={tw`ml-4`}>
-                  <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-                    {data.title}
-                  </Text>
-                  <Text
-                    style={tw`font-PoppinsRegular text-sm text-regularText`}
-                  >
-                    {data.weight}
-                  </Text>
-                  <Text
-                    style={tw`font-PoppinsSemiBold text-base text-primary mt-1`}
-                  >
-                    ${data.price}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          <View style={tw`w-full bg-[#e7e9eb]  rounded-xl mt-2`}>
-            <View
-              style={tw`flex-row justify-between items-center rounded-t-lg bg-white px-5 py-2`}
-            >
-              <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>
-                Delivery address
-              </Text>
-              <Link
-                href={"/user/users/userDetails"}
-                style={tw`underline font-PoppinsRegular text-[#56A5FF]`}
-              >
-                Change
-              </Link>
-            </View>
-            <View style={tw`px-5 py-3`}>
-              <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-                Home
-              </Text>
-              <Text style={tw`font-PoppinsRegular text-base text-regularText`}>
-                Kodiak Island
-              </Text>
-              <Text style={tw`font-PoppinsRegular text-base text-regularText`}>
-                Alaska
-              </Text>
-
-              <Text style={tw`font-PoppinsRegular text-base text-black mb-2`}>
-                Mobile:{" "}
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  {" "}
-                  01254698756
-                </Text>
-              </Text>
             </View>
           </View>
 
@@ -217,18 +134,59 @@ const checkOut = () => {
             </View>
           </View>
 
-          <View style={tw`rounded-full my-4`}>
-            <TButton
-              // onPress={handleSubmit(onSubmit)}
-              onPress={() => router.push("/user/paymentSystem/payment")}
-              title="Next"
-              containerStyle={tw`rounded-full `}
-            />
+          <View style={tw`mt-4`}>
+            <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
+              Payment
+            </Text>
+            <Text style={tw`border-b border-gray-800`}></Text>
+
+            <View
+              style={tw`flex-row items-center px-5 py-4 rounded-xl bg-[#eceff1] mb-3 shadow-md mt-5`}
+            >
+              <View
+                style={tw`w-14 h-14 flex justify-center items-center bg-white rounded-full shadow-sm`}
+              >
+                <SvgXml xml={IconMasterCard} style={tw`w-16 h-16 rounded-md`} />
+              </View>
+              <View style={tw`ml-4`}>
+                <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
+                  Mastercard
+                </Text>
+                <Text style={tw`font-PoppinsRegular text-sm text-black`}>
+                  **** **** **** 4568
+                </Text>
+                <View style={tw`flex-row gap-7 items-center mt-1`}>
+                  <Text style={tw`font-PoppinsMedium text-sm text-black`}>
+                    Exp: 06/26
+                  </Text>
+                  <Text style={tw`font-PoppinsMedium text-sm text-black`}>
+                    CVV: 123
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View style={tw`w-full flex justify-end items-end mt-3`}>
+            <Link
+              href={"/user/paymentSystem/myCard"}
+              style={tw`underline font-PoppinsRegular text-sm text-primary `}
+            >
+              Change
+            </Link>
           </View>
         </View>
-      </ScrollView>
+
+        <View style={tw`rounded-full my-4`}>
+          <TButton
+            // onPress={handleSubmit(onSubmit)}
+            onPress={() => router.push("/user/paymentSystem/placeOrder")}
+            title="Next"
+            containerStyle={tw`rounded-full `}
+          />
+        </View>
+      </View>
     </View>
   );
 };
 
-export default checkOut;
+export default payment;

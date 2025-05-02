@@ -4,7 +4,7 @@ import tw from "@/src/lib/tailwind";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
 import { CartData } from "@/src/components/CardData";
-import { Circle, SvgXml } from "react-native-svg";
+import { SvgXml } from "react-native-svg";
 import { IconMuniceButton, IconPlusButton } from "@/assets/icon";
 import TButton from "@/src/lib/buttons/TButton";
 import { ImgEmpty } from "@/assets/images";
@@ -155,7 +155,7 @@ const cart = () => {
           <View style={tw`rounded-full mb-6`}>
             <TButton
               // onPress={handleSubmit(onSubmit)}
-              onPress={() => router.push("/drawer/home")}
+              onPress={() => router.push("/user/drawer/home")}
               title="Back to store"
               containerStyle={tw`rounded-full `}
             />
