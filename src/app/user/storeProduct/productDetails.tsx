@@ -7,17 +7,19 @@ import { ImgBestSellerOne, ImgDetailsBG } from "@/assets/images";
 
 const productDetails = () => {
   return (
-    <View style={tw`flex-1`}>
-      <BackWithComponent
-        onPress={() => router.back()}
-        title="Store Products- (Store name)"
-        titleStyle={tw`mx-auto`}
-      />
+    <View style={tw`flex-1 bg-white`}>
       <View>
-        <View>
-          <Image resizeMode="cover" source={ImgDetailsBG} />
+        <View
+          style={tw`bg-slate-600 w-full h-52 rounded-bl-[170px] rounded-br-[170px]`}
+        ></View>
+        <BackWithComponent
+          onPress={() => router.back()}
+          title="Fresh Carrots"
+          titleStyle={tw`mx-auto`}
+        />
+        <View style={tw`absolute `}>
+          <Image resizeMode="contain" source={ImgBestSellerOne} />
         </View>
-        <Image source={ImgBestSellerOne} />
       </View>
     </View>
   );
