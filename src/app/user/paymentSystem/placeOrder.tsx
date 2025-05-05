@@ -369,6 +369,7 @@ const placeOrder = () => {
 
       {/* ------ is time modal is open ----------------- */}
       <Modal
+        onDismiss={() => console.log("dismissed")}
         animationType="slide"
         transparent={true}
         visible={isTimeModal}
@@ -448,8 +449,9 @@ const placeOrder = () => {
           <Checkbox
             value={isSelected}
             onValueChange={setSelection}
-            // style={tw`text-black`}
-            // containerStyle={tw`text-black`}
+            color="#000"
+            // selectedIconColor="#000000"
+            // borderColor="#000000"
           />
           <View
             style={tw` flex-row bg-white shadow-md rounded-lg w-full px-5  py-3 gap-4`}
@@ -475,7 +477,13 @@ const placeOrder = () => {
         </View>
 
         <View style={tw`flex-row items-center  mt-6 w-[85%] gap-7`}>
-          <Checkbox value={isSelected} onValueChange={setSelection} />
+          <Checkbox
+            value={isSelected}
+            onValueChange={setSelection}
+            color="#000"
+            // selectedIconColor="#000000"
+            // borderColor="#000000"
+          />
           <View
             style={tw` flex-row items-center bg-white shadow-md rounded-lg w-full px-5  py-3 gap-4`}
           >

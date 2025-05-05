@@ -59,6 +59,7 @@ const Stores = () => {
       <View style={tw`flex-row flex-wrap justify-between mt-2`}>
         {storeName.map((store) => (
           <TouchableOpacity
+            onPress={() => router.push("/user/storeProduct/storeProduct")}
             key={store.id}
             activeOpacity={0.8}
             style={tw`w-[48%] bg-white rounded-2xl mb-4 overflow-hidden shadow-md`}
@@ -72,7 +73,10 @@ const Stores = () => {
               <Text style={tw`font-PoppinsMedium text-base text-black`}>
                 {store.store_name}
               </Text>
-              <Pressable style={tw`p-1.5 bg-[#e4e4e4] rounded-full`}>
+              <Pressable
+                onPress={() => router.push("/user/storeProduct/storeProduct")}
+                style={tw`p-1.5 bg-[#e4e4e4] rounded-full`}
+              >
                 <SvgXml
                   xml={IconArrowCorner}
                   width={20}

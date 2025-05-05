@@ -65,5 +65,7 @@ export const ImgOrderSuccessGIF = require("@/assets/images/orderSuccessGIF.gif")
 export const ImgShopperOne = require("@/assets/images/shopperOne.png");
 export const ImgShopperTwo = require("@/assets/images/shopperTwo.png");
 
+export const ImgDetailsBG = require("@/assets/images/detailsImgBG.png");
+
 // export const ImgMasterCard = require("@/assets/images/orderReceived.gif");
 // export const ImgVisaCard = require("@/assets/images/orderReceived.gif");

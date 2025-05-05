@@ -1,21 +1,25 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Pressable } from "react-native";
 import React from "react";
 import tw from "@/src/lib/tailwind";
 import { SvgXml } from "react-native-svg";
 import { IconMasterCard, IconVisaCard } from "@/assets/icon";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
-import { Checkbox } from "react-native-ui-lib";
+import { Checkbox } from "@/src/lib/CheckBox/Checkbox";
 
 const myCard = () => {
-  const [isSelected, setSelection] = React.useState(false);
+  const [selected, setSelected] = React.useState("one");
   return (
     <View style={tw`flex-1`}>
       <BackWithComponent onPress={() => router.back()} title={"My Cards"} />
       <View style={tw`mt-4 px-5`}>
         <View style={tw`flex-row items-center w-[88%] gap-5`}>
-          <Checkbox value={isSelected} onValueChange={setSelection} />
-          <View
+          <Checkbox
+            selected={selected === "one"}
+            onPress={() => setSelected("one")}
+          />
+          <Pressable
+            onPress={() => setSelected("one")}
             style={tw`flex-row items-center px-5 py-4 rounded-xl w-full bg-[#eceff1] mb-3 shadow-md mt-5`}
           >
             <View
@@ -39,11 +43,15 @@ const myCard = () => {
                 </Text>
               </View>
             </View>
-          </View>
+          </Pressable>
         </View>
         <View style={tw`flex-row items-center w-[88%] gap-5`}>
-          <Checkbox value={isSelected} onValueChange={setSelection} />
-          <View
+          <Checkbox
+            selected={selected === "two"}
+            onPress={() => setSelected("two")}
+          />
+          <Pressable
+            onPress={() => setSelected("two")}
             style={tw`flex-row items-center px-5 py-4 w-full rounded-xl bg-[#eceff1] mb-3 shadow-md mt-3`}
           >
             <View
@@ -67,11 +75,12 @@ const myCard = () => {
                 </Text>
               </View>
             </View>
-          </View>
+          </Pressable>
         </View>
       </View>
 
       <TouchableOpacity
+        onPress={() => router.push("/user/paymentSystem/addNewCard")}
         style={tw`border border-primary border-dashed rounded-lg bg-green-100 py-3 px-4 mt-10 mx-5`}
       >
         <Text style={tw`text-green-700 text-center font-medium`}>
