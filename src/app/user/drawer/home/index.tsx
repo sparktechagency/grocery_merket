@@ -12,9 +12,12 @@ import { SvgXml } from "react-native-svg";
 import {
   IconAddToCat,
   IconArrowCorner,
+  IconComparison,
   IconLocation,
+  IconLove,
   IconNotification,
   IconRightArrowSingle,
+  IconShopping,
 } from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
 import DiscountCarousel from "@/src/components/Carousel";
@@ -31,6 +34,7 @@ import { FlatList } from "react-native-gesture-handler";
 import { CartData } from "@/src/components/CardData";
 import { CardItem } from "@/src/components/CardItem";
 import { router } from "expo-router";
+import { BlurView } from "expo-blur";
 
 const HomeScreen = () => {
   const [notification, setNotification] = React.useState(false);
@@ -75,24 +79,98 @@ const HomeScreen = () => {
     category_name: string;
   }
   const categoryItem = ({ item }: { item: CategoryProp }) => (
-    <TouchableOpacity style={tw`m-2 bg-white w-48 rounded-md shadow-md`}>
+    <TouchableOpacity
+      onPress={() => router.push("/user/storeProduct/storeProduct")}
+      style={tw`m-2 bg-white w-48 rounded-md shadow-md`}
+    >
       <Image source={item.image} style={tw`w-full h-28 rounded-t-md`} />
       <View style={tw`flex-row justify-between items-center p-2`}>
         <Text style={tw` text-sm mt-2 font-PoppinsMedium`}>
           {item.category_name}
         </Text>
-        <Pressable style={tw`p-1.5 text-center bg-[#F0F0F0] rounded-full`}>
+        <Pressable
+          onPress={() => router.push("/user/storeProduct/storeProduct")}
+          style={tw`p-1.5 text-center bg-[#F0F0F0] rounded-full`}
+        >
           <SvgXml xml={IconArrowCorner} />
         </Pressable>
       </View>
     </TouchableOpacity>
+  );
+  interface CardDataProps {
+    image: any;
+    category: string;
+    brand: string;
+    title: string;
+    weight: string;
+    price: number;
+    isNew: boolean;
+    isFavorite: boolean;
+  }
+
+  const cardData = ({ item }: CardDataProps) => (
+    <Pressable
+      onPress={() => router.push("/user/storeProduct/productDetails")}
+      style={tw`relative w-52 h-56 bg-[#dbdee0] m-2 p-3 py-4 rounded-xl`}
+    >
+      <Image source={item?.image} style={tw` mx-auto p-3`} />
+      <Text
+        style={tw`absolute font-PoppinsSemiBold text-[10px] px-2 py-1 bg-[#56A5FF] rounded-r-full top-4 z-10 `}
+      >
+        New
+      </Text>
+
+      <TouchableOpacity
+        onPress={() => router.push("/user/addToCart/cart")}
+        style={tw`absolute  bg-transparent right-3 top-4`}
+      >
+        <BlurView
+          intensity={60}
+          style={tw`p-2 border border-white rounded-full  overflow-hidden`}
+        >
+          <SvgXml xml={IconLove} />
+        </BlurView>
+      </TouchableOpacity>
+      <View style={tw`flex-row justify-between items-center gap-2 mt-3 `}>
+        <Text
+          style={tw`font-PoppinsMedium text-xs text-regularText bg-[#dddcdc] px-1.5 py-0.5 shadow-sm rounded-sm`}
+        >
+          {item.category}
+        </Text>
+        <Text
+          style={tw`bg-[#FF5F00] font-PoppinsMedium text-xs px-1.5 py-0.5 shadow-sm rounded-sm text-white`}
+        >
+          {item.brand}
+        </Text>
+      </View>
+      <Text style={tw`font-PoppinsSemiBold text-sm text-black mt-2`}>
+        {item.title}
+      </Text>
+      <Text style={tw`font-PoppinsSemiBold text-xs text-[#787878]`}>
+        {item.weight}
+      </Text>
+      <View style={tw`flex-row justify-between items-center mt-1`}>
+        <Text style={tw`font-PoppinsBold text-base text-[#006B27]`}>
+          ${item?.price}
+        </Text>
+        <TouchableOpacity
+          onPress={() => router.push("/user/storeProduct/productDetails")}
+          style={tw`p-2 bg-white shadow-md rounded-full`}
+        >
+          <SvgXml xml={IconShopping} />
+        </TouchableOpacity>
+      </View>
+    </Pressable>
   );
 
   return (
     <View style={tw`flex-1`}>
       <ScrollView contentContainerStyle={tw`pb-24`}>
         <View style={tw`px-5 flex-row justify-between mt-3 mb-5`}>
-          <View style={tw`flex-row justify-center items-center gap-2`}>
+          <Pressable
+            onPress={() => router.push("/user/drawer/home/profile")}
+            style={tw`flex-row justify-center items-center gap-2`}
+          >
             <SvgXml xml={IconLocation} />
             <View>
               <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
@@ -103,9 +181,17 @@ const HomeScreen = () => {
                 Kodiak Island
               </Text>
             </View>
-          </View>
+          </Pressable>
 
           <View style={tw`flex-row items-center gap-3`}>
+            <TouchableOpacity
+              onPress={() =>
+                router.push("/user/priceComparison/priceComparison")
+              }
+              style={tw`relative p-3 bg-white shadow-lg rounded-lg`}
+            >
+              <SvgXml xml={IconComparison} />
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={() => router.push("/user/addToCart/cart")}
               style={tw`relative p-3 bg-white shadow-lg rounded-lg`}
@@ -146,6 +232,7 @@ const HomeScreen = () => {
               Category
             </Text>
             <TouchableOpacity
+              onPress={() => router.push("/user/drawer/home/stores")}
               style={tw`flex-row justify-center gap-1 items-center`}
             >
               <Text>View all</Text>
@@ -173,6 +260,7 @@ const HomeScreen = () => {
               Beast Seller
             </Text>
             <TouchableOpacity
+              onPress={() => router.push("/user/storeProduct/storeProduct")}
               style={tw`flex-row justify-center gap-1 items-center`}
             >
               <Text>View all</Text>
@@ -183,7 +271,7 @@ const HomeScreen = () => {
           <View style={tw`pl-4`}>
             <FlatList
               data={CartData}
-              renderItem={CardItem}
+              renderItem={cardData}
               keyExtractor={(item) => item.id.toString()}
               horizontal={true}
             />
@@ -198,6 +286,7 @@ const HomeScreen = () => {
               Exclusive offer
             </Text>
             <TouchableOpacity
+              onPress={() => router.push("/user/storeProduct/storeProduct")}
               style={tw`flex-row justify-center gap-1 items-center`}
             >
               <Text>View all</Text>
@@ -208,7 +297,7 @@ const HomeScreen = () => {
           <View style={tw`pl-4`}>
             <FlatList
               data={CartData}
-              renderItem={CardItem}
+              renderItem={cardData}
               keyExtractor={(item) => item.id.toString()}
               horizontal={true}
             />
@@ -222,6 +311,7 @@ const HomeScreen = () => {
               Mackdonalds
             </Text>
             <TouchableOpacity
+              onPress={() => router.push("/user/storeProduct/storeProduct")}
               style={tw`flex-row justify-center gap-1 items-center`}
             >
               <Text>View all</Text>
@@ -232,7 +322,7 @@ const HomeScreen = () => {
           <View style={tw`pl-4`}>
             <FlatList
               data={CartData}
-              renderItem={CardItem}
+              renderItem={cardData}
               keyExtractor={(item) => item.id.toString()}
               horizontal={true}
             />
@@ -246,6 +336,7 @@ const HomeScreen = () => {
               Starbucks
             </Text>
             <TouchableOpacity
+              onPress={() => router.push("/user/storeProduct/storeProduct")}
               style={tw`flex-row justify-center gap-1 items-center`}
             >
               <Text>View all</Text>
@@ -256,7 +347,7 @@ const HomeScreen = () => {
           <View style={tw`pl-4`}>
             <FlatList
               data={CartData}
-              renderItem={CardItem}
+              renderItem={cardData}
               keyExtractor={(item) => item.id.toString()}
               horizontal={true}
             />
@@ -270,6 +361,7 @@ const HomeScreen = () => {
               Store name 1
             </Text>
             <TouchableOpacity
+              onPress={() => router.push("/user/storeProduct/storeProduct")}
               style={tw`flex-row justify-center gap-1 items-center`}
             >
               <Text>View all</Text>
@@ -280,7 +372,7 @@ const HomeScreen = () => {
           <View style={tw`pl-4`}>
             <FlatList
               data={CartData}
-              renderItem={CardItem}
+              renderItem={cardData}
               keyExtractor={(item) => item.id.toString()}
               horizontal={true}
             />
@@ -294,6 +386,7 @@ const HomeScreen = () => {
               Store name 2
             </Text>
             <TouchableOpacity
+              onPress={() => router.push("/user/storeProduct/storeProduct")}
               style={tw`flex-row justify-center gap-1 items-center`}
             >
               <Text>View all</Text>
@@ -304,7 +397,7 @@ const HomeScreen = () => {
           <View style={tw`pl-4`}>
             <FlatList
               data={CartData}
-              renderItem={CardItem}
+              renderItem={cardData}
               keyExtractor={(item) => item.id.toString()}
               horizontal={true}
             />
