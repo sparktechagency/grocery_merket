@@ -72,5 +72,8 @@ export const ImgDetailsCarrot = require("@/assets/images/carrotDetailsImg.png");
 export const ImgOrganic = require("@/assets/images/organic.png");
 export const ImgExpireDate = require("@/assets/images/expireDate.png");
 
+export const ImgChatProfile = require("@/assets/images/chatProfile.png");
+export const ImgNoShopper = require("@/assets/images/noShopper.png");
+
 // export const ImgMasterCard = require("@/assets/images/orderReceived.gif");
 // export const ImgVisaCard = require("@/assets/images/orderReceived.gif");

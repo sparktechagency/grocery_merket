@@ -32,13 +32,15 @@ import {
 } from "@/assets/images";
 import { FlatList } from "react-native-gesture-handler";
 import { CartData } from "@/src/components/CardData";
-import { CardItem } from "@/src/components/CardItem";
 import { router } from "expo-router";
 import { BlurView } from "expo-blur";
+import { Modal } from "react-native-ui-lib";
 
 const HomeScreen = () => {
   const [notification, setNotification] = React.useState(false);
   const [addToCart, setAddToCart] = React.useState(true);
+
+  const [modalVisible, setModalVisible] = React.useState(false);
 
   // ------------ Category Data  item state hare ------------
   const categoryData = [
@@ -121,7 +123,7 @@ const HomeScreen = () => {
       </Text>
 
       <TouchableOpacity
-        onPress={() => router.push("/user/addToCart/cart")}
+        onPress={() => router.push("/user/storeProduct/productDetails")}
         style={tw`absolute  bg-transparent right-3 top-4`}
       >
         <BlurView
@@ -154,7 +156,7 @@ const HomeScreen = () => {
           ${item?.price}
         </Text>
         <TouchableOpacity
-          onPress={() => router.push("/user/storeProduct/productDetails")}
+          onPress={() => setModalVisible(true)}
           style={tw`p-2 bg-white shadow-md rounded-full`}
         >
           <SvgXml xml={IconShopping} />
@@ -193,6 +195,7 @@ const HomeScreen = () => {
               <SvgXml xml={IconComparison} />
             </TouchableOpacity>
             <TouchableOpacity
+              // onPress={() => router.push("/user/addToCart/simpleCart")}
               onPress={() => router.push("/user/addToCart/cart")}
               style={tw`relative p-3 bg-white shadow-lg rounded-lg`}
             >
@@ -405,6 +408,41 @@ const HomeScreen = () => {
         </View>
 
         <StatusBar backgroundColor={Base} animated barStyle={"dark-content"} />
+        <Modal
+          animationType="slide"
+          style={tw`w-[90%]`}
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={tw`flex-1 justify-center items-center bg-black/50`}>
+            <View style={tw`bg-white w-80 rounded-2xl py-6 px-8`}>
+              <Text style={tw`text-center font-PoppinsBold text-xl mb-4`}>
+                Added to cart
+              </Text>
+              <TouchableOpacity
+                onPress={() => setModalVisible(!modalVisible)}
+                style={tw`px-10 py-3 border border-[#686868] rounded-xl`}
+              >
+                <Text style={tw`font-PoppinsRegular text-base text-center`}>
+                  Remove from cart
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setModalVisible(!modalVisible)}
+                style={tw`px-10 py-3  bg-primary rounded-xl mt-3`}
+              >
+                <Text
+                  style={tw`font-PoppinsSemiBold text-base text-white text-center`}
+                >
+                  Continue
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </View>
   );

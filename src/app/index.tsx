@@ -7,7 +7,7 @@ import { router } from "expo-router";
 const index = () => {
   React.useEffect(() => {
     setTimeout(() => {
-      // router.push("/user/storeProduct/productDetails");
+      // router.push("/user/shoppers/myShoppers");
       router.push("/user/onboarding/onboarding");
     }, 1000);
   }, []);

@@ -467,7 +467,7 @@ const placeOrder = () => {
                 My Personal Shopper
               </Text>
               <Link
-                href={"/user/paymentSystem/myCard"}
+                href={"/user/shoppers/myShoppers"}
                 style={tw`underline font-PoppinsRegular text-sm text-primary `}
               >
                 Change
