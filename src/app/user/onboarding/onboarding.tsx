@@ -19,14 +19,14 @@ const OnboardingScreen = () => {
   console.log(index);
 
   const handleDone = () => {
-    router.push("/auth");
+    router.push("/role/role");
   };
 
   const doneButton = () => {
     return (
       <TouchableOpacity
         onPress={() => {
-          router.push("/auth");
+          router.push("/role/role");
         }}
         style={tw`mr-6`}
       >

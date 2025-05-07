@@ -74,6 +74,9 @@ export const ImgExpireDate = require("@/assets/images/expireDate.png");
 
 export const ImgChatProfile = require("@/assets/images/chatProfile.png");
 export const ImgNoShopper = require("@/assets/images/noShopper.png");
+export const ImgRoleHead = require("@/assets/images/roleHead.png");
+export const ImgRoleRide = require("@/assets/images/roleRide.png");
+export const ImgFoods = require("@/assets/images/foods.png");
 
 // export const ImgMasterCard = require("@/assets/images/orderReceived.gif");
 // export const ImgVisaCard = require("@/assets/images/orderReceived.gif");

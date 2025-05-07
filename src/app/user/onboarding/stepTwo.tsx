@@ -27,7 +27,7 @@ const stepTwo = () => {
       </View>
 
       <View style={tw`flex-row justify-between items-center mb-10 mt-auto`}>
-        <TouchableOpacity onPress={() => router.push("/auth")}>
+        <TouchableOpacity onPress={() => router.push("/role/role")}>
           <Text
             style={tw`bg-skipButtonBG px-8 py-3 rounded-md font-PoppinsMedium text-lg text-orange`}
           >
@@ -35,7 +35,7 @@ const stepTwo = () => {
           </Text>
         </TouchableOpacity>
         <SvgXml xml={IconSoundStep} />
-        <TouchableOpacity onPress={() => router.push("/auth")}>
+        <TouchableOpacity onPress={() => router.push("/role/role")}>
           <SvgXml
             xml={IconRightArrow}
             style={tw`p-5 rounded-full bg-orange `}
