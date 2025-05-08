@@ -1,17 +1,19 @@
 import { View, Text, Image, Pressable } from "react-native";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Link, useRouter } from "expo-router";
+import { Link, router, useRouter } from "expo-router";
 import { Logo } from "@/assets/images";
 import tw from "@/src/lib/tailwind";
 import InputText from "@/src/lib/inputs/InputText";
 import { IconEyes, IconGoogle, IconNext, IconNextCorner } from "@/assets/icon";
 import TButton from "@/src/lib/buttons/TButton";
 import { SvgXml } from "react-native-svg";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const singUp = () => {
-  const route = useRouter();
+  // const route = useRouter();
   const [isSelected, setSelection] = React.useState(false);
+  const [roleData, setRoleData] = React.useState("");
   const {
     control,
     handleSubmit,
@@ -23,13 +25,34 @@ const singUp = () => {
       password: "",
     },
   });
-  const onSubmit = (data: any) => console.log(data);
+  // const onSubmit = (data: any) => console.log(data);
+
+  // ----------- get user  role -----------------
+  // Retrieve on mount
+  const getUserData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("role");
+      const role = value ? JSON.parse(value) : null;
+      setRoleData(role);
+    } catch (e) {
+      console.error("Error reading role from AsyncStorage", e);
+    }
+  };
+
+  React.useEffect(() => {
+    getUserData();
+  }, []);
 
   return (
     <>
       <View style={tw`px-6 flex-1 justify-center bg-white items-center`}>
-        <View>
+        <View style={tw`mb-4`}>
           <Image source={Logo} />
+          {roleData === "shopper" ? (
+            <Text style={tw`font-PoppinsSemiBold text-xl text-black mx-auto`}>
+              Register as a shopper
+            </Text>
+          ) : null}
         </View>
         <View style={tw`w-full gap-2`}>
           <Controller
@@ -119,7 +142,7 @@ const singUp = () => {
           <View style={tw`rounded-full h-12`}>
             <TButton
               // onPress={handleSubmit(onSubmit)}
-              onPress={() => route.push("/drawer/home")}
+              onPress={() => router.push("/user/drawer/home")}
               title="Register"
               containerStyle={tw`rounded-md`}
             />

@@ -7,8 +7,10 @@ import InputText from "@/src/lib/inputs/InputText";
 import { IconEyes } from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
 import TButton from "@/src/lib/buttons/TButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const changePassword = () => {
+  const [roleData, setRoleData] = React.useState("");
   const {
     control,
     handleSubmit,
@@ -19,10 +21,24 @@ const changePassword = () => {
       password: "",
     },
   });
-  const onSubmit = (data: any) => console.log(data);
+  // const onSubmit = (data: any) => console.log(data);
 
-  console.log(errors);
+  // console.log(errors);
 
+  // ----------- get user  role -----------------
+  const getUserData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("role");
+      const role = value ? JSON.parse(value) : null;
+      setRoleData(role);
+    } catch (e) {
+      console.error("Error reading role from AsyncStorage", e);
+    }
+  };
+
+  React.useEffect(() => {
+    getUserData();
+  }, []);
   return (
     <View style={tw`flex-1`}>
       <BackWithComponent
@@ -123,9 +139,11 @@ const changePassword = () => {
         <View style={tw`rounded-full`}>
           <TButton
             // onPress={handleSubmit(onSubmit)}
-            onPress={() => router.push("/user/drawer/home")}
+            onPress={() => router.push("/auth/resetPassSuccess")}
             title="Update password"
-            containerStyle={tw`rounded-full `}
+            containerStyle={tw`rounded-full  ${
+              roleData === "user" ? "bg-primary" : "bg-primaryShopper"
+            }`}
           />
         </View>
       </View>

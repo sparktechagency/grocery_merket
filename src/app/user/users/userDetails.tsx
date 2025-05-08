@@ -9,8 +9,10 @@ import { IconEdit } from "@/assets/icon";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
 import TButton from "@/src/lib/buttons/TButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const userDetails = () => {
+  const [roleData, setRoleData] = React.useState("");
   const {
     control,
     handleSubmit,
@@ -22,9 +24,26 @@ const userDetails = () => {
       location: "",
     },
   });
-  const onSubmit = (data: any) => console.log(data);
+  // const onSubmit = (data: any) => console.log(data);
 
-  console.log(errors);
+  // console.log(errors);
+
+  // ----------- get user  role -----------------
+
+  // ----------- get user  role -----------------
+  const getUserData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("role");
+      const role = value ? JSON.parse(value) : null;
+      setRoleData(role);
+    } catch (e) {
+      console.error("Error reading role from AsyncStorage", e);
+    }
+  };
+
+  React.useEffect(() => {
+    getUserData();
+  }, []);
 
   return (
     <View style={tw`flex-1`}>
@@ -118,7 +137,9 @@ const userDetails = () => {
         // onPress={handleSubmit(onSubmit)}
         onPress={() => router.push("/user/users/editUserDetails")}
         title="Edit"
-        containerStyle={tw`rounded-md mx-6  mt-10`}
+        containerStyle={tw`rounded-md mx-6  mt-10 ${
+          roleData === "user" ? "bg-primary" : "bg-primaryShopper"
+        }`}
       />
     </View>
   );

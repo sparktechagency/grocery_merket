@@ -9,11 +9,7 @@ import { IconDelete, IconMuniceButton, IconPlusButton } from "@/assets/icon";
 import TButton from "@/src/lib/buttons/TButton";
 import { ImgBurger, ImgEmpty, ImgShopperOne } from "@/assets/images";
 import { Swipeable } from "react-native-gesture-handler";
-import {
-  ALERT_TYPE,
-  AlertNotificationRoot,
-  Toast,
-} from "react-native-alert-notification";
+import { AlertNotificationRoot } from "react-native-alert-notification";
 import { Dialog, PanningProvider } from "react-native-ui-lib";
 
 const SwipeToDeleteCard = ({

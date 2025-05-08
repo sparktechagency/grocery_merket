@@ -32,12 +32,15 @@ module.exports = {
  
       colors: {
         primary: "#23AA49",
+        primaryShopper: "#0080DC",
         soundery: "#009E5F",
         regularText: "#777777",
         skipButtonBG: "#F0F0F0",
         darkViolet: "#5802D0",
         orange: "#D08802",
         darkGreen: "#9B53FF",
+        redDeep: "#FF5151",
+        redWhite: "#FF8585",
 
         
         deepBlue50: "#E8EAED",

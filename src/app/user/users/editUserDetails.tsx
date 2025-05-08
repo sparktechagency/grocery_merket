@@ -14,8 +14,11 @@ import {
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const editUserDetails = () => {
+  const [roleData, setRoleData] = React.useState("");
+
   const {
     control,
     handleSubmit,
@@ -27,9 +30,23 @@ const editUserDetails = () => {
       location: "",
     },
   });
-  const onSubmit = (data: any) => console.log(data);
+  // const onSubmit = (data: any) => console.log(data);
 
-  console.log(errors);
+  // console.log(errors);
+
+  const getUserData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("role");
+      const role = value ? JSON.parse(value) : null;
+      setRoleData(role);
+    } catch (e) {
+      console.error("Error reading role from AsyncStorage", e);
+    }
+  };
+
+  React.useEffect(() => {
+    getUserData();
+  }, []);
 
   return (
     <AlertNotificationRoot>
@@ -130,7 +147,9 @@ const editUserDetails = () => {
             })
           }
           title="save & change"
-          containerStyle={tw`rounded-md mx-6  mt-10`}
+          containerStyle={tw`rounded-md mx-6  mt-10 ${
+            roleData === "user" ? "bg-primary" : "bg-primaryShopper"
+          }`}
         />
       </View>
     </AlertNotificationRoot>
