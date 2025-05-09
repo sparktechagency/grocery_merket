@@ -35,7 +35,9 @@ const deliveryOrder = () => {
       <View style={tw`items-end`}>
         <Text style={tw`text-primary font-PoppinsBold text-lg`}>$50.00</Text>
         <TouchableOpacity
-          onPress={() => router.push("/shopper/deliveryOrder/orderDetails")}
+          onPress={() =>
+            router.push("/shopper/deliveryOrder/deliveryOrderMonitoring")
+          }
           style={tw`mt-2 bg-primaryShopper px-4 py-1.5 rounded-lg`}
         >
           <Text style={tw`text-white font-PoppinsMedium text-sm`}>

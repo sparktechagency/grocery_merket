@@ -9,14 +9,11 @@ import { CartData } from "@/src/components/CardData";
 import Collapsible from "react-native-collapsible";
 import TButton from "@/src/lib/buttons/TButton";
 
-const orderDetails = () => {
+const pickUp = () => {
   const [viewOrderDetails, setViewOrderDetails] = React.useState(true);
   return (
     <ScrollView>
-      <BackWithComponent
-        onPress={() => router.back()}
-        title={"Delivery orders"}
-      />
+      <BackWithComponent onPress={() => router.back()} title={"Pick-Up"} />
       <View style={tw`px-5`}>
         <View style={tw`p-4 rounded-md bg-[#e3e7eb]`}>
           <Text style={tw`font-PoppinsRegular text-base text-black mb-1`}>
@@ -122,9 +119,9 @@ const orderDetails = () => {
                 Order status:
               </Text>
               <Text
-                style={tw`font-PoppinsMedium px-1 py-0.5 rounded-md text-primary bg-[#E8FFEE] `}
+                style={tw`font-PoppinsMedium px-1 py-0.5 rounded-md text-[#FF00EE] bg-[#FFE8FD] `}
               >
-                Delivered
+                Pending
               </Text>
             </View>
             <View style={tw`flex-row justify-start items-center gap-2`}>
@@ -139,12 +136,13 @@ const orderDetails = () => {
                 Online paid
               </Text>
             </View>
+            <Text style={tw`border-b border-[#C8C8C8] w-full`}></Text>
             <View style={tw`rounded-full mt-3 h-12`}>
               <TButton
                 // onPress={handleSubmit(onSubmit)}
-                onPress={() => router.push("/bothHome/bothHome")}
-                title="Delivered"
-                containerStyle={tw`rounded-md`}
+                onPress={() => router.push("/shopper/deliveryOrder/mapArrived")}
+                title="Pick up"
+                containerStyle={tw`rounded-md bg-primaryShopper`}
               />
             </View>
           </View>
@@ -154,4 +152,4 @@ const orderDetails = () => {
   );
 };
 
-export default orderDetails;
+export default pickUp;

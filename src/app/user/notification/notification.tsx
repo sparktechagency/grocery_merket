@@ -18,7 +18,7 @@ const notification = () => {
           </Text>
         </TouchableOpacity>
 
-        <View style={tw`flex justify-center mb-3 gap-3`}>
+        <View style={tw`gap-3`}>
           {notificationData.map((notification) => (
             <TouchableOpacity
               onPress={() =>
@@ -30,7 +30,7 @@ const notification = () => {
                     null
               }
               key={notification.id}
-              style={tw`flex-row justify-start items-center p-4   rounded-lg gap-5 ${
+              style={tw`flex-row p-3 w-[99%] gap-2 rounded-lg ${
                 notification.status === "arrived"
                   ? "bg-[#DEFFE7]"
                   : notification.status === "pickUp"
@@ -44,16 +44,18 @@ const notification = () => {
               />
 
               <View>
-                <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
+                <Text style={tw`font-PoppinsSemiBold text-sm text-black `}>
                   {notification.title}
                 </Text>
-                <Text
-                  // numberOfLines={3}
-                  style={tw`font-PoppinsRegular text-sm text-regularText`}
-                >
-                  {notification.description}
-                </Text>
-                <Text style={tw`font-PoppinsRegular text-base text-black`}>
+                <View style={tw`w-[95%]  overflow-hidden pr-6`}>
+                  <Text
+                    // numberOfLines={3}
+                    style={tw`font-PoppinsRegular text-sm text-regularText `}
+                  >
+                    {notification.description}
+                  </Text>
+                </View>
+                <Text style={tw`font-PoppinsRegular text-xs text-black`}>
                   {notification.time}
                 </Text>
               </View>

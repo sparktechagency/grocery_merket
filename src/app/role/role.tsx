@@ -17,7 +17,8 @@ const role = () => {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem("role", jsonValue);
       // router.push("/auth");
-      router.push("/bothHome/bothHome");
+
+      router.replace("/auth");
     } catch (e) {
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
@@ -30,14 +31,14 @@ const role = () => {
   return (
     <AlertNotificationRoot>
       <View style={tw`flex-1 `}>
-        <Image source={ImgRoleHead} />
+        <Image style={tw`w-full h-44`} source={ImgRoleHead} />
         <View style={tw`w-full justify-center items-start px-8`}>
-          <Image style={tw`mx-auto`} source={ImgRoleRide} />
+          <Image style={tw`mx-auto w-36 h-36`} source={ImgRoleRide} />
           <Text style={tw`font-PoppinsSemiBold text-2xl text-primary mx-auto`}>
             Book, Ride, Earn
           </Text>
           <Text
-            style={tw`font-PoppinsRegular text-lg text-regularText mx-auto`}
+            style={tw`font-PoppinsRegular text-lg text-regularText text-center mx-auto`}
           >
             Order your essential grocery items from home or ride the orders to
             the customer for earn daily

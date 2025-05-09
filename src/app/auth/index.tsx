@@ -1,6 +1,6 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
-import { Link, useRouter } from "expo-router";
+import { Link, router, useRouter } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import tw from "@/src/lib/tailwind";
 import InputText from "@/src/lib/inputs/InputText";
@@ -10,10 +10,11 @@ import TButton from "@/src/lib/buttons/TButton";
 import { Logo } from "@/assets/images";
 import { SvgXml } from "react-native-svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRole } from "@/src/hook/useRole";
 const login = () => {
   const route = useRouter();
   const [isSelected, setSelection] = React.useState(false);
-  const [roleData, setRoleData] = React.useState("");
+  const role = useRole();
   const {
     control,
     handleSubmit,
@@ -26,26 +27,15 @@ const login = () => {
   });
   // const onSubmit = (data: any) => console.log(data);
 
-  // ----------- get user  role -----------------
-  const getUserData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("role");
-      const role = value ? JSON.parse(value) : null;
-      setRoleData(role);
-    } catch (e) {
-      console.error("Error reading role from AsyncStorage", e);
-    }
-  };
-
-  React.useEffect(() => {
-    getUserData();
-  }, []);
+  // React.useEffect(() => {
+  //   getUserData();
+  // }, []);
   return (
     <View style={tw`flex-1`}>
       <View style={tw`px-6 flex-1 justify-center bg-white items-center`}>
         <View style={tw`mb-4`}>
           <Image source={Logo} />
-          {roleData === "shopper" ? (
+          {role === "shopper" ? (
             <Text style={tw`font-PoppinsSemiBold text-xl text-black mx-auto`}>
               Login as a shopper
             </Text>
@@ -133,7 +123,13 @@ const login = () => {
           <View style={tw`rounded-full h-12`}>
             <TButton
               // onPress={handleSubmit(onSubmit)}
-              onPress={() => route.push("/bothHome/bothHome")}
+              onPress={() => {
+                if (role === "user") {
+                  router.replace("/user/drawer/home");
+                } else if (role === "shopper") {
+                  router.replace("/shopper/home/home");
+                }
+              }}
               title="Sign in"
               containerStyle={tw`rounded-md`}
             />

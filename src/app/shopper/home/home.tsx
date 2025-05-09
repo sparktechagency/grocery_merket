@@ -6,9 +6,6 @@ import tw from "@/src/lib/tailwind";
 import { router } from "expo-router";
 import { SvgXml } from "react-native-svg";
 import {
-  IconAddToCat,
-  IconArrowCorner,
-  IconComparison,
   IconConnerArrowGreen,
   IconLocation,
   IconNotification,
@@ -44,7 +41,7 @@ const ShopperHome = () => {
 
         <View style={tw`flex-row items-center gap-3`}>
           <TouchableOpacity
-            onPress={() => router.push("/user/priceComparison/priceComparison")}
+            onPress={() => router.push("/shopper/settings/settings")}
             style={tw`relative p-3 bg-white shadow-lg rounded-lg`}
           >
             <SvgXml xml={IconSettingsGreen} />
@@ -72,7 +69,7 @@ const ShopperHome = () => {
       >
         <Image source={ImgShopperShop} />
         <View>
-          <Text style={tw`font-PoppinsSemiBold text-lg text-white`}>
+          <Text style={tw`font-PoppinsMedium text-base text-white`}>
             4 delivery orders found!
           </Text>
           <TouchableOpacity
@@ -135,6 +132,9 @@ const ShopperHome = () => {
                 $50.00
               </Text>
               <TouchableOpacity
+                onPress={() =>
+                  router.push("/shopper/deliveryOrder/orderDetails")
+                }
                 style={tw`mt-2 bg-primaryShopper px-4 py-1.5 rounded-lg`}
               >
                 <Text style={tw`text-white font-PoppinsMedium text-sm`}>
@@ -174,6 +174,7 @@ const ShopperHome = () => {
       <View style={tw`items-end`}>
         <Text style={tw`text-primary font-PoppinsBold text-lg`}>$50.00</Text>
         <TouchableOpacity
+          onPress={() => router.push("/shopper/deliveryOrder/orderDetails")}
           style={tw`mt-2 bg-primaryShopper px-4 py-1.5 rounded-lg`}
         >
           <Text style={tw`text-white font-PoppinsMedium text-sm`}>
