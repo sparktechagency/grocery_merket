@@ -31,7 +31,6 @@ const goToLocation = () => {
         </View>
 
         <View>
-          <Text style={tw`border-b border-[#C8C8C8] w-full`}></Text>
           <TouchableOpacity
             onPress={() => setViewOrderDetails(!viewOrderDetails)}
             style={tw`flex-row justify-start items-center gap-2 my-2`}
@@ -43,9 +42,9 @@ const goToLocation = () => {
           </TouchableOpacity>
 
           <Collapsible collapsed={viewOrderDetails}>
-            {CartData.map((data) => (
+            {CartData?.map((data) => (
               <TouchableOpacity
-                key={data.id}
+                key={data?.id}
                 style={tw`flex-row items-center p-3 rounded-2xl bg-white mb-3 shadow-md`}
               >
                 <Image
@@ -72,38 +71,19 @@ const goToLocation = () => {
             ))}
           </Collapsible>
 
-          <Text style={tw`border-b border-[#C8C8C8] w-full`}></Text>
+          <View style={tw`my-4`}>
+            <Text style={tw`mx-auto text text-red-700`}>
+              -----------This is map section-----------
+            </Text>
+          </View>
 
-          <View style={tw`flex-row justify-start items-center gap-2`}>
-            <Text
-              style={tw`font-PoppinsRegular text-base text-regularText my-3.5`}
-            >
-              Order status:
-            </Text>
-            <Text
-              style={tw`font-PoppinsMedium px-1 py-0.5 rounded-md text-[#FF00EE] bg-[#FFE8FD] `}
-            >
-              Pending
-            </Text>
-          </View>
-          <View style={tw`flex-row justify-start items-center gap-2`}>
-            <Text style={tw`font-PoppinsRegular text-base text-regularText`}>
-              {" "}
-              Payment:
-            </Text>
-            <Text
-              style={tw`font-PoppinsMedium px-1 py-0.5 rounded-md text-primary bg-[#E8FFEE] `}
-            >
-              {" "}
-              Online paid
-            </Text>
-          </View>
-          <Text style={tw`border-b border-[#C8C8C8] w-full`}></Text>
           <View style={tw`rounded-full mt-3 h-12`}>
             <TButton
               // onPress={handleSubmit(onSubmit)}
-              onPress={() => router.push("/shopper/deliveryOrder/deliver")}
-              title="Pick up"
+              onPress={() =>
+                router.push("/shopper/deliveryOrder/goToCustomerLocation")
+              }
+              title="Go to Location"
               containerStyle={tw`rounded-md bg-primaryShopper`}
             />
           </View>

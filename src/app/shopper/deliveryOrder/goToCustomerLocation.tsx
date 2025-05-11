@@ -1,18 +1,31 @@
-import { View, Text, Pressable } from "react-native";
-import React from "react";
+import { View, Text, Pressable, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
 import { Dialog, PanningProvider } from "react-native-ui-lib";
 import tw from "@/src/lib/tailwind";
 import { SvgXml } from "react-native-svg";
-import { IconClockShopper, IconLocationWhite } from "@/assets/icon";
+import {
+  IconClockShopper,
+  IconLocationWhite,
+  IconMessage,
+} from "@/assets/icon";
 import TButton from "@/src/lib/buttons/TButton";
 import { router } from "expo-router";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 
-const mapArrived = () => {
-  const [isVisibleModal, setIsVisibleModal] = React.useState(true);
+const goToCustomerLocation = () => {
+  const [isVisibleModal, setIsVisibleModal] = React.useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsVisibleModal(true);
+    }, 500);
+  });
   return (
     <View>
-      <BackWithComponent onPress={() => router.back()} title={"Map Arrived"} />
+      <BackWithComponent
+        onPress={() => router.back()}
+        title={"Customer Location"}
+      />
 
       <Dialog
         width={"100%"}
@@ -23,16 +36,32 @@ const mapArrived = () => {
         panDirection={PanningProvider.Directions.DOWN}
         bottom={true}
       >
-        <View style={tw` py-4 px-10`}>
+        <View style={tw` py-4 px-10 `}>
           <View style={tw`items-center`}>
-            <Text style={tw`font-PoppinsSemiBold text-xl text-black mb-1`}>
-              Arrived
-            </Text>
-            <View style={tw`flex-row items-center gap-1`}>
-              <SvgXml xml={IconLocationWhite} />
-              <Text style={tw`font-PoppinsMedium text-sm text-regularText`}>
-                Fairbanks North Star
-              </Text>
+            <View style={tw`w-full  flex-row justify-between items-center`}>
+              <View>
+                <Text style={tw`font-PoppinsSemiBold text-xl text-black mb-1`}>
+                  Benjamin Wilkison
+                </Text>
+                <View style={tw`flex-row items-center gap-1`}>
+                  <SvgXml xml={IconLocationWhite} />
+                  <Text style={tw`font-PoppinsMedium text-sm text-regularText`}>
+                    Kodiak Island
+                  </Text>
+                </View>
+              </View>
+
+              <TouchableOpacity
+                onPress={() => router.push("/user/messaging/messaging")}
+                style={tw`relative w-10 h-10 bg-white shadow-xl rounded-xl justify-center items-center`}
+              >
+                <SvgXml xml={IconMessage} />
+                <Text
+                  style={tw`absolute top-0 right-0 text-white w-5 h-5 text-center bg-yellow-500 rounded-full`}
+                >
+                  2
+                </Text>
+              </TouchableOpacity>
             </View>
 
             <View style={tw`flex-row items-start px-4 py-6`}>
@@ -64,8 +93,10 @@ const mapArrived = () => {
           <View style={tw`rounded-full mt-3 h-12 `}>
             <TButton
               // onPress={handleSubmit(onSubmit)}
-              onPress={() => router.push("/shopper/deliveryOrder/pickUpItems")}
-              title="Pick-up items"
+              onPress={() =>
+                router.push("/shopper/deliveryOrder/pendingOrSuccessDeliver")
+              }
+              title="Deliver"
               containerStyle={tw`rounded-md bg-primaryShopper`}
             />
           </View>
@@ -75,4 +106,4 @@ const mapArrived = () => {
   );
 };
 
-export default mapArrived;
+export default goToCustomerLocation;

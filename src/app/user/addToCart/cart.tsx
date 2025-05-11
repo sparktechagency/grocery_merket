@@ -77,48 +77,13 @@ const cart = () => {
               showsVerticalScrollIndicator={false}
               contentContainerStyle={tw`mx-5`}
             >
-              {CartData.map((item) => (
+              {CartData?.map((item) => (
                 <SwipeToDeleteCard
                   key={item.id}
                   data={item}
                   onDelete={() => setIsModalVisible(true)}
                 />
               ))}
-
-              {/* {CartData.map((data) => (
-              <TouchableOpacity
-                key={data.id}
-                style={tw`flex-row justify-between items-center p-2 rounded-xl bg-white mb-2`}
-              >
-                <Image source={data.image} />
-                <View>
-                  <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-                    {data.title}
-                  </Text>
-                  <Text
-                    style={tw`font-PoppinsRegular text-sm text-regularText`}
-                  >
-                    {data.weight}
-                  </Text>
-                  <Text
-                    style={tw`font-PoppinsSemiBold text-base text-[#006B27]`}
-                  >
-                    ${data.price}
-                  </Text>
-                </View>
-                <View style={tw`items-center gap-1.5 bg-slate-50 rounded-full`}>
-                  <TouchableOpacity
-                    style={tw`px-2.5 py-3.5 rounded-full bg-[#eff3f7]`}
-                  >
-                    <SvgXml xml={IconMuniceButton} />
-                  </TouchableOpacity>
-                  <Text>00</Text>
-                  <TouchableOpacity style={tw`p-2.5 rounded-full bg-primary`}>
-                    <SvgXml xml={IconPlusButton} />
-                  </TouchableOpacity>
-                </View>
-              </TouchableOpacity>
-            ))} */}
 
               <View style={tw`bg-[#F3F5F7] p-4 my-16 rounded-xl`}>
                 <View style={tw`flex-row justify-between items-center`}>

@@ -81,7 +81,7 @@ const pickUp = () => {
             </TouchableOpacity>
 
             <Collapsible collapsed={viewOrderDetails}>
-              {CartData.map((data) => (
+              {CartData?.map((data) => (
                 <TouchableOpacity
                   key={data.id}
                   style={tw`flex-row items-center p-3 rounded-2xl bg-white mb-3 shadow-md`}
@@ -141,7 +141,7 @@ const pickUp = () => {
               <TButton
                 // onPress={handleSubmit(onSubmit)}
                 onPress={() => router.push("/shopper/deliveryOrder/mapArrived")}
-                title="Pick up"
+                title="Go to Store"
                 containerStyle={tw`rounded-md bg-primaryShopper`}
               />
             </View>

@@ -139,7 +139,7 @@ const settings = () => {
           </View>
           <View style={tw`px-8 mt-10`}>
             <TouchableOpacity
-              // onPress={() => setIsVisibleModal(!isVisibleModal)}
+              onPress={() => router.push("/auth/addFingerPrint")}
               style={tw`flex-row justify-between items-center border  rounded-xl border-primary p-2.5`}
             >
               <View style={tw`flex-row justify-start items-center gap-3`}>
@@ -153,14 +153,14 @@ const settings = () => {
                 </Text>
               </View>
               <Pressable
-                onPress={() => setIsVisibleModal(!isVisibleModal)}
+                onPress={() => router.push("/auth/addFingerPrint")}
                 style={tw`py-2.5 px-3.5 bg-[#ECFFF1] rounded-full`}
               >
                 <SvgXml xml={IconGetterThen} />
               </Pressable>
             </TouchableOpacity>
             <TouchableOpacity
-              // onPress={() => setIsVisibleModal(!isVisibleModal)}
+              onPress={() => router.push("/auth/addFace")}
               style={tw`flex-row justify-between items-center border  rounded-xl border-primary p-2.5 mt-3`}
             >
               <View style={tw`flex-row justify-start items-center gap-3`}>
@@ -174,7 +174,7 @@ const settings = () => {
                 </Text>
               </View>
               <Pressable
-                onPress={() => setIsVisibleModal(!isVisibleModal)}
+                onPress={() => router.push("/auth/addFace")}
                 style={tw`py-2.5 px-3.5 bg-[#ECFFF1] rounded-full`}
               >
                 <SvgXml xml={IconGetterThen} />

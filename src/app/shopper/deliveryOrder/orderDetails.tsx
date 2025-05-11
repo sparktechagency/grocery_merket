@@ -84,9 +84,9 @@ const orderDetails = () => {
             </TouchableOpacity>
 
             <Collapsible collapsed={viewOrderDetails}>
-              {CartData.map((data) => (
+              {CartData?.map((data) => (
                 <TouchableOpacity
-                  key={data.id}
+                  key={data?.id}
                   style={tw`flex-row items-center p-3 rounded-2xl bg-white mb-3 shadow-md`}
                 >
                   <Image

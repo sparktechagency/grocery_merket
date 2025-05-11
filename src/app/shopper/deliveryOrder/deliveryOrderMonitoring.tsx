@@ -58,44 +58,51 @@ const deliveryOrderMonitoring = () => {
   );
 
   return (
-    <View style={tw`p-4`}>
+    <View style={tw`flex-1 `}>
       <BackWithComponent onPress={() => router.back()} title={"#500"} />
-      <Text style={tw`text-base font-bold mb-4`}>Delivery details</Text>
-
-      <DeliveryDetailCard
-        type="Pickup"
-        title="Swapno"
-        location="Fairbanks North Star"
-        distance="5.3 km"
-        time="20 min"
-        iconXml={IconPickUpShopper}
-      />
-
-      <View style={tw`h-6 w-1 bg-regularText mx-6`} />
-
-      <DeliveryDetailCard
-        type="Drop–off"
-        title="Rampura"
-        location="Kodiak Island"
-        distance="7 km"
-        time="30 min"
-        iconXml={IconDropOffShopper}
-      />
-
-      <View style={tw`flex-row  items-center gap-3 my-3`}>
-        <TButton
-          // onPress={handleSubmit(onSubmit)}
-          //   onPress={() => router.push("/bothHome/bothHome")}
-          title="Decline"
-          containerStyle={tw`rounded-md flex-1 bg-[#E5F4FF] `}
-          titleStyle={tw`text-black`}
+      <View style={tw`mx-5`}>
+        <Text style={tw`text-base font-bold mb-4`}>Delivery details</Text>
+        <DeliveryDetailCard
+          type="Pickup"
+          title="Swapno"
+          location="Fairbanks North Star"
+          distance="5.3 km"
+          time="20 min"
+          iconXml={IconPickUpShopper}
         />
-        <TButton
-          // onPress={handleSubmit(onSubmit)}
-          onPress={() => router.push("/shopper/deliveryOrder/pickUp")}
-          title="Accept"
-          containerStyle={tw`rounded-md flex-1 bg-primaryShopper `}
+
+        <View style={tw`h-6 w-1 bg-regularText mx-6`} />
+
+        <DeliveryDetailCard
+          type="Drop–off"
+          title="Rampura"
+          location="Kodiak Island"
+          distance="7 km"
+          time="30 min"
+          iconXml={IconDropOffShopper}
         />
+
+        <View style={tw`my-4`}>
+          <Text style={tw`mx-auto text text-red-700`}>
+            -----------This is map section-----------
+          </Text>
+        </View>
+
+        <View style={tw`flex-row  items-center gap-3 my-3`}>
+          <TButton
+            // onPress={handleSubmit(onSubmit)}
+            onPress={() => router.push("/shopper/home/home")}
+            title="Decline"
+            containerStyle={tw`rounded-md flex-1 bg-[#E5F4FF] `}
+            titleStyle={tw`text-black`}
+          />
+          <TButton
+            // onPress={handleSubmit(onSubmit)}
+            onPress={() => router.push("/shopper/deliveryOrder/pickUp")}
+            title="Accept"
+            containerStyle={tw`rounded-md flex-1 bg-primaryShopper `}
+          />
+        </View>
       </View>
     </View>
   );

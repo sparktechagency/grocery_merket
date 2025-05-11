@@ -110,6 +110,7 @@ const ShopperHome = () => {
         </Text>
         {CartData?.map((item) => (
           <View
+            key={item?.id}
             style={tw`bg-gray-100 p-4 rounded-xl flex-row justify-between items-center shadow-md mb-4`}
           >
             <View style={tw`flex-1`}>
@@ -133,7 +134,7 @@ const ShopperHome = () => {
               </Text>
               <TouchableOpacity
                 onPress={() =>
-                  router.push("/shopper/deliveryOrder/orderDetails")
+                  router.push("/shopper/deliveryOrder/deliveryOrderMonitoring")
                 }
                 style={tw`mt-2 bg-primaryShopper px-4 py-1.5 rounded-lg`}
               >
@@ -174,7 +175,9 @@ const ShopperHome = () => {
       <View style={tw`items-end`}>
         <Text style={tw`text-primary font-PoppinsBold text-lg`}>$50.00</Text>
         <TouchableOpacity
-          onPress={() => router.push("/shopper/deliveryOrder/orderDetails")}
+          onPress={() =>
+            router.push("/shopper/deliveryOrder/deliveryOrderMonitoring")
+          }
           style={tw`mt-2 bg-primaryShopper px-4 py-1.5 rounded-lg`}
         >
           <Text style={tw`text-white font-PoppinsMedium text-sm`}>
