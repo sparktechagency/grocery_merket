@@ -6,6 +6,7 @@ import {
   Image,
   FlatList,
   Modal,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React from "react";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
@@ -32,6 +33,8 @@ const storeProduct = () => {
         style={tw`px-[4%]`}
         contentContainerStyle={tw`gap-1 items-center justify-between `}
         columnWrapperStyle={tw`gap-1 justify-between mb-3`}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) => {
           return (
             <TouchableOpacity
@@ -71,15 +74,15 @@ const storeProduct = () => {
                 {/* content part  */}
                 <View style={tw`pb-1.5`}>
                   <View
-                    style={tw`flex-row justify-between items-center gap-2 pt-1.5 `}
+                    style={tw`flex-row justify-between items-center gap-1 pt-1.5 `}
                   >
                     <Text
-                      style={tw`font-PoppinsMedium text-xs text-regularText bg-[#dddcdc] p-0.5 shadow-sm rounded-sm`}
+                      style={tw`font-PoppinsMedium text-[10px] text-regularText bg-[#dddcdc] px-1 py-0.5 shadow-sm rounded-sm`}
                     >
                       {item.category}
                     </Text>
                     <Text
-                      style={tw`bg-[#FF5F00] font-PoppinsMedium text-xs p-0.5 shadow-sm rounded-sm text-white`}
+                      style={tw`bg-[#FF5F00] font-PoppinsMedium text-[10px] px-1 py-0.5 shadow-sm rounded-sm text-white`}
                     >
                       {item.brand}
                     </Text>
@@ -119,35 +122,38 @@ const storeProduct = () => {
         style={tw`w-[90%]`}
         transparent={true}
         visible={modalVisible}
+        onDismiss={() => setModalVisible(!modalVisible)}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
         }}
       >
-        <View style={tw`flex-1 justify-center items-center bg-black/50`}>
-          <View style={tw`bg-white w-80 rounded-2xl py-6 px-8`}>
-            <Text style={tw`text-center font-PoppinsBold text-xl mb-4`}>
-              Added to cart
-            </Text>
-            <TouchableOpacity
-              onPress={() => setModalVisible(!modalVisible)}
-              style={tw`px-10 py-3 border border-[#686868] rounded-xl`}
-            >
-              <Text style={tw`font-PoppinsRegular text-base text-center`}>
-                Remove from cart
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={tw`flex-1 justify-center items-center bg-black/50`}>
+            <View style={tw`bg-white w-80 rounded-2xl py-6 px-8`}>
+              <Text style={tw`text-center font-PoppinsBold text-xl mb-4`}>
+                Added to cart
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setModalVisible(!modalVisible)}
-              style={tw`px-10 py-3  bg-primary rounded-xl mt-3`}
-            >
-              <Text
-                style={tw`font-PoppinsSemiBold text-base text-white text-center`}
+              <TouchableOpacity
+                onPress={() => setModalVisible(!modalVisible)}
+                style={tw`px-10 py-3 border border-[#686868] rounded-xl`}
               >
-                Continue
-              </Text>
-            </TouchableOpacity>
+                <Text style={tw`font-PoppinsRegular text-base text-center`}>
+                  Remove from cart
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setModalVisible(!modalVisible)}
+                style={tw`px-10 py-3  bg-primary rounded-xl mt-3`}
+              >
+                <Text
+                  style={tw`font-PoppinsSemiBold text-base text-white text-center`}
+                >
+                  Continue
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </View>
   );

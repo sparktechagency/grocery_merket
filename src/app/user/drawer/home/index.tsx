@@ -2,7 +2,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StatusBar,
   Image,
   Pressable,
   ScrollView,
@@ -14,14 +13,11 @@ import {
   IconArrowCorner,
   IconComparison,
   IconLocation,
-  IconLove,
   IconNotification,
   IconRightArrowSingle,
-  IconShopping,
 } from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
 import DiscountCarousel from "@/src/components/Carousel";
-import { Base } from "@/utils/utils";
 import {
   ImgBeverage,
   ImgDairyBakery,
@@ -33,14 +29,11 @@ import {
 import { FlatList } from "react-native-gesture-handler";
 import { CartData } from "@/src/components/CardData";
 import { router } from "expo-router";
-import { BlurView } from "expo-blur";
-import { Modal } from "react-native-ui-lib";
+import { CardItem } from "@/src/components/CardItem";
 
 const HomeScreen = () => {
   const [notification, setNotification] = React.useState(false);
   const [addToCart, setAddToCart] = React.useState(true);
-
-  const [modalVisible, setModalVisible] = React.useState(false);
 
   // ------------ Category Data  item state hare ------------
   const categoryData = [
@@ -83,91 +76,30 @@ const HomeScreen = () => {
   const categoryItem = ({ item }: { item: CategoryProp }) => (
     <TouchableOpacity
       onPress={() => router.push("/user/storeProduct/storeProduct")}
-      style={tw`m-2 bg-white w-48 rounded-md shadow-md`}
+      style={tw`m-2 bg-white w-44 rounded-lg shadow-md`}
     >
-      <Image source={item.image} style={tw`w-full h-28 rounded-t-md`} />
-      <View style={tw`flex-row justify-between items-center p-2`}>
-        <Text style={tw` text-sm mt-2 font-PoppinsMedium`}>
+      <Image source={item.image} style={tw`w-full h-24 rounded-t-lg`} />
+      <View style={tw`flex-row justify-between items-center p-1.5`}>
+        <Text style={tw` text-xs mt-1 font-PoppinsMedium`}>
           {item.category_name}
         </Text>
         <Pressable
           onPress={() => router.push("/user/storeProduct/storeProduct")}
-          style={tw`p-1.5 text-center bg-[#F0F0F0] rounded-full`}
+          style={tw`p-0.5 text-center bg-[#F0F0F0] rounded-full`}
         >
           <SvgXml xml={IconArrowCorner} />
         </Pressable>
       </View>
     </TouchableOpacity>
   );
-  interface CardDataProps {
-    image: any;
-    category: string;
-    brand: string;
-    title: string;
-    weight: string;
-    price: number;
-    isNew: boolean;
-    isFavorite: boolean;
-  }
-
-  const cardData = ({ item }: CardDataProps) => (
-    <Pressable
-      onPress={() => router.push("/user/storeProduct/productDetails")}
-      style={tw`relative w-52 h-56 bg-[#dbdee0] m-2 p-3 py-4 rounded-xl`}
-    >
-      <Image source={item?.image} style={tw` mx-auto p-3`} />
-      <Text
-        style={tw`absolute font-PoppinsSemiBold text-[10px] px-2 py-1 bg-[#56A5FF] rounded-r-full top-4 z-10 `}
-      >
-        New
-      </Text>
-
-      <TouchableOpacity
-        onPress={() => router.push("/user/storeProduct/productDetails")}
-        style={tw`absolute  bg-transparent right-3 top-4`}
-      >
-        <BlurView
-          intensity={60}
-          style={tw`p-2 border border-white rounded-full  overflow-hidden`}
-        >
-          <SvgXml xml={IconLove} />
-        </BlurView>
-      </TouchableOpacity>
-      <View style={tw`flex-row justify-between items-center gap-2 mt-3 `}>
-        <Text
-          style={tw`font-PoppinsMedium text-xs text-regularText bg-[#dddcdc] px-1.5 py-0.5 shadow-sm rounded-sm`}
-        >
-          {item.category}
-        </Text>
-        <Text
-          style={tw`bg-[#FF5F00] font-PoppinsMedium text-xs px-1.5 py-0.5 shadow-sm rounded-sm text-white`}
-        >
-          {item.brand}
-        </Text>
-      </View>
-      <Text style={tw`font-PoppinsSemiBold text-sm text-black mt-2`}>
-        {item.title}
-      </Text>
-      <Text style={tw`font-PoppinsSemiBold text-xs text-[#787878]`}>
-        {item.weight}
-      </Text>
-      <View style={tw`flex-row justify-between items-center mt-1`}>
-        <Text style={tw`font-PoppinsBold text-base text-[#006B27]`}>
-          ${item?.price}
-        </Text>
-        <TouchableOpacity
-          onPress={() => setModalVisible(true)}
-          style={tw`p-2 bg-white shadow-md rounded-full`}
-        >
-          <SvgXml xml={IconShopping} />
-        </TouchableOpacity>
-      </View>
-    </Pressable>
-  );
 
   return (
     <View style={tw`flex-1`}>
-      <ScrollView contentContainerStyle={tw`pb-24`}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={tw`pb-24`}
+      >
         <View style={tw`px-5 flex-row justify-between mt-3 mb-5`}>
           <Pressable
             onPress={() => router.push("/user/drawer/home/profile")}
@@ -231,7 +163,7 @@ const HomeScreen = () => {
         {/* ----------- Category section -------------------- */}
         <View>
           <View style={tw`flex-row justify-between items-center mt-5 px-4`}>
-            <Text style={tw`font-PoppinsSemiBold text-xl text-black`}>
+            <Text style={tw`font-PoppinsSemiBold text-lg text-black`}>
               Category
             </Text>
             <TouchableOpacity
@@ -250,7 +182,8 @@ const HomeScreen = () => {
               // numColumns={2}
               keyExtractor={(item) => item.id.toString()}
               horizontal={true}
-              // scrollIndicatorInsets={false}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
             />
           </View>
         </View>
@@ -258,8 +191,8 @@ const HomeScreen = () => {
         {/* ============== Beast Seller section =============== */}
 
         <View>
-          <View style={tw`flex-row justify-between items-center mt-5  px-4`}>
-            <Text style={tw`font-PoppinsSemiBold text-xl text-black`}>
+          <View style={tw`flex-row justify-between items-center mt-4  px-4`}>
+            <Text style={tw`font-PoppinsSemiBold text-lg text-black`}>
               Beast Seller
             </Text>
             <TouchableOpacity
@@ -274,9 +207,20 @@ const HomeScreen = () => {
           <View style={tw`pl-4`}>
             <FlatList
               data={CartData}
-              renderItem={cardData}
+              renderItem={({ index, item }) => {
+                return (
+                  <CardItem
+                    onPressAddToCart={() => {
+                      router?.push("/addCartModal");
+                    }}
+                    item={item}
+                  />
+                );
+              }}
               keyExtractor={(item) => item.id.toString()}
               horizontal={true}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
             />
           </View>
         </View>
@@ -284,8 +228,8 @@ const HomeScreen = () => {
         {/* ============== exclusive offer ========= */}
 
         <View>
-          <View style={tw`flex-row justify-between items-center mt-5  px-4`}>
-            <Text style={tw`font-PoppinsSemiBold text-xl text-black`}>
+          <View style={tw`flex-row justify-between items-center mt-3  px-4`}>
+            <Text style={tw`font-PoppinsSemiBold text-lg text-black`}>
               Exclusive offer
             </Text>
             <TouchableOpacity
@@ -300,149 +244,16 @@ const HomeScreen = () => {
           <View style={tw`pl-4`}>
             <FlatList
               data={CartData}
-              renderItem={cardData}
+              renderItem={({ index, item }) => {
+                return <CardItem item={item} />;
+              }}
               keyExtractor={(item) => item.id.toString()}
               horizontal={true}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
             />
           </View>
         </View>
-
-        {/* ================ Mackdonalds section ------------------ */}
-        <View>
-          <View style={tw`flex-row justify-between items-center mt-5  px-4`}>
-            <Text style={tw`font-PoppinsSemiBold text-xl text-black`}>
-              Mackdonalds
-            </Text>
-            <TouchableOpacity
-              onPress={() => router.push("/user/storeProduct/storeProduct")}
-              style={tw`flex-row justify-center gap-1 items-center`}
-            >
-              <Text>View all</Text>
-              <SvgXml xml={IconRightArrowSingle} />
-            </TouchableOpacity>
-          </View>
-
-          <View style={tw`pl-4`}>
-            <FlatList
-              data={CartData}
-              renderItem={cardData}
-              keyExtractor={(item) => item.id.toString()}
-              horizontal={true}
-            />
-          </View>
-        </View>
-
-        {/*  ------------------- Starbucks section ---------------  */}
-        <View>
-          <View style={tw`flex-row justify-between items-center mt-5  px-4`}>
-            <Text style={tw`font-PoppinsSemiBold text-xl text-black`}>
-              Starbucks
-            </Text>
-            <TouchableOpacity
-              onPress={() => router.push("/user/storeProduct/storeProduct")}
-              style={tw`flex-row justify-center gap-1 items-center`}
-            >
-              <Text>View all</Text>
-              <SvgXml xml={IconRightArrowSingle} />
-            </TouchableOpacity>
-          </View>
-
-          <View style={tw`pl-4`}>
-            <FlatList
-              data={CartData}
-              renderItem={cardData}
-              keyExtractor={(item) => item.id.toString()}
-              horizontal={true}
-            />
-          </View>
-        </View>
-
-        {/* ----------------- Store name 1 section start  */}
-        <View>
-          <View style={tw`flex-row justify-between items-center mt-5  px-4`}>
-            <Text style={tw`font-PoppinsSemiBold text-xl text-black`}>
-              Store name 1
-            </Text>
-            <TouchableOpacity
-              onPress={() => router.push("/user/storeProduct/storeProduct")}
-              style={tw`flex-row justify-center gap-1 items-center`}
-            >
-              <Text>View all</Text>
-              <SvgXml xml={IconRightArrowSingle} />
-            </TouchableOpacity>
-          </View>
-
-          <View style={tw`pl-4`}>
-            <FlatList
-              data={CartData}
-              renderItem={cardData}
-              keyExtractor={(item) => item.id.toString()}
-              horizontal={true}
-            />
-          </View>
-        </View>
-
-        {/* -------------------- Store name 2 ----------------- */}
-        <View>
-          <View style={tw`flex-row justify-between items-center mt-5  px-4`}>
-            <Text style={tw`font-PoppinsSemiBold text-xl text-black`}>
-              Store name 2
-            </Text>
-            <TouchableOpacity
-              onPress={() => router.push("/user/storeProduct/storeProduct")}
-              style={tw`flex-row justify-center gap-1 items-center`}
-            >
-              <Text>View all</Text>
-              <SvgXml xml={IconRightArrowSingle} />
-            </TouchableOpacity>
-          </View>
-
-          <View style={tw`pl-4`}>
-            <FlatList
-              data={CartData}
-              renderItem={cardData}
-              keyExtractor={(item) => item.id.toString()}
-              horizontal={true}
-            />
-          </View>
-        </View>
-
-        <StatusBar backgroundColor={Base} animated barStyle={"dark-content"} />
-        <Modal
-          animationType="slide"
-          style={tw`w-[90%]`}
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={tw`flex-1 justify-center items-center bg-black/50`}>
-            <View style={tw`bg-white w-80 rounded-2xl py-6 px-8`}>
-              <Text style={tw`text-center font-PoppinsBold text-xl mb-4`}>
-                Added to cart
-              </Text>
-              <TouchableOpacity
-                onPress={() => setModalVisible(!modalVisible)}
-                style={tw`px-10 py-3 border border-[#686868] rounded-xl`}
-              >
-                <Text style={tw`font-PoppinsRegular text-base text-center`}>
-                  Remove from cart
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setModalVisible(!modalVisible)}
-                style={tw`px-10 py-3  bg-primary rounded-xl mt-3`}
-              >
-                <Text
-                  style={tw`font-PoppinsSemiBold text-base text-white text-center`}
-                >
-                  Continue
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
       </ScrollView>
     </View>
   );

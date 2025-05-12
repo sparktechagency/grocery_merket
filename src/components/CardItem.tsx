@@ -17,21 +17,26 @@ interface CardDataProps {
   isFavorite: boolean;
 }
 
-export const CardItem = ({ item }: CardDataProps) => (
+interface CartItemProps {
+  item: CardDataProps;
+  onPressAddToCart?: () => void;
+}
+
+export const CardItem = ({ item, onPressAddToCart }: CartItemProps) => (
   <Pressable
     onPress={() => router.push("/user/storeProduct/productDetails")}
-    style={tw`relative w-52 h-56 bg-[#dbdee0] m-2 p-3 py-4 rounded-xl`}
+    style={tw`relative w-44 h-48 bg-[#dbdee0] m-1 p-2  rounded-xl`}
   >
-    <Image source={item?.image} style={tw` mx-auto p-3`} />
+    <Image source={item?.image} style={tw`h-20 mx-auto p-1`} />
     <Text
-      style={tw`absolute font-PoppinsSemiBold text-[10px] px-2 py-1 bg-[#56A5FF] rounded-r-full top-4 z-10 `}
+      style={tw`absolute font-PoppinsSemiBold text-xs px-2 py-1 bg-[#56A5FF] rounded-r-full top-4 z-10 `}
     >
       New
     </Text>
 
     <TouchableOpacity
-      onPress={() => router.push("/user/addToCart/cart")}
-      style={tw`absolute  bg-transparent right-3 top-4`}
+      onPress={() => router.push("/user/storeProduct/productDetails")}
+      style={tw`absolute  bg-transparent right-2 top-4`}
     >
       <BlurView
         intensity={60}
@@ -40,19 +45,19 @@ export const CardItem = ({ item }: CardDataProps) => (
         <SvgXml xml={IconLove} />
       </BlurView>
     </TouchableOpacity>
-    <View style={tw`flex-row justify-between items-center gap-2 mt-3 `}>
+    <View style={tw`flex-row justify-between items-center gap-2 mt-1 `}>
       <Text
-        style={tw`font-PoppinsMedium text-xs text-regularText bg-[#dddcdc] px-1.5 py-0.5 shadow-sm rounded-sm`}
+        style={tw`font-PoppinsMedium text-[10px] text-regularText bg-[#dddcdc] px-1 py-0.5 shadow-sm rounded-sm`}
       >
         {item.category}
       </Text>
       <Text
-        style={tw`bg-[#FF5F00] font-PoppinsMedium text-xs px-1.5 py-0.5 shadow-sm rounded-sm text-white`}
+        style={tw`bg-[#FF5F00] font-PoppinsMedium text-[10px] px-1 py-0.5 shadow-sm rounded-sm text-white`}
       >
         {item.brand}
       </Text>
     </View>
-    <Text style={tw`font-PoppinsSemiBold text-sm text-black mt-2`}>
+    <Text style={tw`font-PoppinsRegular text-sm text-black mt-1`}>
       {item.title}
     </Text>
     <Text style={tw`font-PoppinsSemiBold text-xs text-[#787878]`}>
@@ -63,8 +68,10 @@ export const CardItem = ({ item }: CardDataProps) => (
         ${item?.price}
       </Text>
       <TouchableOpacity
-        onPress={() => router.push("/user/storeProduct/productDetails")}
-        style={tw`p-2 bg-white shadow-md rounded-full`}
+        onPress={() => {
+          onPressAddToCart && onPressAddToCart!();
+        }}
+        style={tw`p-1.5 bg-white shadow-md rounded-full`}
       >
         <SvgXml xml={IconShopping} />
       </TouchableOpacity>

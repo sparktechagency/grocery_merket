@@ -36,13 +36,13 @@ const index = () => {
 
     setTimeout(() => {
       // router.push("/role/role");
-      // router.push("/shopper/deliveryOrder/goToCustomerLocation");
-      router.push("/user/onboarding/onboarding");
+      router.push("/user/addToCart/cart");
+      // router.push("/user/onboarding/onboarding");
     }, 10);
   }, []);
 
   return (
-    <View style={tw`flex-1 bg-white`}>
+    <View style={tw`flex-1 bg-base`}>
       <View style={tw`flex-1 justify-center items-center gap-4`}>
         <Image
           source={require("@/assets/images/logo.png")}

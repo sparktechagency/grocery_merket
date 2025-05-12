@@ -75,6 +75,8 @@ export const ImgShopperDeliverSuccess = require("@/assets/images/deliverSuccessG
 export const ImgFingerPrint = require("@/assets/images/fingerPrint.png");
 export const ImgFaceId = require("@/assets/images/faceId.png");
 export const ImgSuccessDelivery = require("@/assets/images/successDelivery.gif");
+export const ImgFingerScanWhite = require("@/assets/images/fingerSceenWhite.png");
+export const ImgFaceScanWhite = require("@/assets/images/faceSceenWhite.png");
 
 // export const ImgMasterCard = require("@/assets/images/orderReceived.gif");
 // export const ImgVisaCard = require("@/assets/images/orderReceived.gif");

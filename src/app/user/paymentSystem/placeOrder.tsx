@@ -433,7 +433,7 @@ const placeOrder = () => {
       {/* ------ shopper modal open ------------ */}
       <Dialog
         width={"100%"}
-        height={"50%"}
+        height={"60%"}
         bottom={true}
         containerStyle={tw`flex-1 bg-white rounded-t-3xl p-5`}
         visible={isShopperModal}

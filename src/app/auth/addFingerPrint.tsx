@@ -44,7 +44,7 @@ const addFingerPrint = () => {
             madhab15820@gmail.com
           </Text>
           <View style={tw`w-full border-b border-regularText`}></View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/auth/addFace")}>
             <Text style={tw`font-PoppinsSemiBold text-lg text-blue-700`}>
               Action
             </Text>

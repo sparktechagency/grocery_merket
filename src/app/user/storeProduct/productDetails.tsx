@@ -102,28 +102,28 @@ const productDetails = () => {
 
         <View style={tw`flex-row justify-between items-center my-6`}>
           <View
-            style={tw`flex-row items-center bg-[#FFF9EB] py-3 px-6 rounded-2xl gap-4`}
+            style={tw`flex-row items-center bg-[#FFF9EB] py-1 px-4 rounded-xl gap-3`}
           >
-            <Image source={ImgOrganic} />
+            <Image style={tw`w-8 h-8`} source={ImgOrganic} />
             <View>
-              <Text style={tw`font-PoppinsSemiBold text-base text-primary`}>
+              <Text style={tw`font-PoppinsSemiBold text-sm text-primary`}>
                 100%
               </Text>
-              <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
+              <Text style={tw`font-PoppinsSemiBold text-sm text-black`}>
                 Organic
               </Text>
             </View>
           </View>
 
           <View
-            style={tw`flex-row items-center bg-[#EAF6FF] py-3 px-6 rounded-2xl gap-4`}
+            style={tw`flex-row items-center bg-[#EAF6FF] py-1 px-4 rounded-xl gap-3`}
           >
-            <Image source={ImgExpireDate} />
+            <Image style={tw`w-8 h-8`} source={ImgExpireDate} />
             <View>
-              <Text style={tw`font-PoppinsSemiBold text-base text-primary`}>
+              <Text style={tw`font-PoppinsSemiBold text-sm text-primary`}>
                 7 days
               </Text>
-              <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
+              <Text style={tw`font-PoppinsSemiBold text-sm text-black`}>
                 Expiration
               </Text>
             </View>
@@ -174,15 +174,15 @@ const productDetails = () => {
           {/* content part  */}
           <View style={tw`pb-1.5`}>
             <View
-              style={tw`flex-row justify-between items-center gap-2 pt-1.5 `}
+              style={tw`flex-row justify-between items-center gap-1 pt-1.5 `}
             >
               <Text
-                style={tw`font-PoppinsMedium text-xs text-regularText bg-[#dddcdc] p-0.5 shadow-sm rounded-sm`}
+                style={tw`font-PoppinsMedium text-[10px] text-regularText bg-[#dddcdc] px-1 py-0.5 shadow-sm rounded-sm`}
               >
                 {item.category}
               </Text>
               <Text
-                style={tw`bg-[#FF5F00] font-PoppinsMedium text-xs p-0.5 shadow-sm rounded-sm text-white`}
+                style={tw`bg-[#FF5F00] font-PoppinsMedium text-[10px] px-1 py-0.5 shadow-sm rounded-sm text-white`}
               >
                 {item.brand}
               </Text>
@@ -224,6 +224,8 @@ const productDetails = () => {
     <FlatList
       ListHeaderComponent={renderHeader}
       ListFooterComponent={renderFooter}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
       keyExtractor={(item) => item.id.toString()}
       numColumns={2}
       data={CartData}

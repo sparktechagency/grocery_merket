@@ -1,11 +1,26 @@
 import { View, Text, Image } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
 import { ImgFaceId } from "@/assets/images";
 import tw from "@/src/lib/tailwind";
+import { useRole } from "@/src/hook/useRole";
 
 const addFace = () => {
+  const role = useRole();
+  useEffect(() => {
+    if (!role) return;
+
+    const timer = setTimeout(() => {
+      if (role === "user") {
+        router.replace("/user/drawer/home");
+      } else if (role === "shopper") {
+        router.replace("/shopper/home/home");
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [role]);
   return (
     <View>
       <BackWithComponent

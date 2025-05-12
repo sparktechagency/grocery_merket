@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import React from "react";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
@@ -46,96 +46,104 @@ const changePassword = () => {
         title={"Change password"}
       />
       <View style={tw`mx-5 flex-1 justify-between pb-6`}>
-        <View>
-          <Controller
-            control={control}
-            rules={{
-              pattern: {
-                value: /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
-                message: "Please spacial char password",
-              },
-              required: {
-                value: true,
-                message: "Password is required",
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <InputText
-                label="Current password"
-                value={value}
-                onChangeText={(test) => onChange(test)}
-                onBlur={onBlur}
-                touched
-                errorText={errors?.password?.message}
-                textInputProps={{
-                  placeholder: "******",
-                }}
-                svgSecondIcon={IconEyes}
-                containerLayoutStyle={tw`mb-1 `}
-              />
-            )}
-            name="password"
-          />
-          <Controller
-            control={control}
-            rules={{
-              pattern: {
-                value: /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
-                message: "Please spacial char password",
-              },
-              required: {
-                value: true,
-                message: "Password is required",
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <InputText
-                label="New password"
-                value={value}
-                onChangeText={(test) => onChange(test)}
-                onBlur={onBlur}
-                touched
-                errorText={errors?.password?.message}
-                textInputProps={{
-                  placeholder: "******",
-                }}
-                svgSecondIcon={IconEyes}
-                containerLayoutStyle={tw`mb-1 `}
-              />
-            )}
-            name="password"
-          />
-          <Controller
-            control={control}
-            rules={{
-              pattern: {
-                value: /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
-                message: "Please spacial char password",
-              },
-              required: {
-                value: true,
-                message: "Password is required",
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <InputText
-                label="Confirm new password"
-                value={value}
-                onChangeText={(test) => onChange(test)}
-                onBlur={onBlur}
-                touched
-                errorText={errors?.password?.message}
-                textInputProps={{
-                  placeholder: "******",
-                }}
-                svgSecondIcon={IconEyes}
-                containerLayoutStyle={tw`mb-1`}
-              />
-            )}
-            name="password"
-          />
-        </View>
-
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+        >
+          <View>
+            <Controller
+              control={control}
+              rules={{
+                pattern: {
+                  value:
+                    /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
+                  message: "Please spacial char password",
+                },
+                required: {
+                  value: true,
+                  message: "Password is required",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <InputText
+                  label="Current password"
+                  value={value}
+                  onChangeText={(test) => onChange(test)}
+                  onBlur={onBlur}
+                  touched
+                  errorText={errors?.password?.message}
+                  textInputProps={{
+                    placeholder: "******",
+                  }}
+                  svgSecondIcon={IconEyes}
+                  containerLayoutStyle={tw`mb-1 `}
+                />
+              )}
+              name="password"
+            />
+            <Controller
+              control={control}
+              rules={{
+                pattern: {
+                  value:
+                    /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
+                  message: "Please spacial char password",
+                },
+                required: {
+                  value: true,
+                  message: "Password is required",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <InputText
+                  label="New password"
+                  value={value}
+                  onChangeText={(test) => onChange(test)}
+                  onBlur={onBlur}
+                  touched
+                  errorText={errors?.password?.message}
+                  textInputProps={{
+                    placeholder: "******",
+                  }}
+                  svgSecondIcon={IconEyes}
+                  containerLayoutStyle={tw`mb-1 `}
+                />
+              )}
+              name="password"
+            />
+            <Controller
+              control={control}
+              rules={{
+                pattern: {
+                  value:
+                    /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
+                  message: "Please spacial char password",
+                },
+                required: {
+                  value: true,
+                  message: "Password is required",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <InputText
+                  label="Confirm new password"
+                  value={value}
+                  onChangeText={(test) => onChange(test)}
+                  onBlur={onBlur}
+                  touched
+                  errorText={errors?.password?.message}
+                  textInputProps={{
+                    placeholder: "******",
+                  }}
+                  svgSecondIcon={IconEyes}
+                  containerLayoutStyle={tw`mb-1`}
+                />
+              )}
+              name="password"
+            />
+          </View>
+        </ScrollView>
         <View style={tw`rounded-full`}>
           <TButton
             // onPress={handleSubmit(onSubmit)}

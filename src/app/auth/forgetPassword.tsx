@@ -29,7 +29,7 @@ const forgetPassword = () => {
         title="Forgot Password?"
       />
 
-      <View style={tw`px-6`}>
+      <View style={tw`px-5`}>
         <Text
           style={tw`font-PoppinsRegular text-sm text-regularText mb-3 mt-16`}
         >

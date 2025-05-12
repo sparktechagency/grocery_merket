@@ -31,21 +31,21 @@ const role = () => {
   return (
     <AlertNotificationRoot>
       <View style={tw`flex-1 `}>
-        <Image style={tw`w-full h-44`} source={ImgRoleHead} />
+        <Image style={tw`w-full h-36`} source={ImgRoleHead} />
         <View style={tw`w-full justify-center items-start px-8`}>
-          <Image style={tw`mx-auto w-36 h-36`} source={ImgRoleRide} />
-          <Text style={tw`font-PoppinsSemiBold text-2xl text-primary mx-auto`}>
+          <Image style={tw`mx-auto w-32 h-32`} source={ImgRoleRide} />
+          <Text style={tw`font-PoppinsSemiBold text-xl text-primary mx-auto`}>
             Book, Ride, Earn
           </Text>
           <Text
-            style={tw`font-PoppinsRegular text-lg text-regularText text-center mx-auto`}
+            style={tw`font-PoppinsRegular text-sm text-regularText text-center mx-auto`}
           >
             Order your essential grocery items from home or ride the orders to
             the customer for earn daily
           </Text>
-          <Image style={tw` mx-auto`} source={ImgFoods} />
+          <Image style={tw`mx-auto w-20 h-24`} source={ImgFoods} />
         </View>
-        <View style={tw`px-8`}>
+        <View style={tw`px-5`}>
           <IwtButton
             containerStyle={tw`rounded-md mt-5`}
             onPress={() => storeRoleData("user")}

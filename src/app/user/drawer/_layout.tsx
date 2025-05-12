@@ -195,7 +195,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
 export default function _layout() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <>
       <Drawer
         screenOptions={{
           headerShown: false,
@@ -204,9 +204,8 @@ export default function _layout() {
         }}
         drawerContent={(props) => <CustomDrawerContent {...props} />}
       >
-        {/* <Drawer.Screen name="" /> */}
+        <Drawer.Screen name="home" />
       </Drawer>
-      <StatusBar backgroundColor={Base} animated barStyle={"dark-content"} />
-    </GestureHandlerRootView>
+    </>
   );
 }

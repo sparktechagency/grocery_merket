@@ -9,7 +9,11 @@ import { IconDelete, IconMuniceButton, IconPlusButton } from "@/assets/icon";
 import TButton from "@/src/lib/buttons/TButton";
 import { ImgBurger, ImgEmpty, ImgShopperOne } from "@/assets/images";
 import { Swipeable } from "react-native-gesture-handler";
-import { AlertNotificationRoot } from "react-native-alert-notification";
+import {
+  ALERT_TYPE,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
 import { Dialog, PanningProvider } from "react-native-ui-lib";
 
 const SwipeToDeleteCard = ({
@@ -37,7 +41,7 @@ const SwipeToDeleteCard = ({
       <TouchableOpacity
         style={tw`flex-row justify-between items-center p-2 rounded-xl bg-white mb-2`}
       >
-        <Image source={data.image} />
+        <Image style={tw` h-20`} source={data.image} />
         <View>
           <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
             {data.title}
@@ -195,7 +199,7 @@ const cart = () => {
 
       <Dialog
         width={"100%"}
-        height={"35%"}
+        height={"40%"}
         bottom={true}
         containerStyle={tw`flex-1 bg-white rounded-t-3xl p-5`}
         visible={isModalVisible}
@@ -238,7 +242,14 @@ const cart = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => setIsModalVisible(!isModalVisible)}
+            onPress={() => {
+              setIsModalVisible(!isModalVisible);
+              Toast.show({
+                type: ALERT_TYPE.SUCCESS,
+                title: "Success",
+                textBody: "This Item Removed!",
+              });
+            }}
             style={tw`bg-[#FF0000] px-10 py-2.5 rounded-full`}
           >
             <Text style={tw`font-PoppinsMedium text-white text-lg`}>

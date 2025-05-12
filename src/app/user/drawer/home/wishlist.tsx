@@ -115,7 +115,7 @@ const wishlist = () => {
           bottom={true}
           containerStyle={tw`flex-1 bg-white rounded-t-3xl p-5`}
           visible={isModalVisible}
-          onDismiss={() => console.log("dismissed")}
+          onDismiss={() => setIsModalVisible(false)}
           panDirection={PanningProvider.Directions.DOWN}
         >
           <Text style={tw`font-PoppinsMedium text-base text-center text-black`}>
