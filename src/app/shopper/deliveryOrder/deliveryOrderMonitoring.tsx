@@ -1,4 +1,4 @@
-import { View, Text, Alert } from "react-native";
+import { View, Text, Alert, ScrollView } from "react-native";
 import React, { useRef } from "react";
 import tw from "@/src/lib/tailwind";
 import { SvgXml } from "react-native-svg";
@@ -102,67 +102,69 @@ const deliveryOrderMonitoring = () => {
 
   return (
     <View style={tw`flex-1 `}>
-      <BackWithComponent onPress={() => router.back()} title={"#500"} />
-      <View style={tw`mx-5`}>
-        <Text style={tw`text-base font-bold mb-4`}>Delivery details</Text>
-        <DeliveryDetailCard
-          type="Pickup"
-          title="Swapno"
-          location="Fairbanks North Star"
-          distance="5.3 km"
-          time="20 min"
-          iconXml={IconPickUpShopper}
-        />
-
-        <View style={tw`h-6 w-1 bg-regularText mx-6`} />
-
-        <DeliveryDetailCard
-          type="Drop–off"
-          title="Rampura"
-          location="Kodiak Island"
-          distance="7 km"
-          time="30 min"
-          iconXml={IconDropOffShopper}
-        />
-        {/*  =============== map start hare =-========================== */}
-        <View style={tw`h-[50%] my-4  bg-[#e3e7eb] rounded-lg`}>
-          <MapView
-            style={tw`flex-1 rounded-sm border`}
-            provider={PROVIDER_GOOGLE}
-            initialRegion={INITIAL_REGION}
-            showsUserLocation
-            showsMyLocationButton
-            ref={focusMap}
-          >
-            {markers.map((marker, index) => (
-              <Marker
-                key={index}
-                title="You are here"
-                coordinate={marker}
-                // onPress={() => onMarkerSelected(marker)}
-              />
-            ))}
-          </MapView>
-        </View>
-
-        {/*  ===================== map end hare ================================= */}
-
-        <View style={tw`flex-row  items-center gap-3 my-3`}>
-          <TButton
-            // onPress={handleSubmit(onSubmit)}
-            onPress={() => router.push("/shopper/home/home")}
-            title="Decline"
-            containerStyle={tw`rounded-md flex-1 bg-[#E5F4FF] `}
-            titleStyle={tw`text-black`}
+      <ScrollView style={tw`flex-grow`}>
+        <BackWithComponent onPress={() => router.back()} title={"#500"} />
+        <View style={tw`mx-5`}>
+          <Text style={tw`text-base font-bold mb-4`}>Delivery details</Text>
+          <DeliveryDetailCard
+            type="Pickup"
+            title="Swapno"
+            location="Fairbanks North Star"
+            distance="5.3 km"
+            time="20 min"
+            iconXml={IconPickUpShopper}
           />
-          <TButton
-            // onPress={handleSubmit(onSubmit)}
-            onPress={() => router.push("/shopper/deliveryOrder/pickUp")}
-            title="Accept"
-            containerStyle={tw`rounded-md flex-1 bg-primaryShopper `}
+
+          <View style={tw`h-6 w-1 bg-regularText mx-6`} />
+
+          <DeliveryDetailCard
+            type="Drop–off"
+            title="Rampura"
+            location="Kodiak Island"
+            distance="7 km"
+            time="30 min"
+            iconXml={IconDropOffShopper}
           />
+          {/*  =============== map start hare =-========================== */}
+          <View style={tw`h-[50%] my-4  bg-[#e3e7eb] rounded-lg`}>
+            <MapView
+              style={tw`flex-1 rounded-sm border`}
+              provider={PROVIDER_GOOGLE}
+              initialRegion={INITIAL_REGION}
+              showsUserLocation
+              showsMyLocationButton
+              ref={focusMap}
+            >
+              {markers.map((marker, index) => (
+                <Marker
+                  key={index}
+                  title="You are here"
+                  coordinate={marker}
+                  // onPress={() => onMarkerSelected(marker)}
+                />
+              ))}
+            </MapView>
+          </View>
+
+          {/*  ===================== map end hare ================================= */}
+
+          <View style={tw`flex-row  items-center gap-3 my-3`}>
+            <TButton
+              // onPress={handleSubmit(onSubmit)}
+              onPress={() => router.push("/shopper/home/home")}
+              title="Decline"
+              containerStyle={tw`rounded-md flex-1 bg-[#E5F4FF] `}
+              titleStyle={tw`text-black`}
+            />
+            <TButton
+              // onPress={handleSubmit(onSubmit)}
+              onPress={() => router.push("/shopper/deliveryOrder/pickUp")}
+              title="Accept"
+              containerStyle={tw`rounded-md flex-1 bg-primaryShopper `}
+            />
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
