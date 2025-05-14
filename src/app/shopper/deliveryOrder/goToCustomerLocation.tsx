@@ -1,6 +1,5 @@
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
-import React, { useEffect } from "react";
-import { Dialog, PanningProvider } from "react-native-ui-lib";
+import { View, Text, TouchableOpacity } from "react-native";
+import React, { useEffect, useRef } from "react";
 import tw from "@/src/lib/tailwind";
 import { SvgXml } from "react-native-svg";
 import {
@@ -11,9 +10,57 @@ import {
 import TButton from "@/src/lib/buttons/TButton";
 import { router } from "expo-router";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+
+// ------ map related data ----------------------------------------------------
+
+const INITIAL_REGION = {
+  latitude: 37.33,
+  longitude: -122,
+  latitudeDelta: 2,
+  longitudeDelta: 2,
+};
+
+const markers = [
+  // San Francisco
+  {
+    latitude: 37.7749,
+    longitude: -122.4194,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+    name: "San Francisco City Center",
+  },
+  {
+    latitude: 37.8077,
+    longitude: -122.475,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+    name: "Golden Gate Bridge",
+  },
+  {
+    latitude: 37.8077,
+    longitude: -122.475,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+    name: "Golden house",
+  },
+];
+
+// ------ map related data end hare ----------------------------------------------------
 
 const goToCustomerLocation = () => {
   const [isVisibleModal, setIsVisibleModal] = React.useState(false);
+  const mapRef = useRef<any>(null);
+  const focusMap = () => {
+    const GreenBayStadium = {
+      latitude: 44.5013,
+      longitude: -88.0622,
+      latitudeDelta: 0.1,
+      longitudeDelta: 0.1,
+    };
+
+    mapRef.current?.animateToRegion(GreenBayStadium);
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -21,24 +68,39 @@ const goToCustomerLocation = () => {
     }, 500);
   });
   return (
-    <View>
+    <View style={tw`relative flex-1`}>
       <BackWithComponent
+        containerStyle={tw`absolute top-0 left-0 z-20`}
         onPress={() => router.back()}
         title={"Customer Location"}
       />
 
-      <Dialog
-        width={"100%"}
-        height={"35%"}
-        visible={isVisibleModal}
-        containerStyle={tw`flex-1 bg-white rounded-t-3xl `}
-        onDismiss={() => setIsVisibleModal(false)}
-        panDirection={PanningProvider.Directions.DOWN}
-        bottom={true}
+      {/*  =============== map start hare =-========================== */}
+      <View style={tw`flex-1  `}>
+        <MapView
+          style={tw`flex-1 rounded-sm border`}
+          provider={PROVIDER_GOOGLE}
+          initialRegion={INITIAL_REGION}
+          showsUserLocation
+          showsMyLocationButton
+          ref={focusMap}
+        >
+          {markers.map((marker, index) => (
+            <Marker key={index} title="You are here" coordinate={marker} />
+          ))}
+        </MapView>
+      </View>
+
+      {/*  ===================== map end hare ================================= */}
+
+      <View
+        style={tw`absolute bottom-0 w-full bg-white rounded-t-3xl px-10 py-4`}
       >
         <View style={tw` py-4 px-10 `}>
           <View style={tw`items-center`}>
-            <View style={tw`w-full  flex-row justify-between items-center`}>
+            <View
+              style={tw`w-full  flex-row justify-between items-center gap-3`}
+            >
               <View>
                 <Text style={tw`font-PoppinsSemiBold text-xl text-black mb-1`}>
                   Benjamin Wilkison
@@ -101,7 +163,7 @@ const goToCustomerLocation = () => {
             />
           </View>
         </View>
-      </Dialog>
+      </View>
     </View>
   );
 };

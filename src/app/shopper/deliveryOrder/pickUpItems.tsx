@@ -16,7 +16,7 @@ const pickUpItems = () => {
   const renderItem = ({ item }) => (
     <TouchableOpacity
       //   onPress={() => router.push("/user/storeProduct/productDetails")}
-      style={tw`flex-row justify-between items-center p-3 rounded-2xl bg-white mb-3 shadow-md`}
+      style={tw`flex-row justify-between items-center px-3 py-1  rounded-xl bg-white mb-3 shadow-sm`}
     >
       <View style={tw`flex-row gap-4`}>
         <Image

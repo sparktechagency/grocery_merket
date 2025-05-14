@@ -18,6 +18,7 @@ import DiscountCarousel from "@/src/components/Carousel";
 import { ImgShopperOne } from "@/assets/images";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import Collapsible from "react-native-collapsible";
+import { OnCollapsable } from "@/src/components/OnCollapsable";
 
 const shopperProfile = () => {
   const [pleaseOrder, setPleaseOrder] = React.useState(true);
@@ -141,90 +142,7 @@ const shopperProfile = () => {
           netus ultricies elementum scelerisque nunc.
         </Text>
       </View>
-
-      <View style={tw`my-5`}>
-        <View
-          style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-5 py-4 rounded-xl`}
-        >
-          <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-            1. How do I place an order?
-          </Text>
-          <TouchableOpacity
-            onPress={() => setPleaseOrder(!pleaseOrder)}
-            style={tw`p-2 bg-white rounded-full shadow-lg`}
-          >
-            {pleaseOrder ? (
-              <SvgXml xml={IconDownArrow} />
-            ) : (
-              <SvgXml xml={IconUpArrow} />
-            )}
-          </TouchableOpacity>
-        </View>
-        <Collapsible collapsed={pleaseOrder}>
-          <Text
-            style={tw` px-5 py-4 bg-white rounded-lg font-PoppinsRegular text-sm`}
-          >
-            Placing an order is easy! Simply browse through our categories, add
-            items to your cart, and proceed to checkout. Select your delivery
-            address, choose a payment method, and confirm your order. We’ll take
-            care of the rest!
-          </Text>
-        </Collapsible>
-        <View
-          style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-5 py-4 rounded-xl mt-4`}
-        >
-          <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-            2. What payment methods do you accept?
-          </Text>
-          <TouchableOpacity
-            onPress={() => SetPleaseMethods(!pleaseMethods)}
-            style={tw`p-2 bg-white rounded-full shadow-lg`}
-          >
-            {pleaseMethods ? (
-              <SvgXml xml={IconDownArrow} />
-            ) : (
-              <SvgXml xml={IconUpArrow} />
-            )}
-          </TouchableOpacity>
-        </View>
-        <Collapsible collapsed={pleaseMethods}>
-          <Text
-            style={tw` px-5 py-4 bg-white rounded-lg font-PoppinsRegular text-sm`}
-          >
-            Placing an order is easy! Simply browse through our categories, add
-            items to your cart, and proceed to checkout. Select your delivery
-            address, choose a payment method, and confirm your order. We’ll take
-            care of the rest!
-          </Text>
-        </Collapsible>
-        <View
-          style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-5 py-4 rounded-xl mt-4`}
-        >
-          <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-            3. How long does delivery take?
-          </Text>
-          <TouchableOpacity
-            onPress={() => SetPleaseDelivery(!pleaseDelivery)}
-            style={tw`p-2 bg-white rounded-full shadow-lg`}
-          >
-            {pleaseDelivery ? (
-              <SvgXml xml={IconDownArrow} />
-            ) : (
-              <SvgXml xml={IconUpArrow} />
-            )}
-          </TouchableOpacity>
-        </View>
-        <Collapsible collapsed={pleaseDelivery}>
-          <Text
-            style={tw` px-5 py-4 bg-white rounded-lg font-PoppinsRegular text-sm`}
-          >
-            Placing an order is easy! Simply browse through our categories, add
-            items to your cart, and proceed to checkout. Select your delivery
-            address, choose a payment method, and confirm your order. We’ll take
-            care of the rest!
-          </Text>
-        </Collapsible>
-      </View>
+      <OnCollapsable />
     </View>
   );
 
@@ -243,7 +161,7 @@ const shopperProfile = () => {
         renderItem={renderItem}
       />
 
-      <View style={tw`my-5`}>
+      {/* <View style={tw`my-5`}>
         <View
           style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-5 py-4 rounded-xl`}
         >
@@ -325,7 +243,7 @@ const shopperProfile = () => {
             care of the rest!
           </Text>
         </Collapsible>
-      </View>
+      </View> */}
     </View>
   );
 };

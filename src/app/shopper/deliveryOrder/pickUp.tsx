@@ -84,7 +84,7 @@ const pickUp = () => {
               {CartData?.map((data) => (
                 <TouchableOpacity
                   key={data.id}
-                  style={tw`flex-row items-center p-3 rounded-2xl bg-white mb-3 shadow-md`}
+                  style={tw`flex-row items-center px-2 py-1 rounded-xl bg-white mb-3 shadow-sm`}
                 >
                   <Image
                     source={data.image}
@@ -92,16 +92,16 @@ const pickUp = () => {
                     resizeMode="contain"
                   />
                   <View style={tw`ml-4`}>
-                    <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
+                    <Text style={tw`font-PoppinsSemiBold text-sm text-black`}>
                       {data.title}
                     </Text>
                     <Text
-                      style={tw`font-PoppinsRegular text-sm text-regularText`}
+                      style={tw`font-PoppinsRegular text-xs text-regularText`}
                     >
                       {data.weight}
                     </Text>
                     <Text
-                      style={tw`font-PoppinsSemiBold text-base text-primary mt-1`}
+                      style={tw`font-PoppinsSemiBold text-sm text-primary mt-1`}
                     >
                       ${data.price}
                     </Text>

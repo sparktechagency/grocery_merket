@@ -150,7 +150,7 @@ const profileShopper = () => {
 
       <View style={tw`bg-[#e8eaec] p-3.5 rounded-xl  gap-5`}>
         <TouchableOpacity
-          onPress={() => router.push("/user/settings/settings")}
+          // onPress={() => router.push("/user/settings/settings")}
           style={tw`flex-row justify-between items-center`}
         >
           <View style={tw`flex-row justify-start items-center gap-3`}>
