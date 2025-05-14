@@ -140,14 +140,11 @@ const productDetails = () => {
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
-        // onPress={() => router.push("/user/storeProduct/productDetails")}
+        onPress={() => router.push("/user/storeProduct/productDetails")}
         activeOpacity={0.8}
         style={tw` w-[49%]  bg-white rounded-2xl   shadow-md`}
       >
-        <Pressable
-          onPress={() => router.push("/user/storeProduct/productDetails")}
-          style={tw` flex-1 w-full  bg-[#F3F5F7]  px-2.5 py-2 rounded-xl`}
-        >
+        <View style={tw` flex-1 w-full  bg-[#F3F5F7]  px-2.5 py-2 rounded-xl`}>
           <Image
             source={item?.image}
             resizeMode="contain"
@@ -198,14 +195,14 @@ const productDetails = () => {
                 ${item?.price}
               </Text>
               <TouchableOpacity
-                // onPress={() => setModalVisible(true)}
+                onPress={() => router?.push("/addCartModal")}
                 style={tw`p-2 bg-white shadow-md rounded-full`}
               >
                 <SvgXml xml={IconShopping} />
               </TouchableOpacity>
             </View>
           </View>
-        </Pressable>
+        </View>
       </TouchableOpacity>
     );
   };

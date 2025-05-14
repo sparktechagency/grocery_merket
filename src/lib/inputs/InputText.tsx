@@ -128,11 +128,11 @@ const InputText = ({
     >
       {label && (
         <Text
-          style={[tw`text-sm font-poppinsRegular  py-2 text-black`, labelStyle]}
+          style={[tw`text-sm font-PoppinsRegular  py-2 text-black`, labelStyle]}
         >
           {label}{" "}
           {required && (
-            <Text style={tw`text-red-500 font-DegularDisplayMedium`}> *</Text>
+            <Text style={tw`text-red-500 font-PoppinsMedium`}> *</Text>
           )}
         </Text>
       )}
@@ -151,7 +151,7 @@ const InputText = ({
           <Animated.Text
             numberOfLines={1}
             style={[
-              tw`absolute bg-base rounded-full text-base font-NunitoSansRegular py-2 px-2 ${
+              tw`absolute bg-base rounded-full text-base font-PoppinsRegular py-2 px-2 ${
                 errorText && touched ? "text-red-500" : "text-gray-400"
               }`,
               placeholderStyle,

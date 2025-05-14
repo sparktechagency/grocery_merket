@@ -2,7 +2,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Pressable,
   Image,
   FlatList,
   Modal,
@@ -38,12 +37,11 @@ const storeProduct = () => {
         renderItem={({ item, index }) => {
           return (
             <TouchableOpacity
-              // onPress={() => router.push("/user/storeProduct/productDetails")}
+              onPress={() => router.push("/user/storeProduct/productDetails")}
               activeOpacity={0.8}
               style={tw` w-[49%]  bg-white rounded-2xl   shadow-md`}
             >
-              <Pressable
-                onPress={() => router.push("/user/storeProduct/productDetails")}
+              <View
                 style={tw` flex-1 w-full  bg-[#F3F5F7]  px-2.5 py-2 rounded-xl`}
               >
                 <Image
@@ -109,7 +107,7 @@ const storeProduct = () => {
                     </TouchableOpacity>
                   </View>
                 </View>
-              </Pressable>
+              </View>
             </TouchableOpacity>
           );
         }}

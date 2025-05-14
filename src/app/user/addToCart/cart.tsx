@@ -89,7 +89,7 @@ const cart = () => {
                 />
               ))}
 
-              <View style={tw`bg-[#F3F5F7] p-4 my-16 rounded-xl`}>
+              <View style={tw`bg-[#F3F5F7] p-4 my-10 rounded-xl`}>
                 <View style={tw`flex-row justify-between items-center`}>
                   <Text
                     style={tw`font-PoppinsRegular text-base text-regularText`}

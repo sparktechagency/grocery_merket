@@ -3,7 +3,7 @@ import React from "react";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
 import tw from "@/src/lib/tailwind";
-import { notificationData } from "./NotificationData";
+import { notificationData } from "@/assets/data/NotificationData";
 
 const notification = () => {
   return (

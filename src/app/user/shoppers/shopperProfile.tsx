@@ -4,12 +4,10 @@ import { FlatList, Pressable } from "react-native-gesture-handler";
 import { CartData } from "@/src/components/CardData";
 import tw from "@/src/lib/tailwind";
 import {
-  IconDownArrow,
   IconLocationWhite,
   IconLove,
   IconRightArrowSingle,
   IconShopping,
-  IconUpArrow,
 } from "@/assets/icon";
 import { SvgXml } from "react-native-svg";
 import { BlurView } from "expo-blur";
@@ -17,14 +15,9 @@ import { router } from "expo-router";
 import DiscountCarousel from "@/src/components/Carousel";
 import { ImgShopperOne } from "@/assets/images";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
-import Collapsible from "react-native-collapsible";
 import { OnCollapsable } from "@/src/components/OnCollapsable";
 
 const shopperProfile = () => {
-  const [pleaseOrder, setPleaseOrder] = React.useState(true);
-  const [pleaseMethods, SetPleaseMethods] = React.useState(true);
-  const [pleaseDelivery, SetPleaseDelivery] = React.useState(true);
-
   const renderHeader = () => (
     <View>
       <BackWithComponent onPress={() => router.back()} title={"Profile"} />
@@ -55,12 +48,11 @@ const shopperProfile = () => {
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
-        // onPress={() => router.push("/user/storeProduct/productDetails")}
+        onPress={() => router.push("/user/storeProduct/productDetails")}
         activeOpacity={0.8}
         style={tw` w-[49%]  bg-white rounded-2xl   shadow-md`}
       >
         <Pressable
-          onPress={() => router.push("/user/storeProduct/productDetails")}
           style={tw` flex-1 w-full  bg-[#F3F5F7]  px-2.5 py-2 rounded-xl`}
         >
           <Image
@@ -113,7 +105,7 @@ const shopperProfile = () => {
                 ${item?.price}
               </Text>
               <TouchableOpacity
-                // onPress={() => setModalVisible(true)}
+                onPress={() => router?.push("/addCartModal")}
                 style={tw`p-2 bg-white shadow-md rounded-full`}
               >
                 <SvgXml xml={IconShopping} />
@@ -151,7 +143,6 @@ const shopperProfile = () => {
       <FlatList
         ListHeaderComponent={renderHeader}
         ListFooterComponent={renderFooter}
-        extraData={[pleaseOrder, pleaseMethods, pleaseDelivery]}
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
         data={CartData}
@@ -160,90 +151,6 @@ const shopperProfile = () => {
         columnWrapperStyle={tw`gap-1 justify-between mb-3`}
         renderItem={renderItem}
       />
-
-      {/* <View style={tw`my-5`}>
-        <View
-          style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-5 py-4 rounded-xl`}
-        >
-          <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-            1. How do I place an order?
-          </Text>
-          <TouchableOpacity
-            onPress={() => setPleaseOrder(!pleaseOrder)}
-            style={tw`p-2 bg-white rounded-full shadow-lg`}
-          >
-            {pleaseOrder ? (
-              <SvgXml xml={IconDownArrow} />
-            ) : (
-              <SvgXml xml={IconUpArrow} />
-            )}
-          </TouchableOpacity>
-        </View>
-        <Collapsible collapsed={pleaseOrder}>
-          <Text
-            style={tw` px-5 py-4 bg-white rounded-lg font-PoppinsRegular text-sm`}
-          >
-            Placing an order is easy! Simply browse through our categories, add
-            items to your cart, and proceed to checkout. Select your delivery
-            address, choose a payment method, and confirm your order. We’ll take
-            care of the rest!
-          </Text>
-        </Collapsible>
-        <View
-          style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-5 py-4 rounded-xl mt-4`}
-        >
-          <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-            2. What payment methods do you accept?
-          </Text>
-          <TouchableOpacity
-            onPress={() => SetPleaseMethods(!pleaseMethods)}
-            style={tw`p-2 bg-white rounded-full shadow-lg`}
-          >
-            {pleaseMethods ? (
-              <SvgXml xml={IconDownArrow} />
-            ) : (
-              <SvgXml xml={IconUpArrow} />
-            )}
-          </TouchableOpacity>
-        </View>
-        <Collapsible collapsed={pleaseMethods}>
-          <Text
-            style={tw` px-5 py-4 bg-white rounded-lg font-PoppinsRegular text-sm`}
-          >
-            Placing an order is easy! Simply browse through our categories, add
-            items to your cart, and proceed to checkout. Select your delivery
-            address, choose a payment method, and confirm your order. We’ll take
-            care of the rest!
-          </Text>
-        </Collapsible>
-        <View
-          style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-5 py-4 rounded-xl mt-4`}
-        >
-          <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-            3. How long does delivery take?
-          </Text>
-          <TouchableOpacity
-            onPress={() => SetPleaseDelivery(!pleaseDelivery)}
-            style={tw`p-2 bg-white rounded-full shadow-lg`}
-          >
-            {pleaseDelivery ? (
-              <SvgXml xml={IconDownArrow} />
-            ) : (
-              <SvgXml xml={IconUpArrow} />
-            )}
-          </TouchableOpacity>
-        </View>
-        <Collapsible collapsed={pleaseDelivery}>
-          <Text
-            style={tw` px-5 py-4 bg-white rounded-lg font-PoppinsRegular text-sm`}
-          >
-            Placing an order is easy! Simply browse through our categories, add
-            items to your cart, and proceed to checkout. Select your delivery
-            address, choose a payment method, and confirm your order. We’ll take
-            care of the rest!
-          </Text>
-        </Collapsible>
-      </View> */}
     </View>
   );
 };

@@ -12,7 +12,13 @@ const RootLayout = () => {
         statusBarBackgroundColor: tw.color("primary"),
       }}
     >
-      <Stack.Screen name="drawer/home/index" />
+      <Stack.Screen name="drawer" />
+      <Stack.Screen name="addToCart/cart" />
+      <Stack.Screen name="addToCart/checkOut" />
+      <Stack.Screen name="addToCart/simpleCart" />
+      <Stack.Screen name="messaging/messaging" />
+      <Stack.Screen name="notification/notification" />
+      <Stack.Screen name="notification/orderAccept" />
     </Stack>
   );
 };

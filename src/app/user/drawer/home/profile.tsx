@@ -10,7 +10,6 @@ import {
   IconNotificationSelected,
   IconOrderSelected,
   IconProfileSelected,
-  IconRightArrow,
   IconSettingsSelected,
   IconTeliphone,
   IconTransactionsSelected,
@@ -33,7 +32,7 @@ const profile = () => {
   return (
     <View style={tw`flex-1 mx-4 gap-5`}>
       <View
-        style={tw` flex-row justify-start items-centers bg-primary rounded-xl p-7 mt-5 gap-3 `}
+        style={tw` flex-row justify-start  bg-primary rounded-xl p-7 mt-5 gap-3 `}
       >
         <Image style={tw`w-24 h-24 rounded-full `} source={ImgProfileImg} />
         <View>
