@@ -40,7 +40,7 @@ const profile = () => {
     <ScrollView style={tw`flex-grow mb-24`}>
       <View style={tw`flex-1 mx-4 gap-5`}>
         <View
-          style={tw` flex-row justify-start  bg-primary rounded-xl p-7 mt-5 gap-3 `}
+          style={tw` flex-row justify-start  bg-primary rounded-xl px-4 py-5 mt-5 gap-3 `}
         >
           <Image style={tw`w-24 h-24 rounded-full `} source={ImgProfileImg} />
           <View>

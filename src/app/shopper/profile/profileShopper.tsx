@@ -37,7 +37,7 @@ const profileShopper = () => {
   return (
     <View style={tw`flex-1 mx-4 gap-5`}>
       <View
-        style={tw` flex-row justify-start items-centers bg-primaryShopper rounded-xl p-7 mt-5 gap-3 `}
+        style={tw` flex-row justify-start items-center bg-primaryShopper rounded-xl px-4 py-6 mt-5 gap-3 `}
       >
         <Image style={tw`w-24 h-24 rounded-full `} source={ImgProfileImg} />
         <View>
@@ -51,7 +51,7 @@ const profileShopper = () => {
             </Text>
           </View>
 
-          <Text style={tw`text-white font-PoppinsMedium text-lg mt-1`}>
+          <Text style={tw`text-white font-PoppinsSemiBold text-sm mt-1`}>
             Total: 500 deliveries
           </Text>
         </View>
