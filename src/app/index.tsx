@@ -37,6 +37,7 @@ const index = () => {
     setTimeout(() => {
       // router.push("/role/role");
       // router.push("/shopper/deliveryOrder/deliveryOrderMonitoring");
+      // router.push("/auth/changePassword");
       router.push("/user/onboarding/onboarding");
     }, 10);
   }, []);

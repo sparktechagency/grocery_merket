@@ -35,7 +35,7 @@ const productDetails = () => {
           <BackWithComponent
             onPress={() => router.back()}
             title="Fresh Carrots"
-            titleStyle={tw`mx-auto`}
+            containerStyle={tw`px-0`}
           />
           <View style={tw`w-full items-center`}>
             <Image
@@ -62,13 +62,11 @@ const productDetails = () => {
             <TouchableOpacity
               style={tw`py-2 px-4 bg-white shadow-md rounded-lg`}
             >
-              <Text style={tw`font-bold text-lg`}>-</Text>
+              <Text style={tw`font-bold text-xl text-black`}>-</Text>
             </TouchableOpacity>
             <Text style={tw`font-PoppinsSemiBold text-xl text-black`}>1kg</Text>
-            <TouchableOpacity
-              style={tw`py-2 px-4 bg-primary shadow-md rounded-lg`}
-            >
-              <Text style={tw`font-bold text-lg`}>+</Text>
+            <TouchableOpacity style={tw`py-2 px-4 bg-primary  rounded-lg`}>
+              <Text style={tw`font-bold text-lg text-white`}>+</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -102,7 +100,7 @@ const productDetails = () => {
 
         <View style={tw`flex-row justify-between items-center my-6`}>
           <View
-            style={tw`flex-row items-center bg-[#FFF9EB] py-1 px-4 rounded-xl gap-3`}
+            style={tw`flex-row items-center bg-[#FFF9EB] py-2 px-5 rounded-xl gap-3`}
           >
             <Image style={tw`w-8 h-8`} source={ImgOrganic} />
             <View>
@@ -116,7 +114,7 @@ const productDetails = () => {
           </View>
 
           <View
-            style={tw`flex-row items-center bg-[#EAF6FF] py-1 px-4 rounded-xl gap-3`}
+            style={tw`flex-row items-center bg-[#EAF6FF] py-2 px-5 rounded-xl gap-3`}
           >
             <Image style={tw`w-8 h-8`} source={ImgExpireDate} />
             <View>

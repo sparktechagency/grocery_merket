@@ -17,8 +17,9 @@ const changePassword = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      email: "",
-      password: "",
+      confirm_password: "",
+      old_password: "",
+      new_password: "",
     },
   });
   // const onSubmit = (data: any) => console.log(data);
@@ -40,18 +41,20 @@ const changePassword = () => {
     getUserData();
   }, []);
   return (
-    <View style={tw`flex-1`}>
+    <View style={tw`flex-1 bg-white`}>
       <BackWithComponent
         onPress={() => router.back()}
         title={"Change password"}
       />
       <View style={tw`mx-5 flex-1 justify-between pb-6`}>
         <ScrollView
-          keyboardShouldPersistTaps="handled"
+          // keyboardShouldPersistTaps=""
+          keyboardDismissMode="on-drag"
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
+          contentContainerStyle={tw`py-3 pb-6`}
         >
-          <View>
+          <View style={tw`gap-3`}>
             <Controller
               control={control}
               rules={{
@@ -67,20 +70,21 @@ const changePassword = () => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <InputText
-                  label="Current password"
                   value={value}
                   onChangeText={(test) => onChange(test)}
                   onBlur={onBlur}
                   touched
-                  errorText={errors?.password?.message}
-                  textInputProps={{
-                    placeholder: "******",
-                  }}
+                  focusSTyle={tw`border-blue-500`}
+                  errorText={errors?.old_password?.message}
+                  placeholderStyle={tw`text-gray-700`}
                   svgSecondIcon={IconEyes}
-                  containerLayoutStyle={tw`mb-1 `}
+                  containerStyle={tw`rounded-full `}
+                  placeholder="Old Password"
+                  inputStyle={tw`font-PoppinsRegular`}
+                  textXOutRangeFirst={10}
                 />
               )}
-              name="password"
+              name="old_password"
             />
             <Controller
               control={control}
@@ -97,20 +101,19 @@ const changePassword = () => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <InputText
-                  label="New password"
                   value={value}
                   onChangeText={(test) => onChange(test)}
                   onBlur={onBlur}
                   touched
-                  errorText={errors?.password?.message}
-                  textInputProps={{
-                    placeholder: "******",
-                  }}
+                  errorText={errors?.new_password?.message}
+                  placeholder="New Password"
                   svgSecondIcon={IconEyes}
-                  containerLayoutStyle={tw`mb-1 `}
+                  containerStyle={tw`rounded-full `}
+                  inputStyle={tw`font-PoppinsRegular`}
+                  placeholderStyle={tw`text-gray-700`}
                 />
               )}
-              name="password"
+              name="new_password"
             />
             <Controller
               control={control}
@@ -127,20 +130,20 @@ const changePassword = () => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <InputText
-                  label="Confirm new password"
                   value={value}
                   onChangeText={(test) => onChange(test)}
                   onBlur={onBlur}
                   touched
                   errorText={errors?.password?.message}
-                  textInputProps={{
-                    placeholder: "******",
-                  }}
+                  placeholder="Confirm Password"
                   svgSecondIcon={IconEyes}
-                  containerLayoutStyle={tw`mb-1`}
+                  placeholderStyle={tw`text-gray-700`}
+                  containerStyle={tw`rounded-full `}
+                  inputStyle={tw`font-PoppinsRegular`}
+                  textXOutRangeFirst={5}
                 />
               )}
-              name="password"
+              name="confirm_password"
             />
           </View>
         </ScrollView>

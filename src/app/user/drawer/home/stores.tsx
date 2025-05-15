@@ -54,7 +54,7 @@ const Stores = () => {
         <BackWithComponent
           onPress={() => router.back()}
           title="Stores"
-          titleStyle={tw`mx-auto`}
+          containerStyle={tw`px-0`}
         />
 
         <View style={tw`flex-row flex-wrap justify-between mt-2`}>

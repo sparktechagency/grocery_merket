@@ -55,9 +55,9 @@ const InputText = ({
   labelStyle,
   svgSecondIcon,
   placeholder,
-  textXValue = -28,
-  textXOutRangeFirst = 25,
-  textXOutRangeSecond = 45,
+  textXValue = -20,
+  textXOutRangeFirst = 10,
+  textXOutRangeSecond = 16,
   errorSvgIcon,
   textInputProps,
   errorText,
@@ -83,12 +83,12 @@ const InputText = ({
   const handleFocus = () => {
     setFocus(true);
     Animated.timing(textY.current, {
-      toValue: -28,
+      toValue: -20,
       duration: 200,
       useNativeDriver: true,
       easing: Easing.ease,
     }).start();
-    textInputRef.current?.focus(); // Focus the TextInput
+    // textInputRef.current?.focus(); // Focus the TextInput
   };
 
   const handleBlur = () => {
@@ -102,12 +102,12 @@ const InputText = ({
   };
 
   React.useEffect(() => {
-    if (value?.trim().length) {
+    if (focus || value?.trim().length) {
       handleFocus();
-    } else {
+    } else if (!value?.trim().length || !focus) {
       handleBlur();
     }
-  }, [value]);
+  }, [value, focus]);
 
   const textX = textY.current.interpolate({
     inputRange: [textXValue, 0],
@@ -115,7 +115,7 @@ const InputText = ({
     extrapolate: "clamp",
   });
   const textScale = textY.current.interpolate({
-    inputRange: [-28, 0],
+    inputRange: [-20, 0],
     outputRange: [0.8, 1],
     extrapolate: "clamp",
   });
@@ -128,7 +128,10 @@ const InputText = ({
     >
       {label && (
         <Text
-          style={[tw`text-sm font-PoppinsRegular  py-2 text-black`, labelStyle]}
+          style={[
+            tw`   text-sm font-PoppinsRegular  py-2 text-black`,
+            labelStyle,
+          ]}
         >
           {label}{" "}
           {required && (
@@ -141,7 +144,9 @@ const InputText = ({
         style={[
           tw`flex-row w-full border items-center px-4 ${
             errorText && touched ? "border-red-500" : "border-gray-300"
-          } ${focus ? "bg-white" : "bg-gray-200"} rounded-lg h-12`,
+          } ${
+            focus || value?.trim().length ? "bg-white" : "bg-gray-200"
+          } rounded-lg h-12`,
 
           containerStyle,
         ]}
@@ -153,7 +158,7 @@ const InputText = ({
             style={[
               tw`absolute bg-base rounded-full text-base font-PoppinsRegular py-2 px-2 ${
                 errorText && touched ? "text-red-500" : "text-gray-400"
-              }`,
+              }  ${focus || value?.trim().length ? "bg-white" : "bg-gray-200"}`,
               placeholderStyle,
               {
                 transform: [
@@ -173,9 +178,11 @@ const InputText = ({
           ref={textInputRef} // Assign the ref to the TextInput
           onFocus={() => {
             onFocus && onFocus();
+            setFocus(true);
           }}
           onBlur={(e) => {
             onBlur && onBlur(e);
+            setFocus(false);
           }}
           style={[tw`flex-1 px-2 text-base font-PoppinsSemiBold`, inputStyle]}
           {...textInputProps}
