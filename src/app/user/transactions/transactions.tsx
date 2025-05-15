@@ -68,7 +68,7 @@ const transactions = () => {
           {transactionData.map((data) => (
             <TouchableOpacity
               key={data.id}
-              style={tw`flex-row justify-between items-center p-5  shadow-md rounded-2xl gap-5 bg-[#ebeff3]`}
+              style={tw`flex-row justify-between items-center p-5  shadow-md rounded-2xl gap-4 bg-[#ebeff3]`}
             >
               <View style={tw`flex-row justify-start items-center gap-3`}>
                 <View
@@ -91,7 +91,7 @@ const transactions = () => {
                 </View>
               </View>
 
-              <Text style={tw`font-PoppinsSemiBold text-lg text-primary`}>
+              <Text style={tw`font-PoppinsSemiBold text-base text-primary`}>
                 ${data.price}
               </Text>
             </TouchableOpacity>

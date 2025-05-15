@@ -12,9 +12,9 @@ export const OnCollapsable = () => {
   return (
     <View style={tw`my-5`}>
       <View
-        style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-5 py-4 rounded-xl`}
+        style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-3 py-4 rounded-xl`}
       >
-        <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
+        <Text style={tw`font-PoppinsSemiBold text-sm text-black`}>
           1. How do I place an order?
         </Text>
         <TouchableOpacity
@@ -39,9 +39,9 @@ export const OnCollapsable = () => {
         </Text>
       </Collapsible>
       <View
-        style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-5 py-4 rounded-xl mt-4`}
+        style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-3 py-4 rounded-xl mt-4`}
       >
-        <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
+        <Text style={tw`font-PoppinsSemiBold text-sm text-black`}>
           2. What payment methods do you accept?
         </Text>
         <TouchableOpacity
@@ -66,9 +66,9 @@ export const OnCollapsable = () => {
         </Text>
       </Collapsible>
       <View
-        style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-5 py-4 rounded-xl mt-4`}
+        style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-3 py-4 rounded-xl mt-4`}
       >
-        <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
+        <Text style={tw`font-PoppinsSemiBold text-sm text-black`}>
           3. How long does delivery take?
         </Text>
         <TouchableOpacity

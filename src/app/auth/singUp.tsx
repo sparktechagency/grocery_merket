@@ -166,7 +166,7 @@ const singUp = () => {
 
             <View style={tw`w-[90%] mx-auto`}>
               <Pressable
-                style={tw`flex-row justify-between items-center-center py-3 px-5 border border-[#1E1E1E] rounded-md`}
+                style={tw`flex-row justify-between items-center py-3 px-5 border border-[#1E1E1E] rounded-md`}
               >
                 <View style={tw` flex-row gap-3`}>
                   <SvgXml xml={IconGoogle} />

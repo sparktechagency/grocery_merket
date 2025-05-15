@@ -90,9 +90,9 @@ const wishlist = () => {
 
   return (
     <AlertNotificationRoot>
-      <View>
+      <View style={tw`flex-1`}>
         <BackWithComponent onPress={() => router.back()} title="Stores" />
-        <ScrollView style={tw``}>
+        <ScrollView style={tw`flex-grow mb-24`}>
           {CartData.map((item) => (
             <SwipeToDeleteCard
               key={item.id}
@@ -109,9 +109,10 @@ const wishlist = () => {
           ))}
         </ScrollView>
 
+        {/* ============= Delete modal ========================= */}
         <Dialog
           width={"100%"}
-          height={"35%"}
+          height={"40%"}
           bottom={true}
           containerStyle={tw`flex-1 bg-white rounded-t-3xl p-5`}
           visible={isModalVisible}
