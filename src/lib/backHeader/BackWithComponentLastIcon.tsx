@@ -12,10 +12,11 @@ interface BackButtonProps {
   ComponentBtn?: React.ReactNode;
   offBack?: boolean;
   togather?: boolean;
+  endComponentContentStyle?: string;
   fastComponentContentStyle?: string;
 }
 
-const BackWithComponent = ({
+const BackWithComponentLastIcon = ({
   onPress,
   containerStyle,
   titleStyle,
@@ -23,6 +24,7 @@ const BackWithComponent = ({
   title,
   offBack,
   togather,
+  endComponentContentStyle,
   fastComponentContentStyle,
 }: BackButtonProps) => {
   return (
@@ -98,9 +100,28 @@ const BackWithComponent = ({
         </>
       )}
 
-      {ComponentBtn ? ComponentBtn : <View style={tw`w-10 h-10`} />}
+      {ComponentBtn ? (
+        ComponentBtn
+      ) : (
+        <TouchableOpacity
+          onPress={onPress}
+          style={[
+            tw`bg-white w-10 h-10 justify-center items-center rounded-lg`,
+            endComponentContentStyle,
+          ]}
+        >
+          <SvgXml
+            style={tw`bg-transparent`}
+            xml={`<svg width="18" height="17" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16.5 16L12.8809 12.3809M12.8809 12.3809C13.4999 11.7618 13.991 11.0269 14.326 10.218C14.6611 9.40917 14.8335 8.54225 14.8335 7.66676C14.8335 6.79127 14.6611 5.92435 14.326 5.1155C13.991 4.30665 13.4999 3.57172 12.8809 2.95265C12.2618 2.33358 11.5269 1.84251 10.718 1.50748C9.90917 1.17244 9.04225 1 8.16676 1C7.29127 1 6.42435 1.17244 5.6155 1.50748C4.80665 1.84251 4.07172 2.33358 3.45265 2.95265C2.20239 4.20291 1.5 5.89863 1.5 7.66676C1.5 9.4349 2.20239 11.1306 3.45265 12.3809C4.70291 13.6311 6.39863 14.3335 8.16676 14.3335C9.9349 14.3335 11.6306 13.6311 12.8809 12.3809Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+`}
+          />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
 
-export default BackWithComponent;
+export default BackWithComponentLastIcon;

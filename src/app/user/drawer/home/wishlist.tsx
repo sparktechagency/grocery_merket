@@ -62,7 +62,7 @@ const wishlist = () => {
         >
           <Image source={data.image} />
           <View>
-            <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
+            <Text style={tw`font-PoppinsSemiBold text-sm text-black`}>
               {data.title}
             </Text>
             <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>

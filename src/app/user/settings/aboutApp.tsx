@@ -8,7 +8,11 @@ const aboutApp = () => {
   return (
     <View style={tw`flex-1`}>
       <BackWithComponent onPress={() => router.back()} title={"About App"} />
-      <ScrollView style={tw`p-5 bg-white`}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        style={tw`p-5 bg-white`}
+      >
         <Text style={tw`text-base text-black font-bold mb-4`}>
           Welcome to grocery app, your ultimate solution for a seamless grocery
           shopping experience.

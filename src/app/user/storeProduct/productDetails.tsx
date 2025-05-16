@@ -1,13 +1,5 @@
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  Pressable,
-  ScrollView,
-} from "react-native";
+import { View, Text, Image, TouchableOpacity, Pressable } from "react-native";
 import React from "react";
-import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
 import tw from "@/src/lib/tailwind";
 import {
@@ -22,6 +14,7 @@ import { BlurView } from "expo-blur";
 import { FlatList } from "react-native-gesture-handler";
 import { CartData } from "@/src/components/CardData";
 import TButton from "@/src/lib/buttons/TButton";
+import BackWithComponentLastIcon from "@/src/lib/backHeader/BackWithComponentLastIcon";
 
 const productDetails = () => {
   const renderHeader = () => (
@@ -32,10 +25,12 @@ const productDetails = () => {
           style={tw`absolute -top-[70] self-center bg-[#F3F5F7] w-[140] h-[140] rounded-full`}
         />
         <View style={tw`w-full`}>
-          <BackWithComponent
-            onPress={() => router.back()}
+          <BackWithComponentLastIcon
+            onPress={() => router.push("/user/drawer/home/search")}
             title="Fresh Carrots"
             containerStyle={tw`px-0`}
+            fastComponentContentStyle={tw`shadow-lg`}
+            endComponentContentStyle={tw`shadow-lg`}
           />
           <View style={tw`w-full items-center`}>
             <Image
@@ -159,8 +154,8 @@ const productDetails = () => {
             style={tw`absolute  bg-transparent right-1.5 top-4`}
           >
             <BlurView
-              intensity={60}
-              style={tw`p-1.5 border border-white rounded-full  overflow-hidden`}
+              intensity={90}
+              style={tw`w-10 h-10 justify-center items-center border border-white rounded-full  overflow-hidden`}
             >
               <SvgXml xml={IconLove} />
             </BlurView>

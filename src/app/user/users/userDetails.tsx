@@ -28,9 +28,6 @@ const userDetails = () => {
 
   // console.log(errors);
 
-  // ----------- get user  role -----------------
-
-  // ----------- get user  role -----------------
   const getUserData = async () => {
     try {
       const value = await AsyncStorage.getItem("role");
@@ -43,102 +40,111 @@ const userDetails = () => {
 
   React.useEffect(() => {
     getUserData();
+    return () => {};
   }, []);
 
   return (
-    <View style={tw`flex-1 bg-white`}>
+    <View style={tw`flex-1  bg-white`}>
+      <BackWithComponent
+        onPress={() => router.back()}
+        title={"My Account"}
+        fastComponentContentStyle={tw`shadow-lg`}
+      />
       <ScrollView
         keyboardDismissMode="on-drag"
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        style={tw`pb-20`}
+        contentContainerStyle={tw`pb-6`}
       >
-        <BackWithComponent onPress={() => router.back()} title={"My Account"} />
-
-        <View style={tw`relative mx-auto my-10`}>
-          <Image style={tw`w-24 h-24 rounded-full`} source={ImgProfileImg} />
-          <TouchableOpacity
-            style={tw`absolute bottom-1 right-1 w-6 h-6  border-2 justify-center items-center border-white shadow-sm bg-primary rounded-full`}
-          >
-            <SvgXml xml={IconEdit} />
-          </TouchableOpacity>
+        <View>
+          <View style={tw`relative mx-auto my-10`}>
+            <Image style={tw`w-24 h-24 rounded-full`} source={ImgProfileImg} />
+            <TouchableOpacity
+              style={tw`absolute bottom-1 right-1 w-6 h-6  border-2 justify-center items-center border-white shadow-sm bg-primary rounded-full`}
+            >
+              <SvgXml xml={IconEdit} />
+            </TouchableOpacity>
+          </View>
+          <View style={tw`mx-5 flex-1 items-center gap-3`}>
+            <Controller
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Name is required",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <InputText
+                  editable={false}
+                  value={value}
+                  onChangeText={(test) => onChange(test)}
+                  // onBlur={onBlur}
+                  touched
+                  errorText={errors?.name?.message}
+                  placeholder="Benjamin Wilkison"
+                  placeholderStyle={tw`text-gray-900`}
+                  inputStyle={tw`font-PoppinsRegular `}
+                  textXOutRangeFirst={10}
+                  containerStyle={tw`rounded-full`}
+                />
+              )}
+              name="name"
+            />
+            <Controller
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Name is required",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <InputText
+                  value={value}
+                  onChangeText={(test) => onChange(test)}
+                  onBlur={onBlur}
+                  editable={false}
+                  touched
+                  errorText={errors?.phone?.message}
+                  placeholder="+95632587456"
+                  inputStyle={tw`font-PoppinsRegular`}
+                  textXOutRangeFirst={10}
+                  containerStyle={tw`rounded-full`}
+                  placeholderStyle={tw`text-gray-900`}
+                />
+              )}
+              name="phone"
+            />
+            <Controller
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Name is required",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <InputText
+                  value={value}
+                  onChangeText={(test) => onChange(test)}
+                  onBlur={onBlur}
+                  editable={false}
+                  touched
+                  errorText={errors?.location?.message}
+                  placeholder="Kodiak Island"
+                  inputStyle={tw`font-PoppinsRegular`}
+                  containerStyle={tw`rounded-full`}
+                  placeholderStyle={tw`text-gray-900`}
+                  textXOutRangeFirst={10}
+                />
+              )}
+              name="location"
+            />
+          </View>
         </View>
-
-        <View style={tw`mx-5 gap-3`}>
-          <Controller
-            control={control}
-            rules={{
-              required: {
-                value: true,
-                message: "Name is required",
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <InputText
-                value={value}
-                onChangeText={(test) => onChange(test)}
-                onBlur={onBlur}
-                touched
-                errorText={errors?.name?.message}
-                placeholder="Benjamin Wilkison"
-                placeholderStyle={tw`text-gray-900`}
-                inputStyle={tw`font-PoppinsRegular `}
-                textXOutRangeFirst={10}
-                containerStyle={tw`rounded-full`}
-              />
-            )}
-            name="name"
-          />
-          <Controller
-            control={control}
-            rules={{
-              required: {
-                value: true,
-                message: "Name is required",
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <InputText
-                value={value}
-                onChangeText={(test) => onChange(test)}
-                onBlur={onBlur}
-                touched
-                errorText={errors?.phone?.message}
-                placeholder="+95632587456"
-                inputStyle={tw`font-PoppinsRegular`}
-                textXOutRangeFirst={10}
-                containerStyle={tw`rounded-full`}
-                placeholderStyle={tw`text-gray-900`}
-              />
-            )}
-            name="phone"
-          />
-          <Controller
-            control={control}
-            rules={{
-              required: {
-                value: true,
-                message: "Name is required",
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <InputText
-                value={value}
-                onChangeText={(test) => onChange(test)}
-                onBlur={onBlur}
-                touched
-                errorText={errors?.location?.message}
-                placeholder="Kodiak Island"
-                inputStyle={tw`font-PoppinsRegular`}
-                containerStyle={tw`rounded-full`}
-                placeholderStyle={tw`text-gray-900`}
-                textXOutRangeFirst={10}
-              />
-            )}
-            name="location"
-          />
-        </View>
-
+      </ScrollView>
+      <View style={tw`w-full pb-6`}>
         <TButton
           // onPress={handleSubmit(onSubmit)}
           onPress={() => router.push("/user/users/editUserDetails")}
@@ -147,7 +153,7 @@ const userDetails = () => {
             roleData === "user" ? "bg-primary" : "bg-primaryShopper"
           }`}
         />
-      </ScrollView>
+      </View>
     </View>
   );
 };

@@ -71,8 +71,8 @@ const shopperProfile = () => {
             style={tw`absolute  bg-transparent right-1.5 top-4`}
           >
             <BlurView
-              intensity={60}
-              style={tw`p-1.5 border border-white rounded-full  overflow-hidden`}
+              intensity={90}
+              style={tw`w-10 h-10 justify-center items-center border border-white rounded-full  overflow-hidden`}
             >
               <SvgXml xml={IconLove} />
             </BlurView>

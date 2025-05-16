@@ -1,5 +1,4 @@
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Keyboard, TouchableOpacity, View } from "react-native";
+import { Keyboard, Text, TouchableOpacity, View } from "react-native";
 import tw from "@/src/lib/tailwind";
 import { Tabs } from "expo-router";
 import React from "react";
@@ -22,6 +21,8 @@ import {
 } from "@/assets/icon";
 import { SvgXml } from "react-native-svg";
 import { BottomTabNavigationEventMap } from "@react-navigation/bottom-tabs";
+
+import { BlurView } from "expo-blur";
 
 // Props type for MyTabBar
 type MyTabBarProps = {
@@ -54,11 +55,11 @@ function MyTabBar({ state, descriptors, navigation }: MyTabBarProps) {
       {!isKeyboardVisible && (
         <View
           style={[
-            tw`absolute bottom-4 justify-center items-center w-full flex-1`,
+            tw`absolute bottom-4 justify-center items-center w-full flex-1  `,
           ]}
         >
           <View
-            style={tw`bg-white h-[70px] w-[90%] rounded-full flex-row items-center  shadow-xl flex-1`}
+            style={tw` bg-white justify-between overflow-hidden h-[70px] w-[90%]   rounded-full flex-row items-center  shadow-xl flex-1`}
           >
             {state.routes.map((route, index) => {
               const { options } = descriptors[route.key];

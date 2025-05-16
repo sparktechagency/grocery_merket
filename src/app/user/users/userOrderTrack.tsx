@@ -22,7 +22,7 @@ const userOrderTrack = () => {
       <ScrollView>
         <View style={tw`mx-5 mb-2`}>
           <View
-            style={tw` flex-row justify-start items-centers bg-primary rounded-xl p-7 mt-5 gap-3 `}
+            style={tw` flex-row justify-start items-center bg-primary rounded-xl p-7 mt-5 gap-3 `}
           >
             <View
               style={tw`w-24 h-24 justify-center items-center border-2 border-white bg-[#e8fdee] rounded-full shadow-lg `}

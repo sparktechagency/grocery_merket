@@ -45,6 +45,7 @@ const changePassword = () => {
       <BackWithComponent
         onPress={() => router.back()}
         title={"Change password"}
+        fastComponentContentStyle={tw`shadow-lg`}
       />
       <View style={tw`mx-5 flex-1 justify-between pb-6`}>
         <ScrollView

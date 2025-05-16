@@ -123,7 +123,12 @@ const InputText = ({
   return (
     <TouchableOpacity
       activeOpacity={1} // Ensure the opacity doesn't change on press
-      onPress={handleFocus} // Focus the input when the container is pressed
+      onPress={() => {
+        if (editable) {
+          handleFocus;
+        }
+      }}
+      // Focus the input when the container is pressed
       style={[tw``, containerLayoutStyle]}
     >
       {label && (

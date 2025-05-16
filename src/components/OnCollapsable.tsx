@@ -19,7 +19,7 @@ export const OnCollapsable = () => {
         </Text>
         <TouchableOpacity
           onPress={() => setPleaseOrder(!pleaseOrder)}
-          style={tw`p-2 bg-white rounded-full shadow-lg`}
+          style={tw`w-8 h-8 justify-center items-center bg-white rounded-full shadow-lg`}
         >
           {pleaseOrder ? (
             <SvgXml xml={IconDownArrow} />
@@ -46,7 +46,7 @@ export const OnCollapsable = () => {
         </Text>
         <TouchableOpacity
           onPress={() => SetPleaseMethods(!pleaseMethods)}
-          style={tw`p-2 bg-white rounded-full shadow-lg`}
+          style={tw`w-8 h-8 justify-center items-center bg-white rounded-full shadow-lg`}
         >
           {pleaseMethods ? (
             <SvgXml xml={IconDownArrow} />
@@ -73,7 +73,7 @@ export const OnCollapsable = () => {
         </Text>
         <TouchableOpacity
           onPress={() => SetPleaseDelivery(!pleaseDelivery)}
-          style={tw`p-2 bg-white rounded-full shadow-lg`}
+          style={tw`w-8 h-8 justify-center items-center bg-white rounded-full shadow-lg`}
         >
           {pleaseDelivery ? (
             <SvgXml xml={IconDownArrow} />

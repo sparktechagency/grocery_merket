@@ -35,9 +35,7 @@ const index = () => {
     AppLoader();
 
     setTimeout(() => {
-      // router.push("/role/role");
-      // router.push("/shopper/deliveryOrder/deliveryOrderMonitoring");
-      // router.push("/auth/changePassword");
+      // router.push("/user/drawer/home");
       router.push("/user/onboarding/onboarding");
     }, 10);
   }, []);
