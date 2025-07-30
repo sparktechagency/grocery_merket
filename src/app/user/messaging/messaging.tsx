@@ -116,7 +116,7 @@ const message = () => {
             }}
           />
         </View>
-        <Text style={tw`text-xl text-deepBlue400 font-NunitoSansBold`}>
+        <Text style={tw`text-xl text-deepBlue400 font-PoppinsBold`}>
           Larry Smith
         </Text>
       </View>
@@ -134,17 +134,13 @@ const message = () => {
             {item.user && (
               <View style={tw` flex-row items-start gap-2 px-4`}>
                 <View style={tw`flex-1 flex-row items-end gap-2`}>
-                  <Text
-                    style={tw`text-xs text-deepBlue75 font-NunitoSansRegular`}
-                  >
+                  <Text style={tw`text-xs text-deepBlue75 font-PoppinsRegular`}>
                     {item.time}
                   </Text>
                   <View
                     style={tw`flex-1 bg-primary p-3 rounded-l-md rounded-b-md`}
                   >
-                    <Text
-                      style={tw`text-base text-white font-NunitoSansMedium`}
-                    >
+                    <Text style={tw`text-base text-white font-PoppinsMedium`}>
                       {item.message}
                     </Text>
                   </View>
@@ -170,14 +166,12 @@ const message = () => {
                     style={tw`flex-1 bg-white p-3 rounded-r-md rounded-b-md`}
                   >
                     <Text
-                      style={tw`text-base text-deepBlue400 font-NunitoSansMedium`}
+                      style={tw`text-base text-deepBlue400 font-PoppinsMedium`}
                     >
                       {item.message}
                     </Text>
                   </View>
-                  <Text
-                    style={tw`text-xs text-deepBlue75 font-NunitoSansRegular`}
-                  >
+                  <Text style={tw`text-xs text-deepBlue75 font-PoppinsRegular`}>
                     {item.time}
                   </Text>
                 </View>
@@ -213,7 +207,7 @@ const message = () => {
             });
           }}
           containerStyle={tw` bg-transparent px-4`}
-          titleStyle={tw`text-deepBlue400 text-base font-NunitoSansBold`}
+          titleStyle={tw`text-deepBlue400 text-base font-PoppinsBold`}
         />
       </View>
     </View>

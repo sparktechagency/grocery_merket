@@ -53,13 +53,13 @@ const paymentSystem = () => {
         <View style={tw`px-6 pt-3 `}>
           <View style={tw`mt-6`}>
             <View style={tw`flex-row justify-between `}>
-              <Text style={tw`font-bold text-sm font-NunitoSansRegular`}>
+              <Text style={tw`font-bold text-sm font-PoppinsRegular`}>
                 Card Information
               </Text>
               <TouchableOpacity style={tw`flex-row items-center gap-1`}>
                 {/* <SvgXml xml={IconCamera} /> */}
                 <Text
-                  style={tw`text-primary  font-bold text-sm font-NunitoSansRegular`}
+                  style={tw`text-primary  font-bold text-sm font-PoppinsRegular`}
                 >
                   Scan card
                 </Text>
