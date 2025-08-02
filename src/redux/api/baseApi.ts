@@ -19,6 +19,7 @@ const baseQueryWithRath: BaseQueryFn<BaseQueryArgs, unknown, unknown> = async (
 ) => {
   try {
     const token = await AsyncStorage.getItem("token");
+    // console.log(token, "token from base url............");
 
     // console.log(token, "token from base url............");
 

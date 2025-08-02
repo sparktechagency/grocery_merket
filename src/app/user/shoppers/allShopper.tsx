@@ -7,11 +7,7 @@ import { ImgChatProfile } from "@/assets/images";
 import { SvgXml } from "react-native-svg";
 import { IconLocationWhite } from "@/assets/icon";
 import IwtButton from "@/src/lib/buttons/IwtButton";
-import {
-  ALERT_TYPE,
-  AlertNotificationRoot,
-  Toast,
-} from "react-native-alert-notification";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import { FlatList } from "react-native-gesture-handler";
 
 const allShopper = () => {
@@ -81,20 +77,18 @@ const allShopper = () => {
   );
 
   return (
-    <AlertNotificationRoot>
-      <View>
-        <BackWithComponent onPress={() => router.back()} title={"My Shopper"} />
+    <View>
+      <BackWithComponent onPress={() => router.back()} title={"My Shopper"} />
 
-        <View>
-          <FlatList
-            data={shopperData}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id.toLocaleString()}
-            contentContainerStyle={tw`pb-36`}
-          />
-        </View>
+      <View>
+        <FlatList
+          data={shopperData}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toLocaleString()}
+          contentContainerStyle={tw`pb-36`}
+        />
       </View>
-    </AlertNotificationRoot>
+    </View>
   );
 };
 

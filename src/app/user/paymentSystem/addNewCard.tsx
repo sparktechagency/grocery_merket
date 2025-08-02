@@ -14,11 +14,7 @@ import tw from "@/src/lib/tailwind";
 import TButton from "@/src/lib/buttons/TButton";
 import { IconMasterCard, IconVisaCard } from "@/assets/icon";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
-import {
-  ALERT_TYPE,
-  AlertNotificationRoot,
-  Toast,
-} from "react-native-alert-notification";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 const paymentSystem = () => {
   const [checkBox, setCheckBox] = React.useState(false);
@@ -44,97 +40,92 @@ const paymentSystem = () => {
   };
 
   return (
-    <AlertNotificationRoot>
-      <View style={tw`flex-1`}>
-        <BackWithComponent
-          onPress={() => router.back()}
-          title={"Add new card"}
-        />
-        <View style={tw`px-6 pt-3 `}>
-          <View style={tw`mt-6`}>
-            <View style={tw`flex-row justify-between `}>
-              <Text style={tw`font-bold text-sm font-PoppinsRegular`}>
-                Card Information
+    <View style={tw`flex-1`}>
+      <BackWithComponent onPress={() => router.back()} title={"Add new card"} />
+      <View style={tw`px-6 pt-3 `}>
+        <View style={tw`mt-6`}>
+          <View style={tw`flex-row justify-between `}>
+            <Text style={tw`font-bold text-sm font-PoppinsRegular`}>
+              Card Information
+            </Text>
+            <TouchableOpacity style={tw`flex-row items-center gap-1`}>
+              {/* <SvgXml xml={IconCamera} /> */}
+              <Text
+                style={tw`text-primary  font-bold text-sm font-PoppinsRegular`}
+              >
+                Scan card
               </Text>
-              <TouchableOpacity style={tw`flex-row items-center gap-1`}>
-                {/* <SvgXml xml={IconCamera} /> */}
-                <Text
-                  style={tw`text-primary  font-bold text-sm font-PoppinsRegular`}
-                >
-                  Scan card
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={tw`my-1`}>
-              <View style={tw`border border-gray-300 rounded-lg p-3 mb-3`}>
-                <View style={tw`flex-row justify-between items-center`}>
-                  <TextInput
-                    placeholder="Card Holder name"
-                    keyboardType="numeric"
-                    style={tw`text-lg flex-1`}
-                  />
-                </View>
-              </View>
-              <View style={tw`border border-gray-300 rounded-lg p-3`}>
-                <View style={tw`flex-row justify-between items-center`}>
-                  <TextInput
-                    placeholder="card number"
-                    keyboardType="numeric"
-                    style={tw`text-lg flex-1`}
-                  />
-                  <SvgXml style={tw`w-6 h-4 mr-1`} xml={IconVisaCard} />
-                  <SvgXml style={tw`w-6 h-4 mr-1`} xml={IconMasterCard} />
-                </View>
-              </View>
-              <View style={tw`flex-row mt-3`}>
-                <View
-                  style={tw`flex-1 border border-gray-300 rounded-lg p-3 mr-2`}
-                >
-                  <TextInput
-                    placeholder="MM / YY"
-                    keyboardType="numeric"
-                    style={tw`text-lg`}
-                  />
-                </View>
-                <View style={tw`flex-1 border border-gray-300 rounded-lg p-3`}>
-                  <TextInput
-                    placeholder="CVC"
-                    keyboardType="numeric"
-                    secureTextEntry
-                    style={tw`text-lg`}
-                  />
-                </View>
-              </View>
-
-              <View style={tw`flex-row items-center my-6`}>
-                <Checkbox
-                  style={tw`w-5 h-5 border border-gray-400 rounded mr-2`}
-                  value={checkBox}
-                  onValueChange={setCheckBox}
-                  color={PrimaryColor}
-                />
-                <Text style={tw`text-sm font-medium text-gray-700`}>
-                  Save card details
-                </Text>
-              </View>
-
-              <TButton
-                onPress={() =>
-                  Toast.show({
-                    type: ALERT_TYPE.SUCCESS,
-                    title: "Success",
-                    textBody: "Congrats! Your Card Update success!",
-                  })
-                }
-                title="Add card"
-              />
-            </View>
+            </TouchableOpacity>
           </View>
-          {/*  ========== modal open ============ */}
+
+          <View style={tw`my-1`}>
+            <View style={tw`border border-gray-300 rounded-lg p-3 mb-3`}>
+              <View style={tw`flex-row justify-between items-center`}>
+                <TextInput
+                  placeholder="Card Holder name"
+                  keyboardType="numeric"
+                  style={tw`text-lg flex-1`}
+                />
+              </View>
+            </View>
+            <View style={tw`border border-gray-300 rounded-lg p-3`}>
+              <View style={tw`flex-row justify-between items-center`}>
+                <TextInput
+                  placeholder="card number"
+                  keyboardType="numeric"
+                  style={tw`text-lg flex-1`}
+                />
+                <SvgXml style={tw`w-6 h-4 mr-1`} xml={IconVisaCard} />
+                <SvgXml style={tw`w-6 h-4 mr-1`} xml={IconMasterCard} />
+              </View>
+            </View>
+            <View style={tw`flex-row mt-3`}>
+              <View
+                style={tw`flex-1 border border-gray-300 rounded-lg p-3 mr-2`}
+              >
+                <TextInput
+                  placeholder="MM / YY"
+                  keyboardType="numeric"
+                  style={tw`text-lg`}
+                />
+              </View>
+              <View style={tw`flex-1 border border-gray-300 rounded-lg p-3`}>
+                <TextInput
+                  placeholder="CVC"
+                  keyboardType="numeric"
+                  secureTextEntry
+                  style={tw`text-lg`}
+                />
+              </View>
+            </View>
+
+            <View style={tw`flex-row items-center my-6`}>
+              <Checkbox
+                style={tw`w-5 h-5 border border-gray-400 rounded mr-2`}
+                value={checkBox}
+                onValueChange={setCheckBox}
+                color={PrimaryColor}
+              />
+              <Text style={tw`text-sm font-medium text-gray-700`}>
+                Save card details
+              </Text>
+            </View>
+
+            <TButton
+              onPress={() =>
+                Toast.show({
+                  type: ALERT_TYPE.SUCCESS,
+                  title: "Success",
+                  textBody: "Congrats! Your Card Update success!",
+                })
+              }
+              title="Add card"
+            />
+          </View>
         </View>
+        {/*  ========== modal open ============ */}
       </View>
-    </AlertNotificationRoot>
+    </View>
   );
 };
 

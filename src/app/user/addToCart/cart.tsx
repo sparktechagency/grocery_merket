@@ -9,11 +9,7 @@ import { IconDelete, IconMuniceButton, IconPlusButton } from "@/assets/icon";
 import TButton from "@/src/lib/buttons/TButton";
 import { ImgBurger, ImgEmpty, ImgShopperOne } from "@/assets/images";
 import { Swipeable } from "react-native-gesture-handler";
-import {
-  ALERT_TYPE,
-  AlertNotificationRoot,
-  Toast,
-} from "react-native-alert-notification";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import { Dialog, PanningProvider } from "react-native-ui-lib";
 
 const SwipeToDeleteCard = ({
@@ -71,7 +67,7 @@ const cart = () => {
   const [isCart, setIsCart] = React.useState(true);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   return (
-    <AlertNotificationRoot>
+    <>
       <View style={tw`flex-1  `}>
         {isCart ? (
           <View style={tw`flex-1`}>
@@ -258,7 +254,7 @@ const cart = () => {
           </TouchableOpacity>
         </View>
       </Dialog>
-    </AlertNotificationRoot>
+    </>
   );
 };
 

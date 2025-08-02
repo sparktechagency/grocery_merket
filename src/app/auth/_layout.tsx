@@ -1,4 +1,3 @@
-import { View, Text } from "react-native";
 import React from "react";
 import { Stack } from "expo-router";
 import tw from "@/src/lib/tailwind";
@@ -19,6 +18,15 @@ const AuthLayout = () => {
           headerShown: false,
         }}
       />
+
+      <Stack.Screen name="forgetOtpCode" />
+      <Stack.Screen name="addFace" />
+      <Stack.Screen name="addFingerPrint" />
+      <Stack.Screen name="antherAuth" />
+      <Stack.Screen name="changePassword" />
+      <Stack.Screen name="OTPCode" />
+      <Stack.Screen name="resetPassSuccess" />
+      <Stack.Screen name="singUp" />
     </Stack>
   );
 };

@@ -5,11 +5,7 @@ import { ImgChatProfile, ImgNoShopper } from "@/assets/images";
 import { SvgXml } from "react-native-svg";
 import { IconLocationWhite } from "@/assets/icon";
 import IwtButton from "@/src/lib/buttons/IwtButton";
-import {
-  ALERT_TYPE,
-  AlertNotificationRoot,
-  Toast,
-} from "react-native-alert-notification";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
 import { FlatList } from "react-native-gesture-handler";
@@ -71,36 +67,34 @@ const myShoppers = () => {
   );
 
   return (
-    <AlertNotificationRoot>
-      <View style={tw`flex-1 bg-white`}>
-        <BackWithComponent onPress={() => router.back()} title={"My Shopper"} />
+    <View style={tw`flex-1 bg-white`}>
+      <BackWithComponent onPress={() => router.back()} title={"My Shopper"} />
 
-        {isShopper ? (
-          <View>
-            <FlatList
-              contentContainerStyle={tw`pb-24`}
-              data={shopperData}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id.toLocaleString()}
+      {isShopper ? (
+        <View>
+          <FlatList
+            contentContainerStyle={tw`pb-24`}
+            data={shopperData}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id.toLocaleString()}
+          />
+        </View>
+      ) : (
+        <View style={tw`px-5 items-center  my-auto`}>
+          <Image style={tw`mb-8`} source={ImgNoShopper} />
+          <Text style={tw`font-PoppinsMedium text-base text-black mb-4`}>
+            You have no personal shopper right now
+          </Text>
+          <View style={tw`w-full`}>
+            <IwtButton
+              // onPress={() => router.push("/user/messaging/messaging")}
+              onPress={() => router.push("/user/shoppers/allShopper")}
+              title="Make One"
             />
           </View>
-        ) : (
-          <View style={tw`px-5 items-center  my-auto`}>
-            <Image style={tw`mb-8`} source={ImgNoShopper} />
-            <Text style={tw`font-PoppinsMedium text-base text-black mb-4`}>
-              You have no personal shopper right now
-            </Text>
-            <View style={tw`w-full`}>
-              <IwtButton
-                // onPress={() => router.push("/user/messaging/messaging")}
-                onPress={() => router.push("/user/shoppers/allShopper")}
-                title="Make One"
-              />
-            </View>
-          </View>
-        )}
-      </View>
-    </AlertNotificationRoot>
+        </View>
+      )}
+    </View>
   );
 };
 

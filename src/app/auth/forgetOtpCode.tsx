@@ -10,7 +10,6 @@ import {
   useResendOTPMutation,
   useVerifyingOTPMutation,
 } from "@/src/redux/apiSlices/authSlices";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const OTPCode = () => {
   const [otpData] = useVerifyingOTPMutation();
@@ -41,12 +40,7 @@ const OTPCode = () => {
     try {
       const response = await otpData({ otp }).unwrap();
       if (response) {
-        await AsyncStorage.setItem("token", response?.token);
-        router.replace(
-          response?.user?.role === "shopper"
-            ? "/shopper/home/home"
-            : "/user/drawer/home"
-        );
+        router.replace("/auth");
       }
     } catch (error) {
       console.error("Error handling OTP filled:", error);

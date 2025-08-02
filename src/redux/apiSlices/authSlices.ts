@@ -45,15 +45,15 @@ const authSlices = api.injectEndpoints({
       }),
       forgotPassword: build.mutation({
         query: (email) => ({
-          url: "/auth/forgot_password",
+          url: "/auth/forget_password",
           method: "POST",
-          body: { email },
+          body: email,
         }),
         invalidatesTags: ["user"],
       }),
       verifyingOTP: build.mutation({
         query: (otpData) => ({
-          url: "/auth/verify_otp",
+          url: "/auth/verify",
           method: "POST",
           body: otpData,
         }),
@@ -71,4 +71,13 @@ const authSlices = api.injectEndpoints({
   },
 });
 
-export const { useLoginMutation } = authSlices;
+export const {
+  useLoginMutation,
+  useProfileQuery,
+  useChangePasswordMutation,
+  useForgotPasswordMutation,
+  useLogoutMutation,
+  useResendOTPMutation,
+  useRegisterMutation,
+  useVerifyingOTPMutation,
+} = authSlices;

@@ -12,11 +12,7 @@ import {
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { CartData } from "@/src/components/CardData";
 import { Swipeable } from "react-native-gesture-handler";
-import {
-  ALERT_TYPE,
-  AlertNotificationRoot,
-  Toast,
-} from "react-native-alert-notification";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import { Dialog, PanningProvider } from "react-native-ui-lib";
 import { ImgBurger } from "@/assets/images";
 
@@ -89,85 +85,81 @@ const wishlist = () => {
   };
 
   return (
-    <AlertNotificationRoot>
-      <View style={tw`flex-1`}>
-        <BackWithComponent onPress={() => router.back()} title="Stores" />
-        <ScrollView style={tw`flex-grow mb-24`}>
-          {CartData.map((item) => (
-            <SwipeToDeleteCard
-              key={item.id}
-              data={item}
-              onDelete={() => setIsModalVisible(true)}
-              onAddToCart={() =>
-                Toast.show({
-                  type: ALERT_TYPE.SUCCESS,
-                  title: "Success",
-                  textBody: "Added add to cart",
-                })
-              }
-            />
-          ))}
-        </ScrollView>
+    <View style={tw`flex-1`}>
+      <BackWithComponent onPress={() => router.back()} title="Stores" />
+      <ScrollView style={tw`flex-grow mb-24`}>
+        {CartData.map((item) => (
+          <SwipeToDeleteCard
+            key={item.id}
+            data={item}
+            onDelete={() => setIsModalVisible(true)}
+            onAddToCart={() =>
+              Toast.show({
+                type: ALERT_TYPE.SUCCESS,
+                title: "Success",
+                textBody: "Added add to cart",
+              })
+            }
+          />
+        ))}
+      </ScrollView>
 
-        {/* ============= Delete modal ========================= */}
-        <Dialog
-          width={"100%"}
-          height={"40%"}
-          bottom={true}
-          containerStyle={tw`flex-1 bg-white rounded-t-3xl p-5`}
-          visible={isModalVisible}
-          onDismiss={() => setIsModalVisible(false)}
-          panDirection={PanningProvider.Directions.DOWN}
+      {/* ============= Delete modal ========================= */}
+      <Dialog
+        width={"100%"}
+        height={"40%"}
+        bottom={true}
+        containerStyle={tw`flex-1 bg-white rounded-t-3xl p-5`}
+        visible={isModalVisible}
+        onDismiss={() => setIsModalVisible(false)}
+        panDirection={PanningProvider.Directions.DOWN}
+      >
+        <Text style={tw`font-PoppinsMedium text-base text-center text-black`}>
+          Remove from cart ?
+        </Text>
+        <Text style={tw` border-b w-full`}></Text>
+
+        <View
+          style={tw`flex-row items-center p-3 rounded-2xl bg-white mt-7 mb-3 shadow-md`}
         >
-          <Text style={tw`font-PoppinsMedium text-base text-center text-black`}>
-            Remove from cart ?
-          </Text>
-          <Text style={tw` border-b w-full`}></Text>
+          <Image
+            source={ImgBurger}
+            style={tw`w-14 h-14 rounded-md`}
+            resizeMode="contain"
+          />
+          <View style={tw`ml-4`}>
+            <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
+              Red Apple
+            </Text>
+            <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>
+              1kg
+            </Text>
+            <Text style={tw`font-PoppinsSemiBold text-base text-primary mt-1`}>
+              $55
+            </Text>
+          </View>
+        </View>
 
-          <View
-            style={tw`flex-row items-center p-3 rounded-2xl bg-white mt-7 mb-3 shadow-md`}
+        <View style={tw`flex-row justify-between items-center mt-8 `}>
+          <TouchableOpacity
+            onPress={() => setIsModalVisible(!isModalVisible)}
+            style={tw`bg-[#E8E8E8] px-10 py-2.5 rounded-full`}
           >
-            <Image
-              source={ImgBurger}
-              style={tw`w-14 h-14 rounded-md`}
-              resizeMode="contain"
-            />
-            <View style={tw`ml-4`}>
-              <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-                Red Apple
-              </Text>
-              <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>
-                1kg
-              </Text>
-              <Text
-                style={tw`font-PoppinsSemiBold text-base text-primary mt-1`}
-              >
-                $55
-              </Text>
-            </View>
-          </View>
-
-          <View style={tw`flex-row justify-between items-center mt-8 `}>
-            <TouchableOpacity
-              onPress={() => setIsModalVisible(!isModalVisible)}
-              style={tw`bg-[#E8E8E8] px-10 py-2.5 rounded-full`}
-            >
-              <Text style={tw`font-PoppinsMedium text-black text-lg`}>
-                Cancel
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setIsModalVisible(!isModalVisible)}
-              style={tw`bg-[#FF0000] px-10 py-2.5 rounded-full`}
-            >
-              <Text style={tw`font-PoppinsMedium text-white text-lg`}>
-                Yes, remove
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Dialog>
-      </View>
-    </AlertNotificationRoot>
+            <Text style={tw`font-PoppinsMedium text-black text-lg`}>
+              Cancel
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setIsModalVisible(!isModalVisible)}
+            style={tw`bg-[#FF0000] px-10 py-2.5 rounded-full`}
+          >
+            <Text style={tw`font-PoppinsMedium text-white text-lg`}>
+              Yes, remove
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </Dialog>
+    </View>
   );
 };
 

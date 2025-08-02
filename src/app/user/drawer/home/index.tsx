@@ -99,9 +99,17 @@ const HomeScreen = () => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={tw`pb-24`}
+
+        //  ---------------- profile section ------------------
       >
         <View style={tw`px-5 flex-row justify-between mt-3 mb-5`}>
-          <Pressable
+          <TouchableOpacity
+            onPress={() => router.push("/role/role")}
+            style={tw`justify-center items-center`}
+          >
+            <Text style={tw`font-PoppinsMedium text-base p-2`}>Login</Text>
+          </TouchableOpacity>
+          {/* <Pressable
             onPress={() => router.push("/user/drawer/home/profile")}
             style={tw`flex-row justify-center items-center gap-2`}
           >
@@ -115,7 +123,7 @@ const HomeScreen = () => {
                 Kodiak Island
               </Text>
             </View>
-          </Pressable>
+          </Pressable> */}
 
           <View style={tw`flex-row items-center gap-3`}>
             <TouchableOpacity

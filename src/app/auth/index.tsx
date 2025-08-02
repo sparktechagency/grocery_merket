@@ -1,18 +1,26 @@
-import { View, Text, Image, ScrollView } from "react-native";
+import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import React from "react";
 import { Link, router } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import tw from "@/src/lib/tailwind";
 import InputText from "@/src/lib/inputs/InputText";
-import { IconEyes, IconNext } from "@/assets/icon";
+import { IconEyes, IconEyesShow, IconNext } from "@/assets/icon";
 import { Checkbox } from "react-native-ui-lib";
 import TButton from "@/src/lib/buttons/TButton";
 import { Logo } from "@/assets/images";
 import { SvgXml } from "react-native-svg";
 import { useRole } from "@/src/hook/useRole";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useLoginMutation } from "@/src/redux/apiSlices/authSlices";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 const login = () => {
-  const [isSelected, setSelection] = React.useState(false);
+  const [isShow, setIsShow] = React.useState<boolean>(false);
+  const [isChecked, setIsChecked] = React.useState<boolean>(false);
   const role = useRole();
+
+  // -------------------------- all api --------------------------
+  const [credentials, { isLoading, isError }] = useLoginMutation();
+
   const {
     control,
     handleSubmit,
@@ -23,11 +31,40 @@ const login = () => {
       password: "",
     },
   });
-  // const onSubmit = (data: any) => console.log(data);
+  const onSubmit = async (data: any) => {
+    console.log(data, " onSubmit data");
+    try {
+      if (isChecked === true) {
+        await AsyncStorage.setItem("loginInfo", JSON.stringify(data));
+      }
+      const response = await credentials(data).unwrap();
+      if (response) {
+        await AsyncStorage.setItem("token", response?.token);
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Login Successful",
+          textBody: "Welcome back!",
+        });
+        // router.replace(role === "shopper" ? "/shopper/home/home" : "/user/drawer/home");
+      }
+    } catch (error) {
+      console.log(error, "Login error ----->");
+      Toast.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Login Failed",
+        textBody: "Please check your credentials and try again.",
+      });
+    }
+  };
 
-  // React.useEffect(() => {
-  //   getUserData();
-  // }, []);r
+  const handleCheckBox = async () => {
+    setIsChecked(!isChecked);
+    try {
+      await AsyncStorage.setItem("check", JSON.stringify(isChecked));
+    } catch (error) {
+      console.log(error, "User Info Storage not save ---->");
+    }
+  };
   return (
     <View style={tw`flex-1 bg-base`}>
       <ScrollView
@@ -65,7 +102,7 @@ const login = () => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <InputText
-                  label="Email & Phone"
+                  label="Email "
                   value={value}
                   onChangeText={(test) => onChange(test)}
                   onBlur={onBlur}
@@ -85,7 +122,7 @@ const login = () => {
               rules={{
                 pattern: {
                   value:
-                    /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
+                    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
                   message: "Please spacial char password",
                 },
                 required: {
@@ -103,8 +140,12 @@ const login = () => {
                   errorText={errors?.password?.message}
                   textInputProps={{
                     placeholder: "******",
+
+                    secureTextEntry: isShow ? false : true,
                   }}
-                  svgSecondIcon={IconEyes}
+                  secureTextEntry={isShow ? false : true}
+                  svgSecondIcon={isShow ? IconEyesShow : IconEyes}
+                  svgSecondOnPress={() => setIsShow(!isShow)}
                   containerLayoutStyle={tw`mb-3`}
                 />
               )}
@@ -113,14 +154,18 @@ const login = () => {
 
             <View style={tw`flex-row justify-between mb-10`}>
               <View style={tw`flex-row gap-2 items-center rounded-none`}>
-                <Checkbox
-                  value={isSelected}
-                  onValueChange={setSelection}
-                  style={tw`w-4 h-4 border-black rounded-none`}
-                />
-                <Text style={tw`font-PoppinsRegular text-sm text-black`}>
-                  Remember me
-                </Text>
+                <TouchableOpacity
+                  onPress={() => handleCheckBox()}
+                  style={tw.style(
+                    `border w-5 h-5  justify-center items-center rounded-sm`,
+                    isChecked ? `bg-primary border-0` : `bg-transparent`
+                  )}
+                >
+                  {isChecked ? (
+                    <Text style={tw`text-white text-sm`}>✔</Text>
+                  ) : null}
+                </TouchableOpacity>
+                <Text>Remember me</Text>
               </View>
               <Text
                 style={tw`text-black border-b text-[12px] font-PoppinsRegular`}
@@ -131,14 +176,15 @@ const login = () => {
 
             <View style={tw`rounded-full h-12`}>
               <TButton
-                // onPress={handleSubmit(onSubmit)}
-                onPress={() => {
-                  if (role === "user") {
-                    router.replace("/user/drawer/home");
-                  } else if (role === "shopper") {
-                    router.replace("/shopper/home/home");
-                  }
-                }}
+                onPress={handleSubmit(onSubmit)}
+                // onPress={() => {
+                //   if (role === "user") {
+                //     router.replace("/user/drawer/home");
+                //   } else if (role === "shopper") {
+                //     router.replace("/shopper/home/home");
+                //   }
+                // }}
+                isLoading={isLoading}
                 title="Sign in"
                 containerStyle={tw`rounded-md`}
               />

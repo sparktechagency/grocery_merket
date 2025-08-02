@@ -5,15 +5,28 @@ import { Link, router, useRouter } from "expo-router";
 import { Logo } from "@/assets/images";
 import tw from "@/src/lib/tailwind";
 import InputText from "@/src/lib/inputs/InputText";
-import { IconEyes, IconGoogle, IconNext, IconNextCorner } from "@/assets/icon";
+import {
+  IconEyes,
+  IconEyesShow,
+  IconGoogle,
+  IconNext,
+  IconNextCorner,
+} from "@/assets/icon";
 import TButton from "@/src/lib/buttons/TButton";
 import { SvgXml } from "react-native-svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRegisterMutation } from "@/src/redux/apiSlices/authSlices";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import { useRole } from "@/src/hook/useRole";
 
 const singUp = () => {
-  // const route = useRouter();
-  const [isSelected, setSelection] = React.useState(false);
+  const role = useRole();
+  const [isShow, setIsShow] = React.useState<boolean>(false);
   const [roleData, setRoleData] = React.useState("");
+
+  // -------------------------- all api --------------------------
+  const [userData] = useRegisterMutation();
+
   const {
     control,
     handleSubmit,
@@ -25,7 +38,35 @@ const singUp = () => {
       password: "",
     },
   });
-  // const onSubmit = (data: any) => console.log(data);
+  const onSubmit = async (data: any) => {
+    const payload = {
+      ...data,
+      role: roleData || role,
+    };
+    try {
+      const response = await userData(payload).unwrap();
+      //  await AsyncStorage.setItem("loginInfo", JSON.stringify(data));
+      if (response) {
+        console.log(response, "Registration response ----->");
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Registration Successful",
+          textBody: "Welcome aboard!",
+        });
+        router.replace({
+          pathname: "/auth/OTPCode",
+          params: { email: response?.user?.email },
+        });
+      }
+    } catch (error) {
+      console.log(error, "Registration error ----->");
+      Toast.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Registration Failed",
+        textBody: "Please check your details and try again.",
+      });
+    }
+  };
 
   // ----------- get user  role -----------------
   // Retrieve on mount
@@ -104,7 +145,7 @@ const singUp = () => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <InputText
-                  label="Email & Phone"
+                  label="Email "
                   value={value}
                   onChangeText={(test) => onChange(test)}
                   onBlur={onBlur}
@@ -124,7 +165,7 @@ const singUp = () => {
               rules={{
                 pattern: {
                   value:
-                    /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
+                    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
                   message: "Please spacial char password",
                 },
                 required: {
@@ -142,8 +183,11 @@ const singUp = () => {
                   errorText={errors?.password?.message}
                   textInputProps={{
                     placeholder: "******",
+                    secureTextEntry: isShow ? false : true,
                   }}
-                  svgSecondIcon={IconEyes}
+                  secureTextEntry={isShow ? false : true}
+                  svgSecondIcon={isShow ? IconEyesShow : IconEyes}
+                  svgSecondOnPress={() => setIsShow(!isShow)}
                   containerLayoutStyle={tw`mb-3`}
                 />
               )}
@@ -152,28 +196,11 @@ const singUp = () => {
 
             <View style={tw`rounded-full h-12`}>
               <TButton
-                // onPress={handleSubmit(onSubmit)}
-                onPress={() => router.push("/auth/antherAuth")}
+                onPress={handleSubmit(onSubmit)}
+                // onPress={() => router.push("/auth/antherAuth")}
                 title="Register"
                 containerStyle={tw`rounded-md`}
               />
-            </View>
-            <View style={tw`flex-row items-center my-6`}>
-              <View style={tw`flex-1 h-px bg-gray-300`} />
-              <Text style={tw`mx-3 text-gray-500 font-medium`}>or</Text>
-              <View style={tw`flex-1 h-px bg-gray-300`} />
-            </View>
-
-            <View style={tw`w-[90%] mx-auto`}>
-              <Pressable
-                style={tw`flex-row justify-between items-center py-3 px-5 border border-[#1E1E1E] rounded-md`}
-              >
-                <View style={tw` flex-row gap-3`}>
-                  <SvgXml xml={IconGoogle} />
-                  <Text>Continue with Google </Text>
-                </View>
-                <SvgXml xml={IconNextCorner} />
-              </Pressable>
             </View>
           </View>
         </View>
