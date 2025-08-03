@@ -19,7 +19,7 @@ const OTPCode = () => {
   const handleResendOtp = async () => {
     try {
       const response = await resendOtp({ email }).unwrap();
-      if (response) {
+      if (response.status) {
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: "OTP Resent",
@@ -27,7 +27,7 @@ const OTPCode = () => {
         });
       }
     } catch (error) {
-      console.error("Error resending OTP:", error);
+      console.log("Error resending OTP:", error);
       Toast.show({
         type: ALERT_TYPE.WARNING,
         title: "Error",
@@ -40,10 +40,13 @@ const OTPCode = () => {
     try {
       const response = await otpData({ otp }).unwrap();
       if (response) {
-        router.replace("/auth");
+        router.replace({
+          pathname: "/auth/changePassword",
+          params: { email },
+        });
       }
     } catch (error) {
-      console.error("Error handling OTP filled:", error);
+      console.log("Error handling OTP filled:", error);
       Toast.show({
         type: ALERT_TYPE.WARNING,
         title: "Error",

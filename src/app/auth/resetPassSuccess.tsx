@@ -18,7 +18,7 @@ const resetPassSuccess = () => {
       const role = value ? JSON.parse(value) : null;
       setRoleData(role);
     } catch (e) {
-      console.error("Error reading role from AsyncStorage", e);
+      console.log("Error reading role from AsyncStorage", e);
     }
   };
 
@@ -46,9 +46,7 @@ const resetPassSuccess = () => {
 
       <View style={tw`rounded-full w-full h-12`}>
         <TButton
-          // onPress={handleSubmit(onSubmit)}
-
-          onPress={() => router.push("/role/role")}
+          onPress={() => router.replace("/role/role")}
           title="Back To Login"
           containerStyle={tw`w-full rounded-md ${
             roleData === "shopper" ? "bg-primaryShopper" : "bg-primary"

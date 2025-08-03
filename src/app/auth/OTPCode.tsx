@@ -28,7 +28,7 @@ const OTPCode = () => {
         });
       }
     } catch (error) {
-      console.error("Error resending OTP:", error);
+      console.log("Error resending OTP:", error);
       Toast.show({
         type: ALERT_TYPE.WARNING,
         title: "Error",
@@ -49,7 +49,7 @@ const OTPCode = () => {
         );
       }
     } catch (error) {
-      console.error("Error handling OTP filled:", error);
+      console.log("Error handling OTP filled:", error);
       Toast.show({
         type: ALERT_TYPE.WARNING,
         title: "Error",

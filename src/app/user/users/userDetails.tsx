@@ -10,23 +10,12 @@ import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
 import TButton from "@/src/lib/buttons/TButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useGetProfileQuery } from "@/src/redux/apiSlices/profileSlieces";
 
 const userDetails = () => {
   const [roleData, setRoleData] = React.useState("");
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      name: "",
-      phone: "",
-      location: "",
-    },
-  });
-  // const onSubmit = (data: any) => console.log(data);
-
-  // console.log(errors);
+  // --------------------- all api -----------------------
+  const { data: profileData } = useGetProfileQuery({});
 
   const getUserData = async () => {
     try {
@@ -34,7 +23,7 @@ const userDetails = () => {
       const role = value ? JSON.parse(value) : null;
       setRoleData(role);
     } catch (e) {
-      console.error("Error reading role from AsyncStorage", e);
+      console.log("Error reading role from AsyncStorage", e);
     }
   };
 
@@ -55,6 +44,7 @@ const userDetails = () => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={tw`pb-6`}
+        style={tw`px-5`}
       >
         <View>
           <View style={tw`relative mx-auto my-10`}>
@@ -65,82 +55,55 @@ const userDetails = () => {
               <SvgXml xml={IconEdit} />
             </TouchableOpacity>
           </View>
-          <View style={tw`mx-5 flex-1 items-center gap-3`}>
-            <Controller
-              control={control}
-              rules={{
-                required: {
-                  value: true,
-                  message: "Name is required",
-                },
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <InputText
-                  editable={false}
-                  value={value}
-                  onChangeText={(test) => onChange(test)}
-                  // onBlur={onBlur}
-                  touched
-                  errorText={errors?.name?.message}
-                  placeholder="Benjamin Wilkison"
-                  placeholderStyle={tw`text-gray-900`}
-                  inputStyle={tw`font-PoppinsRegular `}
-                  textXOutRangeFirst={10}
-                  containerStyle={tw`rounded-full`}
-                />
-              )}
-              name="name"
-            />
-            <Controller
-              control={control}
-              rules={{
-                required: {
-                  value: true,
-                  message: "Name is required",
-                },
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <InputText
-                  value={value}
-                  onChangeText={(test) => onChange(test)}
-                  onBlur={onBlur}
-                  editable={false}
-                  touched
-                  errorText={errors?.phone?.message}
-                  placeholder="+95632587456"
-                  inputStyle={tw`font-PoppinsRegular`}
-                  textXOutRangeFirst={10}
-                  containerStyle={tw`rounded-full`}
-                  placeholderStyle={tw`text-gray-900`}
-                />
-              )}
-              name="phone"
-            />
-            <Controller
-              control={control}
-              rules={{
-                required: {
-                  value: true,
-                  message: "Name is required",
-                },
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <InputText
-                  value={value}
-                  onChangeText={(test) => onChange(test)}
-                  onBlur={onBlur}
-                  editable={false}
-                  touched
-                  errorText={errors?.location?.message}
-                  placeholder="Kodiak Island"
-                  inputStyle={tw`font-PoppinsRegular`}
-                  containerStyle={tw`rounded-full`}
-                  placeholderStyle={tw`text-gray-900`}
-                  textXOutRangeFirst={10}
-                />
-              )}
-              name="location"
-            />
+
+          <View style={tw`flex gap-3`}>
+            <View>
+              <Text style={tw`font-PoppinsMedium text-lg text-black`}>
+                Name
+              </Text>
+              <View
+                style={tw` bg-gray-200 rounded-full w-full h-12 flex-row justify-center items-center  px-4`}
+              >
+                <Text
+                  style={tw`flex-1 font-PoppinsMedium text-base text-regularText `}
+                >
+                  {profileData?.data?.name}
+                </Text>
+              </View>
+            </View>
+
+            <View>
+              <Text style={tw`font-PoppinsMedium text-lg text-black`}>
+                Phone
+              </Text>
+              <View
+                style={tw` bg-gray-200 rounded-full w-full h-12 flex-row justify-center items-center  px-4`}
+              >
+                <Text
+                  style={tw`flex-1 font-PoppinsMedium text-base text-regularText `}
+                >
+                  {profileData?.data?.phone
+                    ? profileData?.data?.phone
+                    : "No Phone"}
+                </Text>
+              </View>
+            </View>
+            <View>
+              <Text style={tw`font-PoppinsMedium text-lg text-black`}>
+                Address
+              </Text>
+              <View
+                style={tw` bg-gray-200 rounded-full w-full h-12 flex-row justify-center items-center  px-4`}
+              >
+                <Text
+                  style={tw`flex-1 font-PoppinsMedium text-base text-regularText `}
+                >
+                  {profileData?.data?.address
+                    ? profileData?.data?.address
+                    : "No Address"}
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
       </ScrollView>

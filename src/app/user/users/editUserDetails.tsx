@@ -1,34 +1,62 @@
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  TextInput,
+} from "react-native";
+import React, { useState } from "react";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
 import tw from "@/src/lib/tailwind";
 import TButton from "@/src/lib/buttons/TButton";
-import InputText from "@/src/lib/inputs/InputText";
-import { Controller, useForm } from "react-hook-form";
 import { SvgXml } from "react-native-svg";
 import { IconEdit } from "@/assets/icon";
 import { ImgProfileImg } from "@/assets/images";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+} from "@/src/redux/apiSlices/profileSlieces";
 
 const editUserDetails = () => {
   const [roleData, setRoleData] = React.useState("");
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState(null);
+  // ------------------ all api --------------------
+  const { data: profileDataRead } = useGetProfileQuery({});
+  const [profileData, { isLoading }] = useUpdateProfileMutation();
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      name: "",
-      phone: "",
-      location: "",
-    },
-  });
-  // const onSubmit = (data: any) => console.log(data);
+  //  ------------------ update user profile data ---------------
 
-  // console.log(errors);
+  const handleEditProfile = async () => {
+    try {
+      const userData = {
+        name: name ? name : profileDataRead?.data?.name,
+        phone: phone ? phone : profileDataRead?.data?.phone,
+        address: address ? address : profileDataRead?.data?.address,
+      };
+      const response = await profileData(userData).unwrap();
+      if (response.status) {
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Success",
+          textBody: "Congrats! Your Profile Update success!",
+        });
+        router.replace("/user/users/userDetails");
+      }
+    } catch (error) {
+      console.log(error, "Edit profile update not success .");
+      Toast.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Update Failed",
+        textBody: "Please try again",
+      });
+    }
+  };
 
   const getUserData = async () => {
     try {
@@ -36,7 +64,7 @@ const editUserDetails = () => {
       const role = value ? JSON.parse(value) : null;
       setRoleData(role);
     } catch (e) {
-      console.error("Error reading role from AsyncStorage", e);
+      console.log("Error reading role from AsyncStorage", e);
     }
   };
 
@@ -56,7 +84,7 @@ const editUserDetails = () => {
         keyboardDismissMode="on-drag"
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={tw`pb-6`}
+        contentContainerStyle={tw`pb-6 px-4`}
       >
         <View>
           <View style={tw`relative mx-auto my-10`}>
@@ -68,92 +96,59 @@ const editUserDetails = () => {
             </TouchableOpacity>
           </View>
 
-          <View style={tw`mx-5 flex-1 items-center gap-3`}>
-            <Controller
-              control={control}
-              rules={{
-                required: {
-                  value: true,
-                  message: "Name is required",
-                },
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <InputText
-                  value={value}
-                  onChangeText={(test) => onChange(test)}
-                  onBlur={onBlur}
-                  touched
-                  errorText={errors?.name?.message}
-                  placeholder="Benjamin Wilkison"
-                  placeholderStyle={tw`text-gray-900`}
-                  inputStyle={tw`font-PoppinsRegular `}
-                  textXOutRangeFirst={10}
-                  containerStyle={tw`rounded-full`}
+          <View style={tw`gap-4`}>
+            <View>
+              <Text style={tw`font-PoppinsMedium text-lg text-black ml-2`}>
+                Name
+              </Text>
+              <View
+                style={tw` bg-gray-200 rounded-full w-full h-12 flex-row justify-start items-center  px-4`}
+              >
+                <TextInput
+                  onChangeText={(text) => setName(text)}
+                  defaultValue={profileDataRead?.data?.name}
+                  style={tw`flex-1 text-base`}
                 />
-              )}
-              name="name"
-            />
-            <Controller
-              control={control}
-              rules={{
-                required: {
-                  value: true,
-                  message: "Name is required",
-                },
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <InputText
-                  value={value}
-                  onChangeText={(test) => onChange(test)}
-                  onBlur={onBlur}
-                  touched
-                  errorText={errors?.phone?.message}
-                  placeholder="+95632587456"
-                  inputStyle={tw`font-PoppinsRegular`}
-                  textXOutRangeFirst={10}
-                  containerStyle={tw`rounded-full`}
-                  placeholderStyle={tw`text-gray-900`}
+              </View>
+            </View>
+
+            <View>
+              <Text style={tw`font-PoppinsMedium text-lg text-black ml-2`}>
+                Phone
+              </Text>
+              <View
+                style={tw` bg-gray-200 rounded-full w-full h-12 flex-row justify-start items-center  px-4`}
+              >
+                <TextInput
+                  keyboardType="numeric"
+                  onChangeText={(text) => setPhone(text)}
+                  defaultValue={profileDataRead?.data?.phone}
+                  style={tw`flex-1 text-base`}
                 />
-              )}
-              name="phone"
-            />
-            <Controller
-              control={control}
-              rules={{
-                required: {
-                  value: true,
-                  message: "Name is required",
-                },
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <InputText
-                  value={value}
-                  onChangeText={(test) => onChange(test)}
-                  onBlur={onBlur}
-                  touched
-                  errorText={errors?.location?.message}
-                  placeholder="Kodiak Island"
-                  inputStyle={tw`font-PoppinsRegular`}
-                  containerStyle={tw`rounded-full`}
-                  placeholderStyle={tw`text-gray-900`}
-                  textXOutRangeFirst={10}
+              </View>
+            </View>
+
+            <View>
+              <Text style={tw`font-PoppinsMedium text-lg text-black ml-2`}>
+                Address
+              </Text>
+              <View
+                style={tw` bg-gray-200 rounded-full w-full h-12 flex-row justify-start items-center  px-4`}
+              >
+                <TextInput
+                  onChangeText={(text) => setAddress(text)}
+                  defaultValue={profileDataRead?.data?.address}
+                  style={tw`flex-1 text-base`}
                 />
-              )}
-              name="location"
-            />
+              </View>
+            </View>
           </View>
         </View>
       </ScrollView>
       <View style={tw`w-full pb-6`}>
         <TButton
-          // onPress={handleSubmit(onSubmit)}
-          onPress={() =>
-            Toast.show({
-              type: ALERT_TYPE.SUCCESS,
-              title: "Success",
-              textBody: "Congrats! Your Profile Update success!",
-            })
-          }
+          isLoading={isLoading}
+          onPress={() => handleEditProfile()}
           title="save & change"
           containerStyle={tw`rounded-full mx-6  mt-10 ${
             roleData === "user" ? "bg-primary" : "bg-primaryShopper"

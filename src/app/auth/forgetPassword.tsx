@@ -23,7 +23,6 @@ const forgetPassword = () => {
     },
   });
   const onSubmit = async (data: any) => {
-    console.log(data, "Submitted data for forgot password");
     try {
       const response = await email(data).unwrap();
       if (response) {

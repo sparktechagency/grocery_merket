@@ -24,8 +24,12 @@ import {
 import tw from "@/src/lib/tailwind";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useGetProfileQuery } from "@/src/redux/apiSlices/profileSlieces";
 
 const profile = () => {
+  // =================== all api ----------------------
+  const { data: profileData } = useGetProfileQuery({});
+
   const removeRoleData = async () => {
     try {
       await AsyncStorage.removeItem("role");
@@ -45,20 +49,28 @@ const profile = () => {
           <Image style={tw`w-24 h-24 rounded-full `} source={ImgProfileImg} />
           <View>
             <Text style={tw`text-white font-PoppinsRegular text-sm my-2`}>
-              Benjamin Wilkison
+              {profileData?.data?.name}
             </Text>
-            <View style={tw`flex-row gap-1 `}>
-              <SvgXml xml={IconLocationProfile} />
-              <Text style={tw`text-white font-PoppinsRegular text-sm `}>
-                Kodiak Island
-              </Text>
-            </View>
-            <View style={tw`flex-row gap-1 mt-2`}>
-              <SvgXml xml={IconTeliphone} />
-              <Text style={tw`text-white font-PoppinsRegular text-sm`}>
-                +95632587456
-              </Text>
-            </View>
+            {profileData?.data?.address ? (
+              <View style={tw`flex-row gap-1 `}>
+                <SvgXml xml={IconLocationProfile} />
+                <Text style={tw`text-white font-PoppinsRegular text-sm `}>
+                  {profileData?.data?.address}
+                </Text>
+              </View>
+            ) : (
+              <Text style={tw`text-sm text-regularText`}>No Address</Text>
+            )}
+            {profileData?.data?.phone ? (
+              <View style={tw`flex-row gap-1 mt-2`}>
+                <SvgXml xml={IconTeliphone} />
+                <Text style={tw`text-white font-PoppinsRegular text-sm`}>
+                  {profileData?.data?.phone}
+                </Text>
+              </View>
+            ) : (
+              <Text style={tw`text-sm text-regularText`}>No Phone Number</Text>
+            )}
           </View>
         </View>
 
@@ -84,27 +96,7 @@ const profile = () => {
               <SvgXml xml={IconGetterThen} />
             </Pressable>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => router.push("/user/users/userAddress")}
-            style={tw`flex-row justify-between items-center`}
-          >
-            <View style={tw`flex-row justify-start items-center gap-3`}>
-              <View
-                style={tw`w-10 h-10 justify-center text-center items-center bg-[#ECFFF1] mr-5 rounded-full`}
-              >
-                <SvgXml xml={IconLocationSelected} />
-              </View>
-              <Text style={tw`font-PoppinsMedium text-base text-black`}>
-                My Address
-              </Text>
-            </View>
-            <Pressable
-              onPress={() => router.push("/user/users/userAddress")}
-              style={tw`py-2.5 px-3.5 bg-white rounded-full`}
-            >
-              <SvgXml xml={IconGetterThen} />
-            </Pressable>
-          </TouchableOpacity>
+
           <TouchableOpacity
             onPress={() => router.push("/user/users/userOrder")}
             style={tw`flex-row justify-between items-center`}

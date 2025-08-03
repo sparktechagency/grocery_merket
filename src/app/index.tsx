@@ -35,7 +35,7 @@ const index = () => {
     AppLoader();
 
     setTimeout(() => {
-      // router.push("/auth/OTPCode");
+      // router.push("/user/users/userDetails");
       router.replace("/user/onboarding/onboarding");
     }, 10);
   }, []);

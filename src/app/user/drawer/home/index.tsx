@@ -12,84 +12,38 @@ import {
   IconAddToCat,
   IconArrowCorner,
   IconComparison,
-  IconLocation,
   IconNotification,
   IconRightArrowSingle,
 } from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
 import DiscountCarousel from "@/src/components/Carousel";
-import {
-  ImgBeverage,
-  ImgDairyBakery,
-  ImgFruits,
-  ImgMeatEgg,
-  ImgSnacks,
-  ImgSpices,
-} from "@/assets/images";
+
 import { FlatList } from "react-native-gesture-handler";
 import { CartData } from "@/src/components/CardData";
 import { router } from "expo-router";
 import { CardItem } from "@/src/components/CardItem";
+import { useKogerAllCategoriesQuery } from "@/src/redux/apiSlices/homePageApiSlices";
 
 const HomeScreen = () => {
   const [notification, setNotification] = React.useState(false);
   const [addToCart, setAddToCart] = React.useState(true);
 
-  // ------------ Category Data  item state hare ------------
-  const categoryData = [
-    {
-      id: 1,
-      image: ImgFruits,
-      category_name: "Fruits & Vegetables",
-    },
-    {
-      id: 2,
-      image: ImgDairyBakery,
-      category_name: "Dairy & Bakery",
-    },
-    {
-      id: 3,
-      image: ImgSpices,
-      category_name: "Spices",
-    },
-    {
-      id: 4,
-      image: ImgSnacks,
-      category_name: "Snacks",
-    },
-    {
-      id: 5,
-      image: ImgBeverage,
-      category_name: "Beverage",
-    },
-    {
-      id: 6,
-      image: ImgMeatEgg,
-      category_name: "Meat & Eggs",
-    },
-  ];
-  interface CategoryProp {
-    image: any;
-    id: number;
-    category_name: string;
-  }
-  const categoryItem = ({ item }: { item: CategoryProp }) => (
+  const { data: categoriesData, isLoading } = useKogerAllCategoriesQuery({});
+
+  const categoryItem = ({ item }: any) => (
     <TouchableOpacity
       onPress={() => router.push("/user/storeProduct/storeProduct")}
-      style={tw`m-2 bg-white w-44 rounded-lg shadow-md`}
+      style={tw`m-2 bg-white w-44 h-12 rounded-lg shadow-md flex-row justify-between items-center gap-2 px-4`}
     >
-      <Image source={item.image} style={tw`w-full h-24 rounded-t-lg`} />
-      <View style={tw`flex-row justify-between items-center p-1.5`}>
-        <Text style={tw` text-xs mt-1 font-PoppinsMedium`}>
-          {item.category_name}
-        </Text>
-        <Pressable
-          onPress={() => router.push("/user/storeProduct/storeProduct")}
-          style={tw`p-0.5 text-center bg-[#F0F0F0] rounded-full`}
-        >
-          <SvgXml xml={IconArrowCorner} />
-        </Pressable>
-      </View>
+      <Text numberOfLines={1} style={tw` text-sm flex-1 font-PoppinsMedium`}>
+        {item}
+      </Text>
+      <Pressable
+        onPress={() => router.push("/user/storeProduct/storeProduct")}
+        style={tw`p-0.5 text-center bg-[#F0F0F0] rounded-full`}
+      >
+        <SvgXml xml={IconArrowCorner} />
+      </Pressable>
     </TouchableOpacity>
   );
 
@@ -175,7 +129,7 @@ const HomeScreen = () => {
               Category
             </Text>
             <TouchableOpacity
-              onPress={() => router.push("/user/drawer/home/stores")}
+              onPress={() => router.push("/user/users/all_categories")}
               style={tw`flex-row justify-center gap-1 items-center`}
             >
               <Text>View all</Text>
@@ -185,10 +139,10 @@ const HomeScreen = () => {
 
           <View style={tw`pl-4`}>
             <FlatList
-              data={categoryData}
+              data={categoriesData?.categories}
               renderItem={categoryItem}
               // numColumns={2}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item, index) => index.toString()}
               horizontal={true}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}

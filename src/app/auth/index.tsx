@@ -45,7 +45,9 @@ const login = () => {
           title: "Login Successful",
           textBody: "Welcome back!",
         });
-        // router.replace(role === "shopper" ? "/shopper/home/home" : "/user/drawer/home");
+        router.replace(
+          role === "shopper" ? "/shopper/home/home" : "/user/drawer/home"
+        );
       }
     } catch (error) {
       console.log(error, "Login error ----->");
@@ -177,13 +179,6 @@ const login = () => {
             <View style={tw`rounded-full h-12`}>
               <TButton
                 onPress={handleSubmit(onSubmit)}
-                // onPress={() => {
-                //   if (role === "user") {
-                //     router.replace("/user/drawer/home");
-                //   } else if (role === "shopper") {
-                //     router.replace("/shopper/home/home");
-                //   }
-                // }}
                 isLoading={isLoading}
                 title="Sign in"
                 containerStyle={tw`rounded-md`}

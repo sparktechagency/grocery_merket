@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRegisterMutation } from "@/src/redux/apiSlices/authSlices";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import { useRole } from "@/src/hook/useRole";
+import { isLoading } from "expo-font";
 
 const singUp = () => {
   const role = useRole();
@@ -25,7 +26,7 @@ const singUp = () => {
   const [roleData, setRoleData] = React.useState("");
 
   // -------------------------- all api --------------------------
-  const [userData] = useRegisterMutation();
+  const [userData, { isLoading }] = useRegisterMutation();
 
   const {
     control,
@@ -76,7 +77,7 @@ const singUp = () => {
       const role = value ? JSON.parse(value) : null;
       setRoleData(role);
     } catch (e) {
-      console.error("Error reading role from AsyncStorage", e);
+      console.log("Error reading role from AsyncStorage", e);
     }
   };
 
@@ -198,6 +199,7 @@ const singUp = () => {
               <TButton
                 onPress={handleSubmit(onSubmit)}
                 // onPress={() => router.push("/auth/antherAuth")}
+                isLoading={isLoading}
                 title="Register"
                 containerStyle={tw`rounded-md`}
               />

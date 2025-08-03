@@ -1,30 +1,63 @@
 import { View, Text, ScrollView } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import InputText from "@/src/lib/inputs/InputText";
-import { IconEyes } from "@/assets/icon";
+import { IconEyes, IconEyesShow } from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
 import TButton from "@/src/lib/buttons/TButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import { useChangePasswordMutation } from "@/src/redux/apiSlices/authSlices";
 
 const changePassword = () => {
   const [roleData, setRoleData] = React.useState("");
+  const [showEyeNew, setShowEyeNew] = useState(false);
+  const [showEyeConfirm, setShowEyeConfirm] = useState(false);
+
+  const { email } = useLocalSearchParams();
+
+  //  ------------ all api ---------------- #
+  const [passwordData, { isLoading }] = useChangePasswordMutation();
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      confirm_password: "",
-      old_password: "",
       new_password: "",
+      confirmed_password: "",
     },
   });
-  // const onSubmit = (data: any) => console.log(data);
-
-  // console.log(errors);
+  const onSubmit = async (data: any) => {
+    try {
+      const payload = {
+        email: email,
+        new_password: data.new_password,
+        confirmed_password: data.confirmed_password,
+      };
+      console.log(payload, "this is payload");
+      const response = await passwordData({ payload }).unwrap();
+      console.log(response, "this is response----------->");
+      if (response.status) {
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Success",
+          textBody: "Update yur new password.",
+        });
+        router.replace("/auth/resetPassSuccess");
+      }
+    } catch (error) {
+      console.log(error, "New password not added .");
+      Toast.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Error",
+        textBody: "An error occurred while resending the  new password.",
+      });
+    }
+  };
 
   // ----------- get user  role -----------------
   const getUserData = async () => {
@@ -33,7 +66,7 @@ const changePassword = () => {
       const role = value ? JSON.parse(value) : null;
       setRoleData(role);
     } catch (e) {
-      console.error("Error reading role from AsyncStorage", e);
+      console.log("Error reading role from AsyncStorage", e);
     }
   };
 
@@ -55,44 +88,18 @@ const changePassword = () => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={tw`py-3 pb-6`}
         >
-          <View style={tw`gap-3`}>
+          <View style={tw`gap-4`}>
+            <View>
+              <Text style={tw` text-regularText text-sm`}>
+                Enter your new password
+              </Text>
+            </View>
             <Controller
               control={control}
               rules={{
                 pattern: {
                   value:
-                    /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
-                  message: "Please spacial char password",
-                },
-                required: {
-                  value: true,
-                  message: "Password is required",
-                },
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <InputText
-                  value={value}
-                  onChangeText={(test) => onChange(test)}
-                  onBlur={onBlur}
-                  touched
-                  focusSTyle={tw`border-blue-500`}
-                  errorText={errors?.old_password?.message}
-                  placeholderStyle={tw`text-gray-700`}
-                  svgSecondIcon={IconEyes}
-                  containerStyle={tw`rounded-full `}
-                  placeholder="Old Password"
-                  inputStyle={tw`font-PoppinsRegular`}
-                  textXOutRangeFirst={10}
-                />
-              )}
-              name="old_password"
-            />
-            <Controller
-              control={control}
-              rules={{
-                pattern: {
-                  value:
-                    /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
+                    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
                   message: "Please spacial char password",
                 },
                 required: {
@@ -108,8 +115,13 @@ const changePassword = () => {
                   touched
                   errorText={errors?.new_password?.message}
                   placeholder="New Password"
-                  svgSecondIcon={IconEyes}
-                  containerStyle={tw`rounded-full `}
+                  textInputProps={{
+                    secureTextEntry: showEyeNew ? false : true,
+                  }}
+                  secureTextEntry={showEyeNew ? false : true}
+                  svgSecondIcon={showEyeNew ? IconEyesShow : IconEyes}
+                  svgSecondOnPress={() => setShowEyeNew(!showEyeNew)}
+                  containerStyle={tw`rounded-xl `}
                   inputStyle={tw`font-PoppinsRegular`}
                   placeholderStyle={tw`text-gray-700`}
                 />
@@ -121,7 +133,7 @@ const changePassword = () => {
               rules={{
                 pattern: {
                   value:
-                    /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
+                    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
                   message: "Please spacial char password",
                 },
                 required: {
@@ -135,25 +147,31 @@ const changePassword = () => {
                   onChangeText={(test) => onChange(test)}
                   onBlur={onBlur}
                   touched
-                  errorText={errors?.password?.message}
+                  errorText={errors?.confirmed_password?.message}
                   placeholder="Confirm Password"
-                  svgSecondIcon={IconEyes}
+                  textInputProps={{
+                    secureTextEntry: showEyeConfirm ? false : true,
+                  }}
+                  secureTextEntry={showEyeConfirm ? false : true}
+                  svgSecondIcon={showEyeConfirm ? IconEyesShow : IconEyes}
+                  svgSecondOnPress={() => setShowEyeConfirm(!showEyeConfirm)}
                   placeholderStyle={tw`text-gray-700`}
-                  containerStyle={tw`rounded-full `}
+                  containerStyle={tw`rounded-xl `}
                   inputStyle={tw`font-PoppinsRegular`}
                   textXOutRangeFirst={5}
                 />
               )}
-              name="confirm_password"
+              name="confirmed_password"
             />
           </View>
         </ScrollView>
         <View style={tw`rounded-full`}>
           <TButton
-            // onPress={handleSubmit(onSubmit)}
-            onPress={() => router.push("/auth/resetPassSuccess")}
+            onPress={handleSubmit(onSubmit)}
+            isLoading={isLoading}
+            // onPress={() => router.push("/auth/resetPassSuccess")}
             title="Update password"
-            containerStyle={tw`rounded-full  ${
+            containerStyle={tw`rounded-xl  ${
               roleData === "user" ? "bg-primary" : "bg-primaryShopper"
             }`}
           />
