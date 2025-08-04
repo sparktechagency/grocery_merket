@@ -35,8 +35,8 @@ const index = () => {
     AppLoader();
 
     setTimeout(() => {
-      // router.push("/user/users/userDetails");
-      router.replace("/user/onboarding/onboarding");
+      router.push("/user/drawer/home");
+      // router.replace("/user/onboarding/onboarding");
     }, 10);
   }, []);
 

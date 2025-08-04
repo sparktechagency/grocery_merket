@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity, Pressable } from "react-native";
-import React from "react";
-import { router } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
 import tw from "@/src/lib/tailwind";
 import {
   ImgDetailsCarrot,
@@ -15,8 +15,31 @@ import { FlatList } from "react-native-gesture-handler";
 import { CartData } from "@/src/components/CardData";
 import TButton from "@/src/lib/buttons/TButton";
 import BackWithComponentLastIcon from "@/src/lib/backHeader/BackWithComponentLastIcon";
+import { useProductDetailsMutation } from "@/src/redux/apiSlices/homePageApiSlices";
 
 const productDetails = () => {
+  const { productId } = useLocalSearchParams();
+  const [productDetail, setProductDetail] = useState();
+  const [quantity, setQuantity] = useState(1);
+
+  // console.log(JSON.parse(productDetail?.product?.images?.[0]));
+
+  // -------------------- apis =-------------------
+
+  const [data, { isLoading }] = useProductDetailsMutation({});
+
+  useEffect(() => {
+    const loadProductDetails = async () => {
+      try {
+        const product = await data(productId).unwrap();
+        setProductDetail(product);
+      } catch (error) {
+        console.log(error, "Product details not work ---------->");
+      }
+    };
+    loadProductDetails();
+  }, []);
+
   const renderHeader = () => (
     <View style={tw`bg-white`}>
       {/* ------- header part ----------- */}
@@ -26,8 +49,8 @@ const productDetails = () => {
         />
         <View style={tw`w-full`}>
           <BackWithComponentLastIcon
-            onPress={() => router.push("/user/drawer/home/search")}
-            title="Fresh Carrots"
+            onPress={() => router.back()}
+            title="Detail"
             containerStyle={tw`px-0`}
             fastComponentContentStyle={tw`shadow-lg`}
             endComponentContentStyle={tw`shadow-lg`}
@@ -36,7 +59,7 @@ const productDetails = () => {
             <Image
               style={tw`w-96 h-52 aspect-square`}
               resizeMode="contain"
-              source={ImgDetailsCarrot}
+              source={{ uri: productDetail?.product?.images?.[0] }}
             />
           </View>
         </View>
@@ -46,21 +69,59 @@ const productDetails = () => {
         <View style={tw`flex-row justify-between items-center`}>
           <View>
             <Text style={tw`font-PoppinsMedium text-base text-black`}>
-              1 KG
+              {productDetail?.product?.size}
             </Text>
-            <Text style={tw`font-PoppinsSemiBold text-xl text-primary`}>
-              $ 10.50
-            </Text>
+            {productDetail?.product?.promo_price !== "0" ? (
+              <View>
+                <View style={tw`flex-row items-center gap-1`}>
+                  <Text style={tw`font-PoppinsSemiBold text-lg text-primary`}>
+                    $ {productDetail?.product?.promo_price}
+                  </Text>
+                  <Text style={tw`font-PoppinsRegular text-xs text-black`}>
+                    Promo Price
+                  </Text>
+                </View>
+                <View style={tw`flex-row items-center gap-1`}>
+                  <Text
+                    style={tw`font-PoppinsSemiBold text-lg text-primary line-through`}
+                  >
+                    $ {productDetail?.product?.regular_price}
+                  </Text>
+                  <Text style={tw`font-PoppinsRegular text-xs text-black`}>
+                    Regular price
+                  </Text>
+                </View>
+              </View>
+            ) : (
+              <View style={tw`flex-row items-center gap-1`}>
+                <Text style={tw`font-PoppinsSemiBold text-lg text-primary`}>
+                  $ {productDetail?.product?.regular_price}
+                </Text>
+                <Text style={tw`font-PoppinsRegular text-xs text-black`}>
+                  Regular Price
+                </Text>
+              </View>
+            )}
           </View>
 
           <View style={tw`flex-row items-center gap-4`}>
             <TouchableOpacity
+              onPress={() => {
+                if (quantity >= 2) {
+                  setQuantity(quantity - 1);
+                }
+              }}
               style={tw`py-2 px-4 bg-white shadow-md rounded-lg`}
             >
               <Text style={tw`font-bold text-xl text-black`}>-</Text>
             </TouchableOpacity>
-            <Text style={tw`font-PoppinsSemiBold text-xl text-black`}>1kg</Text>
-            <TouchableOpacity style={tw`py-2 px-4 bg-primary  rounded-lg`}>
+            <Text style={tw`font-PoppinsSemiBold text-xl text-black`}>
+              {quantity}
+            </Text>
+            <TouchableOpacity
+              onPress={() => setQuantity(quantity + 1)}
+              style={tw`py-2 px-4 bg-primary  rounded-lg`}
+            >
               <Text style={tw`font-bold text-lg text-white`}>+</Text>
             </TouchableOpacity>
           </View>

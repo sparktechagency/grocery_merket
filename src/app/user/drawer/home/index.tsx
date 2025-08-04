@@ -5,6 +5,7 @@ import {
   Image,
   Pressable,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React from "react";
 import { SvgXml } from "react-native-svg";
@@ -32,14 +33,27 @@ const HomeScreen = () => {
 
   const categoryItem = ({ item }: any) => (
     <TouchableOpacity
-      onPress={() => router.push("/user/storeProduct/storeProduct")}
+      onPress={() =>
+        router.push({
+          pathname: "/user/storeProduct/storeProduct",
+          params: { categoryData: item },
+        })
+      }
       style={tw`m-2 bg-white w-44 h-12 rounded-lg shadow-md flex-row justify-between items-center gap-2 px-4`}
     >
-      <Text numberOfLines={1} style={tw` text-sm flex-1 font-PoppinsMedium`}>
+      <Text
+        numberOfLines={1}
+        style={tw` text-sm flex-1 text-black font-PoppinsMedium`}
+      >
         {item}
       </Text>
       <Pressable
-        onPress={() => router.push("/user/storeProduct/storeProduct")}
+        onPress={() =>
+          router.push({
+            pathname: "/user/storeProduct/storeProduct",
+            params: { categoryData: item },
+          })
+        }
         style={tw`p-0.5 text-center bg-[#F0F0F0] rounded-full`}
       >
         <SvgXml xml={IconArrowCorner} />
@@ -141,7 +155,11 @@ const HomeScreen = () => {
             <FlatList
               data={categoriesData?.categories}
               renderItem={categoryItem}
-              // numColumns={2}
+              ListEmptyComponent={
+                <Text style={tw`text-center mt-4 text-gray-500`}>
+                  No products available.
+                </Text>
+              }
               keyExtractor={(item, index) => index.toString()}
               horizontal={true}
               showsVerticalScrollIndicator={false}

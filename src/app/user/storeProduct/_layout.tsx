@@ -9,11 +9,8 @@ const _layout = () => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="editUserDetails" />
-      <Stack.Screen name="all_categories" />
-      <Stack.Screen name="userDetails" />
-      <Stack.Screen name="userOrder" />
-      <Stack.Screen name="userOrderTrack" />
+      <Stack.Screen name="storeProduct" />
+      <Stack.Screen name="productDetails" />
     </Stack>
   );
 };

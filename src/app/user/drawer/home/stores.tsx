@@ -13,6 +13,7 @@ import { IconArrowCorner } from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
 import { router } from "expo-router";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
+import { useKogerAllStoreQuery } from "@/src/redux/apiSlices/homePageApiSlices";
 
 const storeName = [
   {
@@ -48,6 +49,8 @@ const storeName = [
 ];
 
 const Stores = () => {
+  const { data } = useKogerAllStoreQuery({});
+  console.log(data?.stores, "hare is store ");
   return (
     <View style={tw`flex-1`}>
       <ScrollView contentContainerStyle={tw` px-4 mb-10`}>
@@ -57,35 +60,31 @@ const Stores = () => {
           containerStyle={tw`px-0`}
         />
 
-        <View style={tw`flex-row flex-wrap justify-between mt-2`}>
-          {storeName.map((store) => (
+        <View style={tw`gap-3 mt-2`}>
+          {data?.stores.map((store, index) => (
             <TouchableOpacity
               onPress={() => router.push("/user/storeProduct/storeProduct")}
-              key={store.id}
+              key={index}
               activeOpacity={0.8}
-              style={tw`w-[48%] bg-white rounded-2xl mb-4 overflow-hidden shadow-md`}
+              style={tw`bg-white px-4 py-2 rounded-xl flex-row justify-between items-center shadow-sm`}
             >
-              <Image
-                source={store.image}
-                resizeMode="cover"
-                style={tw`w-full h-28 rounded-t-2xl`}
-              />
-              <View style={tw`flex-row justify-between items-center p-2.5`}>
-                <Text style={tw`font-PoppinsSemiBold text-sm text-black`}>
-                  {store.store_name}
-                </Text>
-                <Pressable
-                  onPress={() => router.push("/user/storeProduct/storeProduct")}
+              <Text
+                numberOfLines={1}
+                style={tw`font-PoppinsSemiBold  text-sm flex-1 text-black`}
+              >
+                {store}
+              </Text>
+              <Pressable
+                onPress={() => router.push("/user/storeProduct/storeProduct")}
+                style={tw`p-1.5 bg-[#e4e4e4] rounded-full`}
+              >
+                <SvgXml
+                  xml={IconArrowCorner}
+                  width={20}
+                  height={20}
                   style={tw`p-1.5 bg-[#e4e4e4] rounded-full`}
-                >
-                  <SvgXml
-                    xml={IconArrowCorner}
-                    width={20}
-                    height={20}
-                    style={tw`p-1.5 bg-[#e4e4e4] rounded-full`}
-                  />
-                </Pressable>
-              </View>
+                />
+              </Pressable>
             </TouchableOpacity>
           ))}
         </View>

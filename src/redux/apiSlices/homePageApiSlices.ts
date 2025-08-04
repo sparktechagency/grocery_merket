@@ -56,13 +56,12 @@ const homePageApiSlices = api.injectEndpoints({
       }),
       providesTags: ["searchProductsWithFilter"],
     }),
-    productDetails: build.query({
-      query: (productDetails) => ({
-        url: `/app/kroger/products/${productDetails.id}`,
-        method: "GET",
-        body: productDetails,
+    productDetails: build.mutation({
+      query: (productId) => ({
+        url: `/app/kroger/products/${productId}`,
+        method: "POST",
       }),
-      providesTags: ["productDetails"],
+      invalidatesTags: ["productDetails"],
     }),
 
     kogerAllCategories: build.query({
@@ -79,12 +78,13 @@ const homePageApiSlices = api.injectEndpoints({
       }),
       providesTags: ["searchKogerProduct"],
     }),
-    productByCategory: build.query({
-      query: () => ({
-        url: `/app/kroger/products/categories/Beauty?per_page=100&page=1`,
-        method: "GET",
+    productByCategory: build.mutation({
+      query: (category) => ({
+        url: `/app/kroger/products/categories/${category}?per_page=10&page=1`,
+        method: "POST",
+        body: category,
       }),
-      providesTags: ["productByCategory"],
+      invalidatesTags: ["productByCategory"],
     }),
     kogerAllStore: build.query({
       query: () => ({
@@ -111,10 +111,10 @@ export const {
   useAddFingerIdMutation,
   useGetFingerIdQuery,
   useSearchProductsWithFilterQuery,
-  useProductDetailsQuery,
+  useProductDetailsMutation,
   useKogerAllCategoriesQuery,
   useSearchKogerProductsQuery,
-  useProductByCategoryQuery,
+  useProductByCategoryMutation,
   useKogerAllStoreQuery,
   useProductByStoreQuery,
 } = homePageApiSlices;

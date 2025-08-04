@@ -205,6 +205,7 @@ export default function _layout() {
         drawerContent={(props) => <CustomDrawerContent {...props} />}
       >
         <Drawer.Screen name="home" />
+        <Drawer.Screen name="store_all_products" />
       </Drawer>
     </>
   );
