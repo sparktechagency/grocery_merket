@@ -22,8 +22,6 @@ const productDetails = () => {
   const [productDetail, setProductDetail] = useState();
   const [quantity, setQuantity] = useState(1);
 
-  // console.log(JSON.parse(productDetail?.product?.images?.[0]));
-
   // -------------------- apis =-------------------
 
   const [data, { isLoading }] = useProductDetailsMutation({});
@@ -59,7 +57,9 @@ const productDetails = () => {
             <Image
               style={tw`w-96 h-52 aspect-square`}
               resizeMode="contain"
-              source={{ uri: productDetail?.product?.images?.[0] }}
+              source={{
+                uri: "https://www.kroger.com//product//images//xlarge//front//0022331200000",
+              }}
             />
           </View>
         </View>
