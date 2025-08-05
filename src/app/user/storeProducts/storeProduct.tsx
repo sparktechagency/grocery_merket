@@ -63,8 +63,8 @@ const storeProduct = () => {
             <ProductCard
               onPress={() =>
                 router.push({
-                  pathname: "/user/storeProduct/productDetails",
-                  params: { productId: item?.id },
+                  pathname: "/user/storeProducts/productDetails",
+                  params: { productId: item?.id, category: categoryData },
                 })
               }
               productName={item.name}

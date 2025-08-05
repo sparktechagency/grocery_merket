@@ -24,7 +24,7 @@ interface CartItemProps {
 
 export const CardItem = ({ item, onPressAddToCart }: CartItemProps) => (
   <Pressable
-    onPress={() => router.push("/user/storeProduct/productDetails")}
+    onPress={() => router.push("/user/storeProducts/productDetails")}
     style={tw`relative w-44 h-48 bg-[#dbdee0] m-1 p-2  rounded-xl`}
   >
     <Image source={item?.image} style={tw`h-20 mx-auto p-1`} />
@@ -35,7 +35,7 @@ export const CardItem = ({ item, onPressAddToCart }: CartItemProps) => (
     </Text>
 
     <TouchableOpacity
-      onPress={() => router.push("/user/storeProduct/productDetails")}
+      onPress={() => router.push("/user/storeProducts/productDetails")}
       style={tw`absolute  bg-transparent right-2 top-4`}
     >
       <BlurView

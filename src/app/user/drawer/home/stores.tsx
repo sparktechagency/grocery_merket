@@ -63,7 +63,7 @@ const Stores = () => {
         <View style={tw`gap-3 mt-2`}>
           {data?.stores.map((store, index) => (
             <TouchableOpacity
-              onPress={() => router.push("/user/storeProduct/storeProduct")}
+              onPress={() => router.push("/user/storeProducts/storeProduct")}
               key={index}
               activeOpacity={0.8}
               style={tw`bg-white px-4 py-2 rounded-xl flex-row justify-between items-center shadow-sm`}
@@ -75,7 +75,7 @@ const Stores = () => {
                 {store}
               </Text>
               <Pressable
-                onPress={() => router.push("/user/storeProduct/storeProduct")}
+                onPress={() => router.push("/user/storeProducts/storeProduct")}
                 style={tw`p-1.5 bg-[#e4e4e4] rounded-full`}
               >
                 <SvgXml

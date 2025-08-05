@@ -9,7 +9,7 @@ import tw from "@/src/lib/tailwind";
 const priceComparisonProduct = () => {
   const renderItem = ({ item }) => (
     <TouchableOpacity
-      onPress={() => router.push("/user/storeProduct/productDetails")}
+      onPress={() => router.push("/user/storeProducts/productDetails")}
       style={tw`flex-row justify-between items-center p-3 rounded-2xl bg-white mb-3 shadow-lg`}
     >
       <View style={tw`flex-row gap-4`}>

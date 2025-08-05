@@ -35,7 +35,7 @@ const HomeScreen = () => {
     <TouchableOpacity
       onPress={() =>
         router.push({
-          pathname: "/user/storeProduct/storeProduct",
+          pathname: "/user/storeProducts/storeProduct",
           params: { categoryData: item },
         })
       }
@@ -50,7 +50,7 @@ const HomeScreen = () => {
       <Pressable
         onPress={() =>
           router.push({
-            pathname: "/user/storeProduct/storeProduct",
+            pathname: "/user/storeProducts/storeProduct",
             params: { categoryData: item },
           })
         }
@@ -176,7 +176,7 @@ const HomeScreen = () => {
               Beast Seller
             </Text>
             <TouchableOpacity
-              onPress={() => router.push("/user/storeProduct/storeProduct")}
+              onPress={() => router.push("/user/storeProducts/storeProduct")}
               style={tw`flex-row justify-center gap-1 items-center`}
             >
               <Text>View all</Text>
@@ -213,7 +213,7 @@ const HomeScreen = () => {
               Exclusive offer
             </Text>
             <TouchableOpacity
-              onPress={() => router.push("/user/storeProduct/storeProduct")}
+              onPress={() => router.push("/user/storeProducts/storeProduct")}
               style={tw`flex-row justify-center gap-1 items-center`}
             >
               <Text>View all</Text>

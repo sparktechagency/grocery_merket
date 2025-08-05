@@ -23,6 +23,7 @@ const login = () => {
 
   const {
     control,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -32,7 +33,6 @@ const login = () => {
     },
   });
   const onSubmit = async (data: any) => {
-    console.log(data, " onSubmit data");
     try {
       if (isChecked === true) {
         await AsyncStorage.setItem("loginInfo", JSON.stringify(data));
@@ -58,6 +58,25 @@ const login = () => {
       });
     }
   };
+
+  const handleSaveLoginInfo = async () => {
+    const loginInfoStr = await AsyncStorage.getItem("loginInfo");
+    const checkedStr = await AsyncStorage.getItem("check");
+
+    const savedLoginInfo = loginInfoStr ? JSON.parse(loginInfoStr) : null;
+    const checked = checkedStr ? JSON.parse(checkedStr) : false;
+
+    setIsChecked(checked);
+    // Reset form with saved login info
+    reset({
+      email: savedLoginInfo?.email || "",
+      password: savedLoginInfo?.password || "",
+    });
+  };
+
+  React.useEffect(() => {
+    handleSaveLoginInfo();
+  }, []);
 
   const handleCheckBox = async () => {
     setIsChecked(!isChecked);

@@ -11,16 +11,24 @@ import {
 } from "@/assets/icon";
 import { SvgXml } from "react-native-svg";
 import { BlurView } from "expo-blur";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import DiscountCarousel from "@/src/components/Carousel";
 import { ImgShopperOne } from "@/assets/images";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { OnCollapsable } from "@/src/components/OnCollapsable";
 
 const shopperProfile = () => {
+  const { storeName } = useLocalSearchParams();
+  console.log(storeName, " store name is ------------>");
+
   const renderHeader = () => (
     <View>
-      <BackWithComponent onPress={() => router.back()} title={"Profile"} />
+      <BackWithComponent
+        onPress={() => router.back()}
+        title={"Profile"}
+        fastComponentContentStyle={tw`shadow-lg`}
+        endComponentContentStyle={tw`shadow-lg`}
+      />
       <View style={tw`items-center gap-2 mb-6`}>
         <Image style={tw`w-20 h-20 rounded-full`} source={ImgShopperOne} />
         <Text style={tw`font-semibold text-base text-black`}>Starbucks</Text>
@@ -48,7 +56,7 @@ const shopperProfile = () => {
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
-        onPress={() => router.push("/user/storeProduct/productDetails")}
+        onPress={() => router.push("/user/storeProducts/productDetails")}
         activeOpacity={0.8}
         style={tw` w-[49%]  bg-white rounded-2xl   shadow-md`}
       >
@@ -67,7 +75,7 @@ const shopperProfile = () => {
           </Text>
 
           <TouchableOpacity
-            onPress={() => router.push("/user/storeProduct/productDetails")}
+            onPress={() => router.push("/user/storeProducts/productDetails")}
             style={tw`absolute  bg-transparent right-1.5 top-4`}
           >
             <BlurView

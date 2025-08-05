@@ -19,7 +19,7 @@ const All_categories = () => {
     <TouchableOpacity
       onPress={() =>
         router.push({
-          pathname: "/user/storeProduct/storeProduct",
+          pathname: "/user/storeProducts/storeProduct",
           params: { categoryData: item },
         })
       }
@@ -31,7 +31,7 @@ const All_categories = () => {
       <Pressable
         onPress={() =>
           router.push({
-            pathname: "/user/storeProduct/storeProduct",
+            pathname: "/user/storeProducts/storeProduct",
             params: { categoryData: item },
           })
         }

@@ -1,9 +1,10 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import tw from "../lib/tailwind";
 import { BlurView } from "expo-blur";
 import { SvgXml } from "react-native-svg";
 import { IconLove, IconShopping } from "@/assets/icon";
+import { Image } from "expo-image";
 
 interface ProductProps {
   onPress?: () => void;
@@ -35,7 +36,8 @@ const ProductCard = ({
       <View style={tw` flex-1 w-full  bg-[#F3F5F7]  px-2.5 py-2 rounded-xl`}>
         <Image
           source={productImg}
-          resizeMode="contain"
+          // resizeMode="contain"
+          contentFit="contain"
           style={tw`h-24 mx-auto p-1`}
         />
 
@@ -67,7 +69,10 @@ const ProductCard = ({
               {shopName}
             </Text>
           </View>
-          <Text style={tw`font-PoppinsMedium text-sm text-black mt-1`}>
+          <Text
+            numberOfLines={2}
+            style={tw`font-PoppinsMedium text-sm text-black mt-1`}
+          >
             {productName}
           </Text>
           <Text style={tw`font-PoppinsMedium text-xs text-[#787878]`}>

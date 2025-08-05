@@ -4,24 +4,16 @@ import { ImgProfileImg } from "@/assets/images";
 import { SvgXml } from "react-native-svg";
 import {
   IconGetterThen,
-  IconLocationProfile,
-  IconLocationSelected,
   IconLogOut,
-  IconNotificationSelected,
-  IconOrderSelected,
   IconOrderShopper,
   IconPersonalShopper,
   IconPrivacyPolicyShopper,
-  IconProfileSelected,
   IconProfileShopper,
-  IconRightArrow,
-  IconSettingsSelected,
   IconSettingsShopper,
   IconTeliphone,
-  IconTransactionsSelected,
 } from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const profileShopper = () => {
