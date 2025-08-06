@@ -18,6 +18,7 @@ import { ImgBurger } from "@/assets/images";
 
 const wishlist = () => {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [quantity, setQuantity] = React.useState(1);
 
   const SwipeToDeleteCard = ({
     data,
@@ -70,12 +71,24 @@ const wishlist = () => {
           </View>
           <View style={tw`items-center gap-1.5 bg-slate-50 rounded-full`}>
             <TouchableOpacity
+              onPress={() => {
+                if (quantity >= 2) {
+                  setQuantity(quantity - 1);
+                }
+              }}
               style={tw`px-2.5 py-3.5 rounded-full bg-[#eff3f7]`}
             >
               <SvgXml xml={IconMuniceButton} />
             </TouchableOpacity>
-            <Text>00</Text>
-            <TouchableOpacity style={tw`p-2.5 rounded-full bg-primary`}>
+            <Text>{quantity}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                if (quantity <= 9) {
+                  setQuantity(quantity + 1);
+                }
+              }}
+              style={tw`p-2.5 rounded-full bg-primary`}
+            >
               <SvgXml xml={IconPlusButton} />
             </TouchableOpacity>
           </View>

@@ -3,8 +3,13 @@ import React from "react";
 import tw from "../lib/tailwind";
 import { BlurView } from "expo-blur";
 import { SvgXml } from "react-native-svg";
-import { IconLove, IconShopping } from "@/assets/icon";
+import {
+  IconLove,
+  IconLoveWishlistSelected,
+  IconShopping,
+} from "@/assets/icon";
 import { Image } from "expo-image";
+import { useGetWishlistQuery } from "../redux/apiSlices/wishlistSlices";
 
 interface ProductProps {
   onPress?: () => void;
@@ -27,18 +32,23 @@ const ProductCard = ({
   productPrice,
   shopOnPress,
 }: ProductProps) => {
+  // ======================= api ===============
+  // const { data } = useGetWishlistQuery({});
+
+  // console.log(data, "data ----------->");
+
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.8}
-      style={tw` w-[49%]  bg-white rounded-2xl   shadow-md`}
+      style={tw` w-48  bg-white rounded-2xl   shadow-md`}
     >
       <View style={tw` flex-1 w-full  bg-[#F3F5F7]  px-2.5 py-2 rounded-xl`}>
         <Image
           source={productImg}
           // resizeMode="contain"
           contentFit="contain"
-          style={tw`h-24 mx-auto p-1`}
+          style={tw`h-24 w-24 mx-auto p-1`}
         />
 
         <TouchableOpacity

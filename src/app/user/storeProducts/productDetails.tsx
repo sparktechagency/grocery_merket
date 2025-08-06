@@ -3,7 +3,6 @@ import {
   Text,
   TouchableOpacity,
   Pressable,
-  TouchableWithoutFeedback,
   FlatList,
   RefreshControl,
 } from "react-native";
@@ -19,20 +18,14 @@ import {
   useProductDetailsMutation,
 } from "@/src/redux/apiSlices/homePageApiSlices";
 import ProductCard from "@/src/components/ProductCard";
-import { Modal } from "react-native-ui-lib";
 import { Image } from "expo-image";
 
 const productDetails = () => {
   const { productId, category: paramsCategory } = useLocalSearchParams();
   const [productDetail, setProductDetail] = useState();
   const [quantity, setQuantity] = useState(1);
-  const [modalVisible, setModalVisible] = useState(false);
   const [categoriesByProduct, setCategoriesByProduct] = useState(null);
   const flatListRef = React.useRef<FlatList<any>>(null);
-  // console.log(
-  //   productDetail?.product?.images[1],
-  //   "there is expo image details -==============="
-  // );
 
   // -------------------- apis =-------------------
   const [data, { isLoading }] = useProductDetailsMutation({});
@@ -79,11 +72,11 @@ const productDetails = () => {
           />
           <View style={tw`w-full items-center`}>
             <Image
-              style={tw`w-96 h-52 aspect-square`}
+              style={tw`w-96 h-48 aspect-square`}
               // resizeMode="contain"
               contentFit="contain"
               source={{
-                uri: productDetail?.product?.images[1],
+                uri: productDetail?.product?.images,
               }}
             />
           </View>
@@ -172,7 +165,14 @@ const productDetails = () => {
             <Text style={tw`font-PoppinsSemiBold text-sm text-white underline`}>
               Store details
             </Text>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                router.push({
+                  pathname: "/user/shoppers/shopperProfile",
+                  params: { storeName: productDetail?.product?.storeName },
+                })
+              }
+            >
               <SvgXml color={"white"} xml={IconArrowCorner} />
             </TouchableOpacity>
           </View>
@@ -209,8 +209,8 @@ const productDetails = () => {
         data={categoriesByProduct?.data}
         style={tw`flex-1`}
         ListFooterComponentStyle={tw`w-full`}
-        contentContainerStyle={tw` gap-1 items-center justify-between px-5  bg-white`}
-        columnWrapperStyle={tw`gap-1 justify-between mb-3`}
+        contentContainerStyle={tw` gap-1 items-center justify-between px-4  bg-white`}
+        columnWrapperStyle={tw`gap-3 justify-between mb-3`}
         renderItem={({ item }) => (
           <ProductCard
             onPress={() =>
@@ -220,56 +220,15 @@ const productDetails = () => {
               })
             }
             productName={item?.name}
-            productImg={item?.images[0]}
+            productImg={item?.images}
             productPrice={item?.regular_price}
             categoryName={paramsCategory}
             shopName={item.storeName}
             productWidth={item?.size}
-            shopOnPress={() => setModalVisible(true)}
+            shopOnPress={() => router.push("/addToCardModal")}
           />
         )}
       />
-
-      {/* ================= modal ================ */}
-
-      <Modal
-        animationType="slide"
-        style={tw`w-[90%]`}
-        transparent={true}
-        visible={modalVisible}
-        onDismiss={() => setModalVisible(!modalVisible)}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-          <View style={tw`flex-1 justify-center items-center bg-black/50`}>
-            <View style={tw`bg-white w-80 rounded-2xl py-6 px-8`}>
-              <Text style={tw`text-center font-PoppinsBold text-xl mb-4`}>
-                Added to cart
-              </Text>
-              <TouchableOpacity
-                onPress={() => setModalVisible(!modalVisible)}
-                style={tw`px-10 py-3 border border-[#686868] rounded-xl`}
-              >
-                <Text style={tw`font-PoppinsRegular text-base text-center`}>
-                  Remove from cart
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setModalVisible(!modalVisible)}
-                style={tw`px-10 py-3  bg-primary rounded-xl mt-3`}
-              >
-                <Text
-                  style={tw`font-PoppinsSemiBold text-base text-white text-center`}
-                >
-                  Continue
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
     </View>
   );
 };

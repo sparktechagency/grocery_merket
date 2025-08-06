@@ -93,12 +93,12 @@ const homePageApiSlices = api.injectEndpoints({
       }),
       providesTags: ["kogerAllStore"],
     }),
-    productByStore: build.query({
-      query: () => ({
-        url: `/app/kroger/products/stores/Kroger - Irmo Station - St Andrews Rd?per_page=100&page=6`,
-        method: "GET",
+    productByStore: build.mutation({
+      query: (storeName) => ({
+        url: `/app/kroger/products/stores/${storeName}?per_page=100&page=1`,
+        method: "POST",
       }),
-      providesTags: ["productByStore"],
+      invalidatesTags: ["productByStore"],
     }),
   }),
 });
@@ -116,5 +116,5 @@ export const {
   useSearchKogerProductsQuery,
   useProductByCategoryMutation,
   useKogerAllStoreQuery,
-  useProductByStoreQuery,
+  useProductByStoreMutation,
 } = homePageApiSlices;

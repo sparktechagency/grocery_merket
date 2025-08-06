@@ -26,6 +26,14 @@ const RootLayout = () => {
               <Stack.Screen name="shopper" />
               <Stack.Screen name="role/role" />
               <Stack.Screen name="auth" />
+              <Stack.Screen
+                options={{
+                  animation: "fade",
+                  // animationDuration: 2000,
+                  presentation: "transparentModal",
+                }}
+                name="addToCardModal"
+              />
             </Stack>
           </GestureHandlerRootView>
         </AlertNotificationRoot>

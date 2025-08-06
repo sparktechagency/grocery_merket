@@ -2,12 +2,12 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image,
   Pressable,
   ScrollView,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { SvgXml } from "react-native-svg";
 import {
   IconAddToCat,
@@ -19,17 +19,51 @@ import {
 import tw from "@/src/lib/tailwind";
 import DiscountCarousel from "@/src/components/Carousel";
 
-import { FlatList } from "react-native-gesture-handler";
-import { CartData } from "@/src/components/CardData";
 import { router } from "expo-router";
-import { CardItem } from "@/src/components/CardItem";
-import { useKogerAllCategoriesQuery } from "@/src/redux/apiSlices/homePageApiSlices";
+import {
+  useKogerAllCategoriesQuery,
+  useProductByCategoryMutation,
+} from "@/src/redux/apiSlices/homePageApiSlices";
+import ProductCard from "@/src/components/ProductCard";
 
 const HomeScreen = () => {
   const [notification, setNotification] = React.useState(false);
   const [addToCart, setAddToCart] = React.useState(true);
+  const [randomCategoryData, setRandomCategoryData] = React.useState(null);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  console.log(
+    randomCategoryData,
+    "this is randoms catgory data ----------------"
+  );
 
-  const { data: categoriesData, isLoading } = useKogerAllCategoriesQuery({});
+  // --------------------------- all api --------------------------
+  const { data: categoriesData, isLoading: isCategoryLoading } =
+    useKogerAllCategoriesQuery({});
+  const [category, { isError, isLoading: isRandomCategoryProduct }] =
+    useProductByCategoryMutation();
+
+  const randomCategoryName =
+    categoriesData?.categories[
+      Math.floor(Math.random() * categoriesData?.categories.length)
+    ];
+
+  const randomCategoryLoad = async () => {
+    try {
+      const response = await category(randomCategoryName).unwrap();
+      if (response?.status) {
+        setRandomCategoryData(response?.data);
+        console.log(response, "random all category ------------------->");
+      }
+    } catch (error) {
+      console.log(error, "random category not match -------------------");
+    }
+  };
+
+  useEffect(() => {
+    randomCategoryLoad();
+  }, []);
+
+  // console.log(randomCategoryName, "this is random category");
 
   const categoryItem = ({ item }: any) => (
     <TouchableOpacity
@@ -67,6 +101,7 @@ const HomeScreen = () => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={tw`pb-24`}
+        style={tw`flex-1`}
 
         //  ---------------- profile section ------------------
       >
@@ -77,21 +112,6 @@ const HomeScreen = () => {
           >
             <Text style={tw`font-PoppinsMedium text-base p-2`}>Login</Text>
           </TouchableOpacity>
-          {/* <Pressable
-            onPress={() => router.push("/user/drawer/home/profile")}
-            style={tw`flex-row justify-center items-center gap-2`}
-          >
-            <SvgXml xml={IconLocation} />
-            <View>
-              <Text style={tw`font-PoppinsBold text-sm text-black`}>
-                Hello, Benjamin
-              </Text>
-
-              <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>
-                Kodiak Island
-              </Text>
-            </View>
-          </Pressable> */}
 
           <View style={tw`flex-row items-center gap-3`}>
             <TouchableOpacity
@@ -173,10 +193,15 @@ const HomeScreen = () => {
         <View>
           <View style={tw`flex-row justify-between items-center mt-4  px-4`}>
             <Text style={tw`font-PoppinsSemiBold text-lg text-black`}>
-              Beast Seller
+              {randomCategoryName}
             </Text>
             <TouchableOpacity
-              onPress={() => router.push("/user/storeProducts/storeProduct")}
+              onPress={() =>
+                router.push({
+                  pathname: "/user/storeProducts/storeProduct",
+                  params: { categoryData: randomCategoryName },
+                })
+              }
               style={tw`flex-row justify-center gap-1 items-center`}
             >
               <Text>View all</Text>
@@ -184,53 +209,50 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </View>
 
-          <View style={tw`pl-4`}>
+          <View style={tw`pl-6 py-3 flex-1`}>
             <FlatList
-              data={CartData}
+              data={randomCategoryData}
+              keyExtractor={(item) => item.id.toString()}
+              horizontal={true}
+              contentContainerStyle={tw`gap-3`}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              ListEmptyComponent={
+                isRandomCategoryProduct ? (
+                  <View style={tw`justify-center items-center`}>
+                    <ActivityIndicator
+                      size="large"
+                      color={tw.color("red-500")}
+                    />
+                  </View>
+                ) : (
+                  <Text style={tw`text-center mt-4 text-gray-500`}>
+                    No products available.
+                  </Text>
+                )
+              }
               renderItem={({ index, item }) => {
                 return (
-                  <CardItem
-                    onPressAddToCart={() => {
-                      router?.push("/addCartModal");
-                    }}
-                    item={item}
+                  <ProductCard
+                    onPress={() =>
+                      router.push({
+                        pathname: "/user/storeProducts/productDetails",
+                        params: {
+                          productId: item?.id,
+                          category: randomCategoryName,
+                        },
+                      })
+                    }
+                    productName={item.name}
+                    productImg={item?.images}
+                    productPrice={item?.regular_price}
+                    categoryName={randomCategoryName}
+                    shopName={item.storeName}
+                    productWidth={item.size}
+                    shopOnPress={() => router.push("/addToCardModal")}
                   />
                 );
               }}
-              keyExtractor={(item) => item.id.toString()}
-              horizontal={true}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-            />
-          </View>
-        </View>
-
-        {/* ============== exclusive offer ========= */}
-
-        <View>
-          <View style={tw`flex-row justify-between items-center mt-3  px-4`}>
-            <Text style={tw`font-PoppinsSemiBold text-lg text-black`}>
-              Exclusive offer
-            </Text>
-            <TouchableOpacity
-              onPress={() => router.push("/user/storeProducts/storeProduct")}
-              style={tw`flex-row justify-center gap-1 items-center`}
-            >
-              <Text>View all</Text>
-              <SvgXml xml={IconRightArrowSingle} />
-            </TouchableOpacity>
-          </View>
-
-          <View style={tw`pl-4`}>
-            <FlatList
-              data={CartData}
-              renderItem={({ index, item }) => {
-                return <CardItem item={item} />;
-              }}
-              keyExtractor={(item) => item.id.toString()}
-              horizontal={true}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
             />
           </View>
         </View>
