@@ -1,71 +1,134 @@
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
-import React from "react";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import React, { useState } from "react";
 import tw from "@/src/lib/tailwind";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
-import { CartData } from "@/src/components/CardData";
 import { SvgXml } from "react-native-svg";
 import { IconDelete, IconMuniceButton, IconPlusButton } from "@/assets/icon";
 import TButton from "@/src/lib/buttons/TButton";
-import { ImgBurger, ImgEmpty, ImgShopperOne } from "@/assets/images";
+import { ImgBurger, ImgEmpty } from "@/assets/images";
 import { Swipeable } from "react-native-gesture-handler";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import { Dialog, PanningProvider } from "react-native-ui-lib";
-
-const SwipeToDeleteCard = ({
-  data,
-  onDelete,
-}: {
-  data: any;
-  onDelete: () => void;
-}) => {
-  const renderRightActions = () => (
-    <TouchableOpacity
-      onPress={onDelete}
-      style={tw`bg-[#FF5353] justify-center items-center w-24 h-[90%] rounded-lg`}
-    >
-      <SvgXml xml={IconDelete} />
-    </TouchableOpacity>
-  );
-
-  return (
-    <Swipeable
-      renderRightActions={renderRightActions}
-      rightThreshold={70}
-      leftThreshold={70}
-    >
-      <TouchableOpacity
-        style={tw`flex-row justify-between items-center p-2 rounded-xl bg-white mb-2`}
-      >
-        <Image style={tw` h-20`} source={data.image} />
-        <View>
-          <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-            {data.title}
-          </Text>
-          <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>
-            {data.weight}
-          </Text>
-          <Text style={tw`font-PoppinsSemiBold text-base text-[#006B27]`}>
-            ${data.price}
-          </Text>
-        </View>
-        <View style={tw`items-center gap-1.5 bg-slate-50 rounded-full`}>
-          <TouchableOpacity style={tw`px-2.5 py-3.5 rounded-full bg-[#eff3f7]`}>
-            <SvgXml xml={IconMuniceButton} />
-          </TouchableOpacity>
-          <Text>00</Text>
-          <TouchableOpacity style={tw`p-2.5 rounded-full bg-primary`}>
-            <SvgXml xml={IconPlusButton} />
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
-    </Swipeable>
-  );
-};
+import { useGetCartQuery } from "@/src/redux/apiSlices/cartSlices";
+import { Image } from "expo-image";
 
 const cart = () => {
   const [isCart, setIsCart] = React.useState(true);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [quantity, setQuantity] = useState(1);
+
+  //  ----------------------- cart apis ------------------------------
+
+  const { data: getCartData } = useGetCartQuery({});
+  console.log(getCartData?.cart, "threte is get cart data ------------->");
+
+  const SwipeToDeleteCard = ({
+    data,
+    onDelete,
+  }: {
+    data: any;
+    onDelete: () => void;
+  }) => {
+    const renderRightActions = () => (
+      <TouchableOpacity
+        onPress={onDelete}
+        style={tw`bg-[#FF5353] justify-center items-center w-24 h-[90%] rounded-lg`}
+      >
+        <SvgXml xml={IconDelete} />
+      </TouchableOpacity>
+    );
+
+    return (
+      <Swipeable
+        renderRightActions={renderRightActions}
+        rightThreshold={70}
+        leftThreshold={70}
+      >
+        <TouchableOpacity
+          style={tw`flex-row justify-between items-center p-2 rounded-xl  bg-white mb-2`}
+        >
+          <View style={tw`flex-row items-center gap-2 flex-shrink`}>
+            <Image
+              style={tw`w-24 h-20`}
+              source={data.image}
+              contentFit="contain"
+            />
+            <View style={tw`flex-1`}>
+              <Text
+                ellipsizeMode="tail"
+                numberOfLines={1}
+                style={tw`pr-2 font-PoppinsSemiBold text-sm text-black`}
+              >
+                {data?.product_name}
+              </Text>
+
+              <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>
+                {data?.size}
+              </Text>
+              {data?.promo_price !== "0" ? (
+                <View>
+                  <View style={tw`flex-row items-center gap-1`}>
+                    <Text style={tw`font-PoppinsSemiBold text-sm text-primary`}>
+                      $ {data?.promo_price}
+                    </Text>
+                    <Text style={tw`font-PoppinsRegular text-xs text-black`}>
+                      Promo Price
+                    </Text>
+                  </View>
+                  <View style={tw`flex-row items-center gap-1`}>
+                    <Text
+                      style={tw`font-PoppinsSemiBold text-sm text-primary line-through`}
+                    >
+                      $ {data?.regular_price}
+                    </Text>
+                    <Text style={tw`font-PoppinsRegular text-xs text-black`}>
+                      Regular price
+                    </Text>
+                  </View>
+                </View>
+              ) : (
+                <View style={tw`flex-row items-center gap-1`}>
+                  <Text style={tw`font-PoppinsSemiBold text-sm text-primary`}>
+                    $ {data?.regular_price}
+                  </Text>
+                  <Text style={tw`font-PoppinsRegular text-xs text-black`}>
+                    Regular Price
+                  </Text>
+                </View>
+              )}
+            </View>
+          </View>
+
+          {/* =================== quantity counter =================== */}
+          <View style={tw` items-center gap-1.5 bg-slate-50 rounded-full`}>
+            <TouchableOpacity
+              onPress={() => {
+                if (quantity >= 2) {
+                  setQuantity(quantity - 1);
+                }
+              }}
+              style={tw`px-2.5 py-3.5 rounded-full bg-[#eff3f7]`}
+            >
+              <SvgXml xml={IconMuniceButton} />
+            </TouchableOpacity>
+            <Text>{quantity}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                if (quantity <= 9) {
+                  setQuantity(quantity + 1);
+                }
+              }}
+              style={tw`p-2.5 rounded-full bg-primary`}
+            >
+              <SvgXml xml={IconPlusButton} />
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Swipeable>
+    );
+  };
+
   return (
     <>
       <View style={tw`flex-1  `}>
@@ -77,13 +140,15 @@ const cart = () => {
               showsVerticalScrollIndicator={false}
               contentContainerStyle={tw`mx-5`}
             >
-              {CartData?.map((item) => (
+              {getCartData?.cart?.map((item) => (
                 <SwipeToDeleteCard
                   key={item.id}
                   data={item}
                   onDelete={() => setIsModalVisible(true)}
                 />
               ))}
+
+              {/* ------------------------ add to cart item info ---------------- */}
 
               <View style={tw`bg-[#F3F5F7] p-4 my-10 rounded-xl`}>
                 <View style={tw`flex-row justify-between items-center`}>

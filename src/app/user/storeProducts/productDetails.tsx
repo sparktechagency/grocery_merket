@@ -137,7 +137,11 @@ const productDetails = () => {
               {quantity}
             </Text>
             <TouchableOpacity
-              onPress={() => setQuantity(quantity + 1)}
+              onPress={() => {
+                if (quantity <= 9) {
+                  setQuantity(quantity + 1);
+                }
+              }}
               style={tw`py-2 px-4 bg-primary  rounded-lg`}
             >
               <Text style={tw`font-bold text-lg text-white`}>+</Text>
