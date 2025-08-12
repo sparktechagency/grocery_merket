@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import tw from "@/src/lib/tailwind";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
@@ -8,20 +8,29 @@ import { IconDelete, IconMuniceButton, IconPlusButton } from "@/assets/icon";
 import TButton from "@/src/lib/buttons/TButton";
 import { ImgBurger, ImgEmpty } from "@/assets/images";
 import { Swipeable } from "react-native-gesture-handler";
-import { ALERT_TYPE, Toast } from "react-native-alert-notification";
-import { Dialog, PanningProvider } from "react-native-ui-lib";
 import { useGetCartQuery } from "@/src/redux/apiSlices/cartSlices";
 import { Image } from "expo-image";
+import { StyleSheet } from "react-native";
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
 
 const cart = () => {
-  const [isCart, setIsCart] = React.useState(true);
-  const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [quantity, setQuantity] = useState(1);
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   //  ----------------------- cart apis ------------------------------
-
   const { data: getCartData } = useGetCartQuery({});
-  console.log(getCartData?.cart, "threte is get cart data ------------->");
+
+  // callbacks -------------------------------------------------------------
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleCloseModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.dismiss();
+  }, []);
 
   const SwipeToDeleteCard = ({
     data,
@@ -72,18 +81,12 @@ const cart = () => {
                     <Text style={tw`font-PoppinsSemiBold text-sm text-primary`}>
                       $ {data?.promo_price}
                     </Text>
-                    <Text style={tw`font-PoppinsRegular text-xs text-black`}>
-                      Promo Price
-                    </Text>
                   </View>
                   <View style={tw`flex-row items-center gap-1`}>
                     <Text
-                      style={tw`font-PoppinsSemiBold text-sm text-primary line-through`}
+                      style={tw`font-PoppinsSemiBold text-sm text-red-700 line-through`}
                     >
                       $ {data?.regular_price}
-                    </Text>
-                    <Text style={tw`font-PoppinsRegular text-xs text-black`}>
-                      Regular price
                     </Text>
                   </View>
                 </View>
@@ -91,9 +94,6 @@ const cart = () => {
                 <View style={tw`flex-row items-center gap-1`}>
                   <Text style={tw`font-PoppinsSemiBold text-sm text-primary`}>
                     $ {data?.regular_price}
-                  </Text>
-                  <Text style={tw`font-PoppinsRegular text-xs text-black`}>
-                    Regular Price
                   </Text>
                 </View>
               )}
@@ -112,7 +112,7 @@ const cart = () => {
             >
               <SvgXml xml={IconMuniceButton} />
             </TouchableOpacity>
-            <Text>{quantity}</Text>
+            <Text>{data?.quantity}</Text>
             <TouchableOpacity
               onPress={() => {
                 if (quantity <= 9) {
@@ -132,7 +132,7 @@ const cart = () => {
   return (
     <>
       <View style={tw`flex-1  `}>
-        {isCart ? (
+        {getCartData?.cart?.length !== 0 ? (
           <View style={tw`flex-1`}>
             <BackWithComponent onPress={() => router.back()} title={"Cart"} />
 
@@ -144,7 +144,7 @@ const cart = () => {
                 <SwipeToDeleteCard
                   key={item.id}
                   data={item}
-                  onDelete={() => setIsModalVisible(true)}
+                  onDelete={handlePresentModalPress}
                 />
               ))}
 
@@ -160,7 +160,7 @@ const cart = () => {
                   <Text
                     style={tw`font-PoppinsRegular text-base text-regularText`}
                   >
-                    3
+                    $ {getCartData?.total_products}
                   </Text>
                 </View>
                 <View style={tw`flex-row justify-between items-center mt-2.5`}>
@@ -172,7 +172,7 @@ const cart = () => {
                   <Text
                     style={tw`font-PoppinsRegular text-base text-regularText`}
                   >
-                    $50.55
+                    $ {getCartData?.total_price}
                   </Text>
                 </View>
                 <View style={tw`flex-row justify-between items-center mt-2.5`}>
@@ -184,7 +184,7 @@ const cart = () => {
                   <Text
                     style={tw`font-PoppinsRegular text-base text-regularText`}
                   >
-                    $4.45
+                    $ 0
                   </Text>
                 </View>
                 <View style={tw`flex-row justify-between items-center mt-2.5`}>
@@ -196,7 +196,7 @@ const cart = () => {
                   <Text
                     style={tw`font-PoppinsRegular text-base text-regularText`}
                   >
-                    $0.5
+                    $ 0
                   </Text>
                 </View>
                 {/*  ====== border bottom ---------- */}
@@ -211,7 +211,7 @@ const cart = () => {
                     Total:
                   </Text>
                   <Text style={tw`font-PoppinsSemiBold text-lg text-black`}>
-                    $55.05
+                    $ {getCartData?.total_price}
                   </Text>
                 </View>
               </View>
@@ -227,6 +227,7 @@ const cart = () => {
             </ScrollView>
           </View>
         ) : (
+          //  when your cart section empty ------------------------------------
           <View style={tw`flex-1 mx-5 flex-col justify-between `}>
             <BackWithComponent onPress={() => router.back()} title={"Cart"} />
             <View style={tw` w-full text-center px-16 mx-auto`}>
@@ -258,69 +259,79 @@ const cart = () => {
         )}
       </View>
 
-      <Dialog
-        width={"100%"}
-        height={"40%"}
-        bottom={true}
-        containerStyle={tw`flex-1 bg-white rounded-t-3xl p-5`}
-        visible={isModalVisible}
-        onDismiss={() => console.log("dismissed")}
-        panDirection={PanningProvider.Directions.DOWN}
-      >
-        <Text style={tw`font-PoppinsMedium text-base text-center text-black`}>
-          Remove from cart ?
-        </Text>
-        <Text style={tw` border-b w-full`}></Text>
+      {/* ============= Delete modal ========================= */}
 
-        <View
-          style={tw`flex-row items-center p-3 rounded-2xl bg-white mt-7 mb-3 shadow-md`}
-        >
-          <Image
-            source={ImgBurger}
-            style={tw`w-14 h-14 rounded-md`}
-            resizeMode="contain"
-          />
-          <View style={tw`ml-4`}>
-            <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-              Red Apple
+      <BottomSheetModalProvider>
+        <BottomSheetModal ref={bottomSheetModalRef}>
+          <BottomSheetView style={styles.contentContainer}>
+            <Text
+              style={tw`font-PoppinsMedium text-base text-center text-black`}
+            >
+              Remove from cart ?
             </Text>
-            <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>
-              1kg
-            </Text>
-            <Text style={tw`font-PoppinsSemiBold text-base text-primary mt-1`}>
-              $55
-            </Text>
-          </View>
-        </View>
+            <Text style={tw` border-b w-full`}></Text>
 
-        <View style={tw`flex-row justify-between items-center mt-8 `}>
-          <TouchableOpacity
-            onPress={() => setIsModalVisible(!isModalVisible)}
-            style={tw`bg-[#E8E8E8] px-10 py-2.5 rounded-full`}
-          >
-            <Text style={tw`font-PoppinsMedium text-black text-lg`}>
-              Cancel
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setIsModalVisible(!isModalVisible);
-              Toast.show({
-                type: ALERT_TYPE.SUCCESS,
-                title: "Success",
-                textBody: "This Item Removed!",
-              });
-            }}
-            style={tw`bg-[#FF0000] px-10 py-2.5 rounded-full`}
-          >
-            <Text style={tw`font-PoppinsMedium text-white text-lg`}>
-              Yes, remove
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </Dialog>
+            <View
+              style={tw`flex-row items-center p-3 rounded-2xl bg-white mt-7 mb-3 shadow-md`}
+            >
+              <Image
+                source={ImgBurger}
+                style={tw`w-14 h-14 rounded-md`}
+                contentFit="contain"
+              />
+              <View style={tw`ml-4`}>
+                <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
+                  Red Apple
+                </Text>
+                <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>
+                  1kg
+                </Text>
+                <Text
+                  style={tw`font-PoppinsSemiBold text-base text-primary mt-1`}
+                >
+                  $55
+                </Text>
+              </View>
+            </View>
+
+            <View style={tw`flex-row justify-between items-center mt-8 `}>
+              <TouchableOpacity
+                onPress={handleCloseModalPress}
+                style={tw`bg-[#E8E8E8] px-10 py-2.5 rounded-full`}
+              >
+                <Text style={tw`font-PoppinsMedium text-black text-lg`}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                // onPress={() => setIsModalVisible(!isModalVisible)}
+                style={tw`bg-[#FF0000] px-10 py-2.5 rounded-full`}
+              >
+                <Text style={tw`font-PoppinsMedium text-white text-lg`}>
+                  Yes, remove
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </BottomSheetView>
+        </BottomSheetModal>
+      </BottomSheetModalProvider>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 32,
+    justifyContent: "center",
+    backgroundColor: "grey",
+  },
+  contentContainer: {
+    flex: 1,
+    paddingRight: 16,
+    paddingLeft: 16,
+    height: 300,
+  },
+});
 
 export default cart;

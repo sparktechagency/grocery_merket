@@ -17,6 +17,13 @@ const wishListSlices = api.injectEndpoints({
       }),
       providesTags: ["wishlist"],
     }),
+    getWishlistById: build.query({
+      query: (productId) => ({
+        url: `/app/getWishlistById/${productId}`,
+        method: "GET",
+      }),
+      providesTags: ["wishlist"],
+    }),
     deleteWishlistItem: build.mutation({
       query: (wishlistItemId) => ({
         url: `/app/removeWishlist/${wishlistItemId}`,
@@ -30,5 +37,6 @@ const wishListSlices = api.injectEndpoints({
 export const {
   useAddToWishlistMutation,
   useGetWishlistQuery,
+  useLazyGetWishlistByIdQuery,
   useDeleteWishlistItemMutation,
 } = wishListSlices;

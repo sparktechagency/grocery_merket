@@ -50,7 +50,6 @@ const storeName = [
 
 const Stores = () => {
   const { data } = useKogerAllStoreQuery({});
-  console.log(data?.stores, "hare is store ");
   return (
     <View style={tw`flex-1`}>
       <ScrollView contentContainerStyle={tw` px-4 mb-10`}>
