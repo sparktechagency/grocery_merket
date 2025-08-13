@@ -234,7 +234,8 @@ const HomeScreen = () => {
                         },
                       })
                     }
-                    productName={item.name}
+                    productName={item?.name}
+                    productId={item?.id}
                     productImg={item?.images}
                     productPrice={item?.regular_price}
                     categoryName={randomCategoryName}

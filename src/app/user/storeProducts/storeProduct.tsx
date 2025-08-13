@@ -58,6 +58,7 @@ const storeProduct = () => {
                   params: { productId: item?.id, category: categoryData },
                 })
               }
+              productId={item?.id}
               productName={item.name}
               productImg={item?.images}
               productPrice={item?.regular_price}

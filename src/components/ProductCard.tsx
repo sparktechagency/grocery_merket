@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import tw from "../lib/tailwind";
 import { BlurView } from "expo-blur";
 import { SvgXml } from "react-native-svg";
@@ -19,6 +19,7 @@ interface ProductProps {
   categoryName?: any;
   productWidth?: any;
   productPrice?: any;
+  productId?: number;
   shopOnPress?: () => void;
 }
 
@@ -31,11 +32,29 @@ const ProductCard = ({
   productWidth,
   productPrice,
   shopOnPress,
+  productId,
 }: ProductProps) => {
   // ======================= api ===============
-  // const { data } = useGetWishlistQuery({});
+  const { data: allWishlistData } = useGetWishlistQuery({});
+  const [isInWishlist, setIsInWishlist] = useState(false);
+  console.log(
+    allWishlistData?.wishlist,
+    "thare is all wishlist data ===============?"
+  );
 
-  // console.log(data, "data ----------->");
+  console.log(productId, "this is product id ------------------------------->");
+
+  useEffect(() => {
+    if (!allWishlistData?.wishlist) return;
+    const wishlistItem = allWishlistData.wishlist.find(
+      (item) => String(item.product_id) === String(productId)
+    );
+    console.log(
+      wishlistItem,
+      "this is wishlist item ---------------------->" + productId
+    );
+    setIsInWishlist(!!wishlistItem);
+  }, [allWishlistData, productId]);
 
   return (
     <TouchableOpacity
@@ -52,14 +71,14 @@ const ProductCard = ({
         />
 
         <TouchableOpacity
-          onPress={onPress}
+          onPress={() => console.log("love click ----------->")}
           style={tw`absolute  bg-transparent right-1.5 top-4`}
         >
           <BlurView
             intensity={90}
             style={tw`w-10 h-10 justify-center items-center border border-white rounded-full  overflow-hidden`}
           >
-            <SvgXml xml={IconLove} />
+            <SvgXml xml={isInWishlist ? IconLoveWishlistSelected : IconLove} />
           </BlurView>
         </TouchableOpacity>
 
