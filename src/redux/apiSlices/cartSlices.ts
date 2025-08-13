@@ -17,9 +17,16 @@ const cartSlices = api.injectEndpoints({
       }),
       providesTags: ["cart"],
     }),
+    getCartById: build.query({
+      query: (cartId) => ({
+        url: `/app/getCartById/${cartId}`,
+        method: "GET",
+      }),
+      providesTags: ["cart"],
+    }),
     deleteCartItem: build.mutation({
       query: (cartItemId) => ({
-        url: `/app/deleteCartItem/${cartItemId}`,
+        url: `/app/removeCart/${cartItemId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["cart"],
@@ -30,5 +37,6 @@ const cartSlices = api.injectEndpoints({
 export const {
   useAddToCartMutation,
   useGetCartQuery,
+  useLazyGetCartByIdQuery,
   useDeleteCartItemMutation,
 } = cartSlices;

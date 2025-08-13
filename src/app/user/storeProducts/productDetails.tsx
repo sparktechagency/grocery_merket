@@ -229,7 +229,12 @@ const productDetails = () => {
             categoryName={paramsCategory}
             shopName={item.storeName}
             productWidth={item?.size}
-            shopOnPress={() => router.push("/addToCardModal")}
+            shopOnPress={() =>
+              router.push({
+                pathname: "/addToCardModal",
+                params: { id: item?.id },
+              })
+            }
           />
         )}
       />

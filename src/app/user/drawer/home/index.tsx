@@ -25,22 +25,18 @@ import {
   useProductByCategoryMutation,
 } from "@/src/redux/apiSlices/homePageApiSlices";
 import ProductCard from "@/src/components/ProductCard";
+import { useGetCartQuery } from "@/src/redux/apiSlices/cartSlices";
 
 const HomeScreen = () => {
   const [notification, setNotification] = React.useState(false);
-  const [addToCart, setAddToCart] = React.useState(true);
   const [randomCategoryData, setRandomCategoryData] = React.useState(null);
-  const [modalVisible, setModalVisible] = React.useState(false);
-  console.log(
-    randomCategoryData,
-    "this is randoms catgory data ----------------"
-  );
 
   // --------------------------- all api --------------------------
   const { data: categoriesData, isLoading: isCategoryLoading } =
     useKogerAllCategoriesQuery({});
-  const [category, { isError, isLoading: isRandomCategoryProduct }] =
+  const [category, { isError, isLoading: isRandomCategoryProductLoading }] =
     useProductByCategoryMutation();
+  const { data: cartItem } = useGetCartQuery({});
 
   const randomCategoryName =
     categoriesData?.categories[
@@ -52,7 +48,6 @@ const HomeScreen = () => {
       const response = await category(randomCategoryName).unwrap();
       if (response?.status) {
         setRandomCategoryData(response?.data);
-        console.log(response, "random all category ------------------->");
       }
     } catch (error) {
       console.log(error, "random category not match -------------------");
@@ -62,8 +57,6 @@ const HomeScreen = () => {
   useEffect(() => {
     randomCategoryLoad();
   }, []);
-
-  // console.log(randomCategoryName, "this is random category");
 
   const categoryItem = ({ item }: any) => (
     <TouchableOpacity
@@ -123,16 +116,15 @@ const HomeScreen = () => {
               <SvgXml xml={IconComparison} />
             </TouchableOpacity>
             <TouchableOpacity
-              // onPress={() => router.push("/user/addToCart/simpleCart")}
               onPress={() => router.push("/user/addToCart/cart")}
               style={tw`relative p-3 bg-white shadow-lg rounded-lg`}
             >
               <SvgXml xml={IconAddToCat} />
-              {addToCart ? (
+              {cartItem?.cart?.length > 0 ? (
                 <Text
                   style={tw`absolute top-0 right-0 px-1 bg-orange text-white rounded-full`}
                 >
-                  2
+                  {cartItem?.cart?.length}
                 </Text>
               ) : null}
             </TouchableOpacity>
@@ -153,7 +145,6 @@ const HomeScreen = () => {
         </View>
 
         {/* ------------- carousel banner ============================ */}
-
         <DiscountCarousel />
 
         {/* ----------- Category section -------------------- */}
@@ -218,7 +209,7 @@ const HomeScreen = () => {
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               ListEmptyComponent={
-                isRandomCategoryProduct ? (
+                isRandomCategoryProductLoading ? (
                   <View style={tw`justify-center items-center`}>
                     <ActivityIndicator
                       size="large"
@@ -249,7 +240,12 @@ const HomeScreen = () => {
                     categoryName={randomCategoryName}
                     shopName={item.storeName}
                     productWidth={item.size}
-                    shopOnPress={() => router.push("/addToCardModal")}
+                    shopOnPress={() =>
+                      router.push({
+                        pathname: "/addToCardModal",
+                        params: { id: item?.id },
+                      })
+                    }
                   />
                 );
               }}

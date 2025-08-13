@@ -6,9 +6,13 @@ import { router } from "expo-router";
 import { SvgXml } from "react-native-svg";
 import { IconDelete, IconMuniceButton, IconPlusButton } from "@/assets/icon";
 import TButton from "@/src/lib/buttons/TButton";
-import { ImgBurger, ImgEmpty } from "@/assets/images";
+import { ImgEmpty } from "@/assets/images";
 import { Swipeable } from "react-native-gesture-handler";
-import { useGetCartQuery } from "@/src/redux/apiSlices/cartSlices";
+import {
+  useDeleteCartItemMutation,
+  useGetCartQuery,
+  useLazyGetCartByIdQuery,
+} from "@/src/redux/apiSlices/cartSlices";
 import { Image } from "expo-image";
 import { StyleSheet } from "react-native";
 import {
@@ -20,17 +24,49 @@ import {
 const cart = () => {
   const [quantity, setQuantity] = useState(1);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const [singleItem, setSingleItem] = useState(null);
 
   //  ----------------------- cart apis ------------------------------
   const { data: getCartData } = useGetCartQuery({});
+  const [cartId] = useLazyGetCartByIdQuery({});
+  const [cartItemId] = useDeleteCartItemMutation();
 
   // callbacks -------------------------------------------------------------
-  const handlePresentModalPress = useCallback(() => {
+  const handlePresentModalPress = useCallback(async (id) => {
     bottomSheetModalRef.current?.present();
+    try {
+      const response = await cartId(id).unwrap();
+      if (response?.status) {
+        setSingleItem(response);
+      }
+    } catch (error) {
+      console.log(error, " modal not open  !");
+    }
   }, []);
   const handleCloseModalPress = useCallback(() => {
     bottomSheetModalRef.current?.dismiss();
   }, []);
+
+  // -=---------------------- cart item deleted ---------------------
+
+  const handleDeleteCartItem = async (id) => {
+    try {
+      const response = await cartItemId(id).unwrap();
+      if (response?.status) {
+        bottomSheetModalRef.current?.dismiss();
+        router.push({
+          pathname: "/Toaster",
+          params: { res: response?.message },
+        });
+      }
+    } catch (error) {
+      console.log(error, "wishlist item not removed !");
+      router.push({
+        pathname: "/Toaster",
+        params: { res: error?.message || error },
+      });
+    }
+  };
 
   const SwipeToDeleteCard = ({
     data,
@@ -144,7 +180,7 @@ const cart = () => {
                 <SwipeToDeleteCard
                   key={item.id}
                   data={item}
-                  onDelete={handlePresentModalPress}
+                  onDelete={() => handlePresentModalPress(item?.id)}
                 />
               ))}
 
@@ -275,22 +311,44 @@ const cart = () => {
               style={tw`flex-row items-center p-3 rounded-2xl bg-white mt-7 mb-3 shadow-md`}
             >
               <Image
-                source={ImgBurger}
+                source={singleItem?.cart?.image}
                 style={tw`w-14 h-14 rounded-md`}
                 contentFit="contain"
               />
               <View style={tw`ml-4`}>
-                <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-                  Red Apple
+                <Text
+                  numberOfLines={1}
+                  style={tw`font-PoppinsSemiBold text-base text-black`}
+                >
+                  {singleItem?.cart?.product_name}
                 </Text>
                 <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>
-                  1kg
+                  {singleItem?.cart?.size}
                 </Text>
-                <Text
-                  style={tw`font-PoppinsSemiBold text-base text-primary mt-1`}
-                >
-                  $55
-                </Text>
+                {singleItem?.cart?.promo_price !== "0" ? (
+                  <View>
+                    <View style={tw`flex-row items-center gap-1`}>
+                      <Text
+                        style={tw`font-PoppinsSemiBold text-sm text-primary`}
+                      >
+                        $ {singleItem?.cart?.promo_price}
+                      </Text>
+                    </View>
+                    <View style={tw`flex-row items-center gap-1`}>
+                      <Text
+                        style={tw`font-PoppinsSemiBold text-sm text-red-700 line-through`}
+                      >
+                        $ {singleItem?.cart?.regular_price}
+                      </Text>
+                    </View>
+                  </View>
+                ) : (
+                  <View style={tw`flex-row items-center gap-1`}>
+                    <Text style={tw`font-PoppinsSemiBold text-sm text-primary`}>
+                      $ {singleItem?.cart?.regular_price}
+                    </Text>
+                  </View>
+                )}
               </View>
             </View>
 
@@ -304,7 +362,7 @@ const cart = () => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                // onPress={() => setIsModalVisible(!isModalVisible)}
+                onPress={() => handleDeleteCartItem(singleItem?.cart?.id)}
                 style={tw`bg-[#FF0000] px-10 py-2.5 rounded-full`}
               >
                 <Text style={tw`font-PoppinsMedium text-white text-lg`}>

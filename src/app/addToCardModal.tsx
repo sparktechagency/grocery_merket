@@ -1,9 +1,11 @@
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import React from "react";
 import tw from "@/src/lib/tailwind";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 const AddToCardModal = () => {
+  const { id } = useLocalSearchParams();
+
   return (
     <Pressable
       onPress={() => router.back()}

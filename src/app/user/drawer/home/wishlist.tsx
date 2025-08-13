@@ -44,10 +44,8 @@ const wishlist = () => {
   // callbacks
   const handlePresentModalPress = useCallback(async (id) => {
     bottomSheetModalRef.current?.present();
-
     try {
       const response = await getWishlistById(id).unwrap();
-
       if (response?.status) {
         setSingleItem(response);
       }
@@ -70,13 +68,17 @@ const wishlist = () => {
       const response = await deleteWishlistItem(id).unwrap();
       if (response?.status) {
         bottomSheetModalRef.current?.dismiss();
-        Toast.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: "Deleted From Wishlist !",
+        router.push({
+          pathname: "/Toaster",
+          params: { res: "Wishlist Item Deleted !" },
         });
       }
     } catch (error) {
       console.log(error, "Wishlist Item not deleted --!");
+      router.push({
+        pathname: "/Toaster",
+        params: { res: String(error?.message || error) },
+      });
     }
   };
 
@@ -174,29 +176,23 @@ const wishlist = () => {
               key={item.id}
               data={item}
               onDelete={() => handlePresentModalPress(item?.id)}
-              // onPress={handleCloseModalPress}
               onAddToCart={async () => {
-                console.log(
-                  item?.product_id,
-                  "pora lekha kore ze gari gora cole se"
-                );
                 try {
                   const response = await cartData({
                     product_id: item?.product_id,
+                    quantity: 1,
                   }).unwrap();
                   if (response?.status) {
-                    Toast.show({
-                      type: ALERT_TYPE.SUCCESS,
-                      title: "Success",
-                      textBody: "Your Selected item added to your cart !",
+                    router.push({
+                      pathname: "/Toaster",
+                      params: { res: "Item added the cart !" },
                     });
                   }
                 } catch (error) {
                   console.log(error, "Your selected Item not added to cart !");
-                  Toast.show({
-                    type: ALERT_TYPE.WARNING,
-                    title: "Warning",
-                    textBody: "Please try again !",
+                  router.push({
+                    pathname: "/Toaster",
+                    params: { res: String(error?.message || error) },
                   });
                 }
               }}

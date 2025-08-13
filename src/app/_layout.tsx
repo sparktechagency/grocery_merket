@@ -34,6 +34,13 @@ const RootLayout = () => {
                 }}
                 name="addToCardModal"
               />
+              <Stack.Screen
+                name="Toaster"
+                options={{
+                  sheetAllowedDetents: "fitToContents",
+                  presentation: "formSheet",
+                }}
+              />
             </Stack>
           </GestureHandlerRootView>
         </AlertNotificationRoot>
