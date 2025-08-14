@@ -7,7 +7,7 @@ const Toaster = () => {
   const { res } = useLocalSearchParams();
   setTimeout(() => {
     router.back();
-  }, 1500);
+  }, 1000);
   return (
     <View style={tw` `}>
       <View style={tw`bg-slate-700 justify-center items-center p-4 rounded-xl`}>

@@ -9,7 +9,18 @@ import {
   IconShopping,
 } from "@/assets/icon";
 import { Image } from "expo-image";
-import { useGetWishlistQuery } from "../redux/apiSlices/wishlistSlices";
+import {
+  useAddToWishlistMutation,
+  useDeleteWishlistItemMutation,
+  useGetWishlistQuery,
+  useLazyGetWishlistByIdQuery,
+} from "../redux/apiSlices/wishlistSlices";
+import { router } from "expo-router";
+import {
+  useAddToCartMutation,
+  useDeleteCartItemMutation,
+  useGetCartQuery,
+} from "../redux/apiSlices/cartSlices";
 
 interface ProductProps {
   onPress?: () => void;
@@ -34,27 +45,97 @@ const ProductCard = ({
   shopOnPress,
   productId,
 }: ProductProps) => {
+  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [wishlistId, setWishlistId] = useState(null);
+  const [isInCart, setIsInCart] = useState(false);
+  const [cartIds, setCartIds] = useState(null);
+
   // ======================= api ===============
   const { data: allWishlistData } = useGetWishlistQuery({});
-  const [isInWishlist, setIsInWishlist] = useState(false);
-  console.log(
-    allWishlistData?.wishlist,
-    "thare is all wishlist data ===============?"
-  );
-
-  console.log(productId, "this is product id ------------------------------->");
+  const [wishlistData] = useAddToWishlistMutation();
+  const [wishlistItemId] = useDeleteWishlistItemMutation();
+  //  ----------------- add to card api --------------
+  const { data: allCartData } = useGetCartQuery({});
+  const [cartData] = useAddToCartMutation();
+  const [cartItemId] = useDeleteCartItemMutation();
 
   useEffect(() => {
-    if (!allWishlistData?.wishlist) return;
+    // ---------------- check product is in wishlist or not ----------------
+    if (!allWishlistData?.wishlist || !allCartData?.cart) return;
     const wishlistItem = allWishlistData.wishlist.find(
       (item) => String(item.product_id) === String(productId)
     );
-    console.log(
-      wishlistItem,
-      "this is wishlist item ---------------------->" + productId
-    );
     setIsInWishlist(!!wishlistItem);
-  }, [allWishlistData, productId]);
+    setWishlistId(wishlistItem?.id);
+
+    // ---------------- check product is in Add to cart or not ----------------
+
+    const cartItem = allCartData.cart.find(
+      (item) => String(item?.product_id) === String(productId)
+    );
+    setIsInCart(!!cartItem);
+    setCartIds(cartItem?.id);
+  }, [
+    allWishlistData,
+    productId,
+    isInWishlist,
+    allCartData,
+    isInCart,
+    cartIds,
+    wishlistId,
+  ]);
+
+  //  ---------------- handle wishlist toggle ----------------
+  const handleWishlistToggle = async (id, wishlistId) => {
+    try {
+      if (isInWishlist) {
+        await wishlistItemId(wishlistId).unwrap();
+        setIsInWishlist(false);
+      } else if (!isInWishlist) {
+        const response = await wishlistData({
+          product_id: id,
+        }).unwrap();
+        setIsInWishlist(true);
+      }
+
+      // setIsInWishlist(!isInWishlist);
+    } catch (error) {
+      console.log(error, "Product not added to wishlist");
+      router.push({
+        pathname: "/Toaster",
+        params: { res: error?.message || error },
+      });
+    }
+  };
+
+  // --------------------------------- add to cart ----------------------
+
+  const handleCartToggle = async (id, cartId) => {
+    try {
+      if (isInCart) {
+        await cartItemId(cartId).unwrap();
+        setIsInCart(false);
+      } else if (!isInCart) {
+        const response = await cartData({
+          product_id: id,
+          quantity: 1,
+        }).unwrap();
+        setIsInCart(true);
+        if (response?.status) {
+          router.push({
+            pathname: "/Toaster",
+            params: { res: response?.message },
+          });
+        }
+      }
+    } catch (error) {
+      console.log(error, "Product not added to cart");
+      router.push({
+        pathname: "/Toaster",
+        params: { res: error?.message || error },
+      });
+    }
+  };
 
   return (
     <TouchableOpacity
@@ -71,7 +152,7 @@ const ProductCard = ({
         />
 
         <TouchableOpacity
-          onPress={() => console.log("love click ----------->")}
+          onPress={() => handleWishlistToggle(productId, wishlistId)}
           style={tw`absolute  bg-transparent right-1.5 top-4`}
         >
           <BlurView
@@ -111,12 +192,14 @@ const ProductCard = ({
             <Text style={tw`font-PoppinsSemiBold text-base text-primary`}>
               ${productPrice}
             </Text>
-            <TouchableOpacity
-              onPress={shopOnPress}
-              style={tw`p-2 bg-white shadow-md rounded-full`}
-            >
-              <SvgXml xml={IconShopping} />
-            </TouchableOpacity>
+            {!isInCart ? (
+              <TouchableOpacity
+                onPress={() => handleCartToggle(productId, cartIds)}
+                style={tw`p-2 bg-white shadow-md rounded-full`}
+              >
+                <SvgXml xml={IconShopping} />
+              </TouchableOpacity>
+            ) : null}
           </View>
         </View>
       </View>

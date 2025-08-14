@@ -31,6 +31,14 @@ const cartSlices = api.injectEndpoints({
       }),
       invalidatesTags: ["cart"],
     }),
+    updateCartItem: build.mutation({
+      query: (cartDataId) => ({
+        url: `/app/updateCart/${cartDataId}`,
+        method: "POST",
+        body: cartDataId,
+      }),
+      invalidatesTags: ["cart"],
+    }),
   }),
 });
 
@@ -39,4 +47,5 @@ export const {
   useGetCartQuery,
   useLazyGetCartByIdQuery,
   useDeleteCartItemMutation,
+  useUpdateCartItemMutation,
 } = cartSlices;

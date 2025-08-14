@@ -87,7 +87,6 @@ const HomeScreen = () => {
       </Pressable>
     </TouchableOpacity>
   );
-
   return (
     <View style={tw`flex-1`}>
       <ScrollView
@@ -122,7 +121,7 @@ const HomeScreen = () => {
               <SvgXml xml={IconAddToCat} />
               {cartItem?.cart?.length > 0 ? (
                 <Text
-                  style={tw`absolute top-0 right-0 px-1 bg-orange text-white rounded-full`}
+                  style={tw`absolute w-6 text-center -top-2 -right-1 px-1 bg-orange text-white rounded-full`}
                 >
                   {cartItem?.cart?.length}
                 </Text>

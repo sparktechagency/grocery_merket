@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import tw from "@/src/lib/tailwind";
 import { SvgXml } from "react-native-svg";
-import { IconArrowCorner } from "@/assets/icon";
+import { IconArrowCorner, IconShopping } from "@/assets/icon";
 import TButton from "@/src/lib/buttons/TButton";
 import BackWithComponentLastIcon from "@/src/lib/backHeader/BackWithComponentLastIcon";
 import {
@@ -19,6 +19,10 @@ import {
 } from "@/src/redux/apiSlices/homePageApiSlices";
 import ProductCard from "@/src/components/ProductCard";
 import { Image } from "expo-image";
+import {
+  useAddToCartMutation,
+  useUpdateCartItemMutation,
+} from "@/src/redux/apiSlices/cartSlices";
 
 const productDetails = () => {
   const { productId, category: paramsCategory } = useLocalSearchParams();
@@ -29,8 +33,8 @@ const productDetails = () => {
 
   // -------------------- apis =-------------------
   const [data, { isLoading }] = useProductDetailsMutation({});
-
   const [category, { isError }] = useProductByCategoryMutation();
+  const [cartData] = useAddToCartMutation();
 
   const filterByCategory = async () => {
     try {
@@ -55,9 +59,32 @@ const productDetails = () => {
     filterByCategory();
   }, [productId, paramsCategory]);
 
+  // ------------------ handle add to cart ---------------
+
+  const handleCartToggle = async (id) => {
+    try {
+      const response = await cartData({
+        product_id: id,
+        quantity: quantity,
+      }).unwrap();
+      if (response?.status) {
+        router.push({
+          pathname: "/Toaster",
+          params: { res: response?.message },
+        });
+      }
+    } catch (error) {
+      console.log(error, "Product not added to cart");
+      router.push({
+        pathname: "/Toaster",
+        params: { res: error?.message || error },
+      });
+    }
+  };
+
   const renderHeader = () => (
     <View style={tw`bg-white `}>
-      {/* ------- header part ----------- */}
+      {/* ----------------- header part ---------------------- */}
       <View style={tw`relative`}>
         <View
           style={tw`absolute -top-[70] self-center bg-[#F3F5F7] w-[140] h-[140] rounded-full`}
@@ -65,7 +92,10 @@ const productDetails = () => {
         <View style={tw`w-full`}>
           <BackWithComponentLastIcon
             onPress={() => router.back()}
-            title="Detail"
+            title={
+              productDetail?.product?.name.slice(0, 25) + "..." || "Product"
+            }
+            // titleStyle={tw`px-4`}
             containerStyle={tw`px-0`}
             fastComponentContentStyle={tw`shadow-lg`}
             endComponentContentStyle={tw`shadow-lg`}
@@ -95,18 +125,12 @@ const productDetails = () => {
                   <Text style={tw`font-PoppinsSemiBold text-lg text-primary`}>
                     $ {productDetail?.product?.promo_price}
                   </Text>
-                  <Text style={tw`font-PoppinsRegular text-xs text-black`}>
-                    Promo Price
-                  </Text>
                 </View>
                 <View style={tw`flex-row items-center gap-1`}>
                   <Text
                     style={tw`font-PoppinsSemiBold text-lg text-primary line-through`}
                   >
                     $ {productDetail?.product?.regular_price}
-                  </Text>
-                  <Text style={tw`font-PoppinsRegular text-xs text-black`}>
-                    Regular price
                   </Text>
                 </View>
               </View>
@@ -115,13 +139,10 @@ const productDetails = () => {
                 <Text style={tw`font-PoppinsSemiBold text-lg text-primary`}>
                   $ {productDetail?.product?.regular_price}
                 </Text>
-                <Text style={tw`font-PoppinsRegular text-xs text-black`}>
-                  Regular Price
-                </Text>
               </View>
             )}
           </View>
-
+          {/* ----------------------------- quantity section -------------------   */}
           <View style={tw`flex-row items-center gap-4`}>
             <TouchableOpacity
               onPress={() => {
@@ -147,6 +168,15 @@ const productDetails = () => {
               <Text style={tw`font-bold text-lg text-white`}>+</Text>
             </TouchableOpacity>
           </View>
+
+          {/* ---------------- add to cart button --------- */}
+
+          <TouchableOpacity
+            onPress={() => handleCartToggle(productDetail?.product?.id)}
+            style={tw`p-5 bg-white shadow-md rounded-full`}
+          >
+            <SvgXml xml={IconShopping} />
+          </TouchableOpacity>
         </View>
 
         <Pressable
@@ -224,6 +254,7 @@ const productDetails = () => {
               })
             }
             productName={item?.name}
+            productId={item?.id}
             productImg={item?.images}
             productPrice={item?.regular_price}
             categoryName={paramsCategory}

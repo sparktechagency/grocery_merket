@@ -12,6 +12,7 @@ import {
   useDeleteCartItemMutation,
   useGetCartQuery,
   useLazyGetCartByIdQuery,
+  useUpdateCartItemMutation,
 } from "@/src/redux/apiSlices/cartSlices";
 import { Image } from "expo-image";
 import { StyleSheet } from "react-native";
@@ -30,6 +31,7 @@ const cart = () => {
   const { data: getCartData } = useGetCartQuery({});
   const [cartId] = useLazyGetCartByIdQuery({});
   const [cartItemId] = useDeleteCartItemMutation();
+  const [cartDataId] = useUpdateCartItemMutation();
 
   // callbacks -------------------------------------------------------------
   const handlePresentModalPress = useCallback(async (id) => {
@@ -150,9 +152,21 @@ const cart = () => {
             </TouchableOpacity>
             <Text>{data?.quantity}</Text>
             <TouchableOpacity
-              onPress={() => {
+              onPress={async () => {
                 if (quantity <= 9) {
                   setQuantity(quantity + 1);
+                  try {
+                    const response = await cartDataId({
+                      product_id: data?.id,
+                      quantity: quantity,
+                    }).unwrap();
+                  } catch (error) {
+                    console.log(error, "Product not added to cart");
+                    router.push({
+                      pathname: "/Toaster",
+                      params: { res: error?.message || error },
+                    });
+                  }
                 }
               }}
               style={tw`p-2.5 rounded-full bg-primary`}
