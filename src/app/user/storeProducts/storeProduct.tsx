@@ -62,6 +62,7 @@ const storeProduct = () => {
               productName={item.name}
               productImg={item?.images}
               productPrice={item?.regular_price}
+              promoPrice={item?.promo_price}
               categoryName={categoryData}
               shopName={item.storeName}
               productWidth={item.size}

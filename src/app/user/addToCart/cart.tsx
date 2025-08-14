@@ -1,5 +1,11 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import React, { useCallback, useRef, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Pressable,
+} from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import tw from "@/src/lib/tailwind";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
@@ -23,11 +29,10 @@ import {
 } from "@gorhom/bottom-sheet";
 
 const cart = () => {
-  const [quantity, setQuantity] = useState(1);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const [singleItem, setSingleItem] = useState(null);
 
-  //  ----------------------- cart apis ------------------------------
+  //  ----------------------- all apis ------------------------------
   const { data: getCartData } = useGetCartQuery({});
   const [cartId] = useLazyGetCartByIdQuery({});
   const [cartItemId] = useDeleteCartItemMutation();
@@ -92,7 +97,7 @@ const cart = () => {
         rightThreshold={70}
         leftThreshold={70}
       >
-        <TouchableOpacity
+        <Pressable
           style={tw`flex-row justify-between items-center p-2 rounded-xl  bg-white mb-2`}
         >
           <View style={tw`flex-row items-center gap-2 flex-shrink`}>
@@ -141,24 +146,36 @@ const cart = () => {
           {/* =================== quantity counter =================== */}
           <View style={tw` items-center gap-1.5 bg-slate-50 rounded-full`}>
             <TouchableOpacity
-              onPress={() => {
-                if (quantity >= 2) {
-                  setQuantity(quantity - 1);
+              onPress={async () => {
+                if (Number(data?.quantity) >= 2) {
+                  try {
+                    await cartDataId({
+                      cartDataId: data?.id,
+                      quantity: Number(data?.quantity) - 1,
+                    }).unwrap();
+                  } catch (error) {
+                    console.log(error, "Product not Updated to cart");
+                    router.push({
+                      pathname: "/Toaster",
+                      params: { res: error?.message || error },
+                    });
+                  }
                 }
               }}
               style={tw`px-2.5 py-3.5 rounded-full bg-[#eff3f7]`}
             >
               <SvgXml xml={IconMuniceButton} />
             </TouchableOpacity>
-            <Text>{data?.quantity}</Text>
+            <Text style={tw`font-PoppinsSemiBold text-sm`}>
+              {data?.quantity}
+            </Text>
             <TouchableOpacity
               onPress={async () => {
-                if (quantity <= 9) {
-                  setQuantity(quantity + 1);
+                if (Number(data?.quantity) <= 9) {
                   try {
-                    const response = await cartDataId({
-                      product_id: data?.id,
-                      quantity: quantity,
+                    await cartDataId({
+                      cartDataId: data?.id,
+                      quantity: Number(data?.quantity) + 1,
                     }).unwrap();
                   } catch (error) {
                     console.log(error, "Product not added to cart");
@@ -174,7 +191,7 @@ const cart = () => {
               <SvgXml xml={IconPlusButton} />
             </TouchableOpacity>
           </View>
-        </TouchableOpacity>
+        </Pressable>
       </Swipeable>
     );
   };
@@ -210,7 +227,7 @@ const cart = () => {
                   <Text
                     style={tw`font-PoppinsRegular text-base text-regularText`}
                   >
-                    $ {getCartData?.total_products}
+                    {getCartData?.total_products}
                   </Text>
                 </View>
                 <View style={tw`flex-row justify-between items-center mt-2.5`}>

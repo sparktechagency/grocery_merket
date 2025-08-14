@@ -30,6 +30,7 @@ interface ProductProps {
   categoryName?: any;
   productWidth?: any;
   productPrice?: any;
+  promoPrice?: any;
   productId?: number;
   shopOnPress?: () => void;
 }
@@ -42,6 +43,7 @@ const ProductCard = ({
   categoryName,
   productWidth,
   productPrice,
+  promoPrice,
   shopOnPress,
   productId,
 }: ProductProps) => {
@@ -189,9 +191,28 @@ const ProductCard = ({
             {productWidth}
           </Text>
           <View style={tw` flex-1 flex-row justify-between items-center `}>
-            <Text style={tw`font-PoppinsSemiBold text-base text-primary`}>
-              ${productPrice}
-            </Text>
+            {promoPrice !== "0" ? (
+              <View>
+                <View style={tw`flex-row items-center gap-1`}>
+                  <Text style={tw`font-PoppinsSemiBold text-sm text-primary`}>
+                    $ {promoPrice}
+                  </Text>
+                </View>
+                <View style={tw`flex-row items-center gap-1`}>
+                  <Text
+                    style={tw`font-PoppinsSemiBold text-sm text-red-700 line-through`}
+                  >
+                    $ {productPrice}
+                  </Text>
+                </View>
+              </View>
+            ) : (
+              <View style={tw`flex-row items-center gap-1`}>
+                <Text style={tw`font-PoppinsSemiBold text-sm text-primary`}>
+                  $ {productPrice}
+                </Text>
+              </View>
+            )}
             {!isInCart ? (
               <TouchableOpacity
                 onPress={() => handleCartToggle(productId, cartIds)}

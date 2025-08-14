@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Pressable,
+} from "react-native";
 import React from "react";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { Link, router } from "expo-router";
@@ -7,22 +13,31 @@ import { SvgXml } from "react-native-svg";
 import {
   IconCheckout,
   IconLeftLineArrow,
-  IconMuniceButton,
   IconPayment,
   IconPlaceOrder,
-  IconPlusButton,
 } from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
-import { CartData } from "@/src/components/CardData";
 import TButton from "@/src/lib/buttons/TButton";
+import { useGetCartQuery } from "@/src/redux/apiSlices/cartSlices";
+import { Image } from "expo-image";
+import { useGetProfileQuery } from "@/src/redux/apiSlices/profileSlieces";
 
 const checkOut = () => {
-  const [step, setStep] = React.useState(0);
+  // ---------------------------- all apis ----------------------------------
+  const { data: getCartData } = useGetCartQuery({});
+  const { data: getProfileInfo } = useGetProfileQuery({});
+
+  console.log(
+    getProfileInfo?.data,
+    "get cart data----------------------------------->"
+  );
+
   return (
     <View style={tw`flex-1`}>
       <BackWithComponent onPress={() => router.back()} title={"Checkout"} />
 
       <ScrollView>
+        {/* ------------------- Steps ---------------- */}
         <View style={tw`mx-5`}>
           <View style={tw`flex-row items-center justify-between px-4 py-4`}>
             {/* Step 1: Checkout */}
@@ -66,44 +81,63 @@ const checkOut = () => {
         </View>
 
         <View style={tw`mx-5 mt-3`}>
-          <View
-            style={tw` rounded-md bg-primary flex-row justify-between items-center p-3.5`}
-          >
-            <Text style={tw`font-PoppinsSemiBold text-base text-white`}>
-              Order id:
-            </Text>
-            <Text style={tw`font-PoppinsSemiBold text-base text-white`}>
-              #500
-            </Text>
-          </View>
-
           <View style={tw`mt-4`}>
-            {CartData.map((data) => (
-              <TouchableOpacity
-                key={data.id}
-                style={tw`flex-row items-center p-3 rounded-2xl bg-white mb-3 shadow-lg`}
+            {getCartData?.cart?.map((data) => (
+              <Pressable
+                key={data?.id}
+                style={tw`flex-row justify-between items-center p-2 rounded-xl  bg-white mb-2`}
               >
-                <Image
-                  source={data.image}
-                  style={tw`w-14 h-14 rounded-md`}
-                  resizeMode="contain"
-                />
-                <View style={tw`ml-4`}>
-                  <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-                    {data.title}
-                  </Text>
-                  <Text
-                    style={tw`font-PoppinsRegular text-sm text-regularText`}
-                  >
-                    {data.weight}
-                  </Text>
-                  <Text
-                    style={tw`font-PoppinsSemiBold text-base text-primary mt-1`}
-                  >
-                    ${data.price}
-                  </Text>
+                <View style={tw`flex-row items-center gap-2 flex-shrink`}>
+                  <Image
+                    style={tw`w-24 h-20`}
+                    source={data.image}
+                    contentFit="contain"
+                  />
+                  <View style={tw`flex-1`}>
+                    <Text
+                      ellipsizeMode="tail"
+                      numberOfLines={1}
+                      style={tw`pr-2 font-PoppinsSemiBold text-sm text-black`}
+                    >
+                      {data?.product_name}
+                    </Text>
+
+                    <Text
+                      style={tw`font-PoppinsRegular text-sm text-regularText`}
+                    >
+                      {data?.size}
+                    </Text>
+                    {data?.promo_price !== "0" ? (
+                      <View>
+                        <View style={tw`flex-row items-center gap-1`}>
+                          <Text
+                            style={tw`font-PoppinsSemiBold text-sm text-primary`}
+                          >
+                            $ {data?.promo_price}
+                          </Text>
+                        </View>
+                        <View style={tw`flex-row items-center gap-1`}>
+                          <Text
+                            style={tw`font-PoppinsSemiBold text-sm text-red-700 line-through`}
+                          >
+                            $ {data?.regular_price}
+                          </Text>
+                        </View>
+                      </View>
+                    ) : (
+                      <View style={tw`flex-row items-center gap-1`}>
+                        <Text
+                          style={tw`font-PoppinsSemiBold text-sm text-primary`}
+                        >
+                          $ {data?.regular_price}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
                 </View>
-              </TouchableOpacity>
+
+                {/* =================== quantity counter =================== */}
+              </Pressable>
             ))}
           </View>
 
@@ -123,13 +157,10 @@ const checkOut = () => {
             </View>
             <View style={tw`px-5 py-3`}>
               <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-                Home
+                {getProfileInfo?.data?.name}
               </Text>
               <Text style={tw`font-PoppinsRegular text-base text-regularText`}>
-                Kodiak Island
-              </Text>
-              <Text style={tw`font-PoppinsRegular text-base text-regularText`}>
-                Alaska
+                {getProfileInfo?.data?.address}
               </Text>
 
               <Text style={tw`font-PoppinsRegular text-base text-black mb-2`}>
@@ -137,8 +168,7 @@ const checkOut = () => {
                 <Text
                   style={tw`font-PoppinsRegular text-base text-regularText`}
                 >
-                  {" "}
-                  01254698756
+                  {getProfileInfo?.data?.phone}
                 </Text>
               </Text>
             </View>
@@ -160,7 +190,7 @@ const checkOut = () => {
                 <Text
                   style={tw`font-PoppinsRegular text-base text-regularText`}
                 >
-                  3
+                  $ {getCartData?.total_products}
                 </Text>
               </View>
               <View style={tw`flex-row justify-between items-center mt-2`}>
@@ -172,7 +202,7 @@ const checkOut = () => {
                 <Text
                   style={tw`font-PoppinsRegular text-base text-regularText`}
                 >
-                  $50.55
+                  $ {getCartData?.total_price}
                 </Text>
               </View>
               <View style={tw`flex-row justify-between items-center mt-2`}>
@@ -184,7 +214,7 @@ const checkOut = () => {
                 <Text
                   style={tw`font-PoppinsRegular text-base text-regularText`}
                 >
-                  $4.45
+                  $0
                 </Text>
               </View>
               <View style={tw`flex-row justify-between items-center mt-2`}>
@@ -196,7 +226,7 @@ const checkOut = () => {
                 <Text
                   style={tw`font-PoppinsRegular text-base text-regularText`}
                 >
-                  $0.5
+                  $0
                 </Text>
               </View>
               {/*  ====== border bottom ---------- */}
@@ -211,7 +241,7 @@ const checkOut = () => {
                   Total:
                 </Text>
                 <Text style={tw`font-PoppinsSemiBold text-lg text-black`}>
-                  $55.05
+                  $ {getCartData?.total_price}
                 </Text>
               </View>
             </View>

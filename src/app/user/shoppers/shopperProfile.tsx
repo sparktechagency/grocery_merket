@@ -93,7 +93,7 @@ const shopperProfile = () => {
             productName={item.name}
             productImg={item?.images}
             productPrice={item?.regular_price}
-            // categoryName={categoryData}
+            promoPrice={item?.promo_price}
             shopName={item.storeName}
             productWidth={item.size}
             shopOnPress={() => setModalVisible(true)}

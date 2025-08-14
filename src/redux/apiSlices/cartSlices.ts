@@ -32,10 +32,10 @@ const cartSlices = api.injectEndpoints({
       invalidatesTags: ["cart"],
     }),
     updateCartItem: build.mutation({
-      query: (cartDataId) => ({
+      query: ({ cartDataId, quantity }) => ({
         url: `/app/updateCart/${cartDataId}`,
         method: "POST",
-        body: cartDataId,
+        body: { quantity },
       }),
       invalidatesTags: ["cart"],
     }),

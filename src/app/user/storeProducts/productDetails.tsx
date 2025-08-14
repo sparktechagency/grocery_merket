@@ -257,6 +257,7 @@ const productDetails = () => {
             productId={item?.id}
             productImg={item?.images}
             productPrice={item?.regular_price}
+            promoPrice={item?.promo_price}
             categoryName={paramsCategory}
             shopName={item.storeName}
             productWidth={item?.size}

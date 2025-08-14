@@ -237,6 +237,7 @@ const HomeScreen = () => {
                     productId={item?.id}
                     productImg={item?.images}
                     productPrice={item?.regular_price}
+                    promoPrice={item?.promo_price}
                     categoryName={randomCategoryName}
                     shopName={item.storeName}
                     productWidth={item.size}
