@@ -20,7 +20,7 @@ const profileSlices = api.injectEndpoints({
 
     getAllShopper: builder.query({
       query: () => ({
-        url: "/app/getAllShopper?page=1&per_page=2",
+        url: "/app/getAllShopper?page=1&per_page=20",
         method: "GET",
       }),
       providesTags: ["profile"],

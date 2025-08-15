@@ -3,22 +3,19 @@ import {
   Text,
   ScrollView,
   Modal,
-  Pressable,
   StyleSheet,
   TouchableOpacity,
   Image,
 } from "react-native";
-import React from "react";
+import React, { useCallback, useRef } from "react";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
-import { Link, router } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import tw from "@/src/lib/tailwind";
 import { SvgXml } from "react-native-svg";
 import {
   IconCalender,
   IconCheckout,
   IconLeftLineArrow,
-  IconMasterCard,
-  IconPaymentSelected,
   IconPlaceOrderSelected,
   IconRightArrowSingle,
   IconTime,
@@ -27,27 +24,107 @@ import {
 import TButton from "@/src/lib/buttons/TButton";
 import { Calendar } from "react-native-calendars";
 import { TextInput } from "react-native-gesture-handler";
-import { Checkbox, Dialog, PanningProvider } from "react-native-ui-lib";
 import { ImgShopperOne, ImgShopperTwo } from "@/assets/images";
+import OrderBill from "@/src/components/OrderBill";
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetScrollView,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
+import { set } from "react-hook-form";
+import { useGetAllShopperQuery } from "@/src/redux/apiSlices/profileSlieces";
 
 const placeOrder = () => {
   const [isCalenderModal, setIsCalenderModal] = React.useState(false);
+  const [markedDates, setMarkedDates] = React.useState({});
   const [isTimeModal, setIsTimeModal] = React.useState(false);
   const [calenderValue, setCalenderValue] = React.useState("");
-  const [isShopperModal, setIsShopperModal] = React.useState(false);
-  const [isSelected, setSelection] = React.useState(false);
+  const [isChecked, setIsChecked] = React.useState<boolean>(false);
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const handlePresentModalPress = useCallback(async () => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleCloseModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.dismiss();
+  }, []);
+  const handleCheckBox = async () => {
+    setIsChecked(!isChecked);
+  };
+
+  const { userInfo, cartInfo } = useLocalSearchParams();
+  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const parsedCartInfo = cartInfo ? JSON.parse(cartInfo) : null;
 
   const [hour, setHour] = React.useState("08");
   const [minute, setMinute] = React.useState("00");
   const [amPm, setAmPm] = React.useState("AM");
 
+  // ******************************* API CALLS ****************************************************
+  const { data: getAllShoppers, isLoading: isGetAllShopperLoading } =
+    useGetAllShopperQuery({});
+
+  console.log(
+    getAllShoppers?.data,
+    "get all shoppers ----------------------->"
+  );
+
+  // -------------------------------------- calender and time handler ------------------------------
+
   const formatTime = () => {
     return `${hour.padStart(2, "0")}:${minute.padStart(2, "0")} ${amPm}`;
   };
-
   const handleOK = () => {
     console.log("Selected time:", formatTime());
     setIsTimeModal(false);
+  };
+  const today = new Date().toISOString().split("T")[0];
+  const handleDayPress = (day) => {
+    setCalenderValue(day.dateString);
+    setMarkedDates({
+      [day?.dateString]: {
+        selected: true,
+        marked: true,
+        selectedColor: "#00BFFF",
+      },
+    });
+  };
+  const renderDay = (day) => {
+    const isPastDate = day.dateString < today;
+    const isDisabled = isPastDate;
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          handleDayPress(day);
+        }}
+        disabled={isDisabled}
+        style={{
+          backgroundColor: isDisabled
+            ? "rgba(0, 0, 0, 0.1)"
+            : calenderValue === day.dateString
+            ? tw.color("bg-primary")
+            : "transparent",
+          borderRadius: 20,
+          width: 35,
+          height: 35,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            color: isPastDate
+              ? "rgba(0, 0, 0, 0.5)"
+              : calenderValue === day.dateString
+              ? "#FFFFFF"
+              : "#000000",
+          }}
+        >
+          {day.day}
+        </Text>
+      </TouchableOpacity>
+    );
   };
 
   return (
@@ -56,6 +133,7 @@ const placeOrder = () => {
 
       <ScrollView>
         <View style={tw`px-5`}>
+          {/* ------------------- Steps ---------------- */}
           <View style={tw`flex-row items-center justify-between px-4 py-4`}>
             {/* Step 1: Checkout */}
             <View style={tw`items-center`}>
@@ -69,24 +147,10 @@ const placeOrder = () => {
               <Text style={tw`text-center text-black mt-2`}>Checkout</Text>
             </View>
             {/* Arrow */}
-            <View>
+            <View style={tw` flex-1 justify-center items-center pb-3`}>
               <SvgXml xml={IconLeftLineArrow} />
             </View>
-            {/* Step 2: Payment */}
-            <View style={tw`items-center`}>
-              <View style={tw`border-2 border-primary rounded-full`}>
-                <View
-                  style={tw`w-14 h-14 rounded-full  bg-primary justify-center items-center m-1`}
-                >
-                  <SvgXml xml={IconPaymentSelected} width={24} height={24} />
-                </View>
-              </View>
-              <Text style={tw`text-center text-black mt-2`}>Payment</Text>
-            </View>
-            {/* Arrow */}
-            <View>
-              <SvgXml xml={IconLeftLineArrow} />
-            </View>
+
             {/* Step 3: Place Order */}
             <View style={tw`items-center`}>
               <View style={tw`border-2 border-primary rounded-full`}>
@@ -99,6 +163,8 @@ const placeOrder = () => {
               <Text style={tw`text-center text-black mt-2`}>Place order</Text>
             </View>
           </View>
+
+          {/*  ======================= userInfo =-================================== */}
 
           <View style={tw`w-full bg-[#e7e9eb] rounded-xl  mt-2`}>
             <View
@@ -116,126 +182,33 @@ const placeOrder = () => {
             </View>
             <View style={tw`px-5 py-3`}>
               <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-                Home
+                {parsedUserInfo?.name}
               </Text>
               <Text style={tw`font-PoppinsRegular text-base text-regularText`}>
-                Kodiak Island
-              </Text>
-              <Text style={tw`font-PoppinsRegular text-base text-regularText`}>
-                Alaska
+                {parsedUserInfo?.address}
               </Text>
 
               <Text style={tw`font-PoppinsRegular text-base text-black mb-2`}>
-                Mobile:{" "}
+                Mobile:
                 <Text
                   style={tw`font-PoppinsRegular text-base text-regularText`}
                 >
-                  {" "}
-                  01254698756
+                  {parsedUserInfo?.phone}
                 </Text>
               </Text>
             </View>
           </View>
 
-          <View
-            style={tw`flex-row items-center px-5 py-4 rounded-xl bg-[#eceff1] mb-3 shadow-md mt-5`}
-          >
-            <View
-              style={tw`w-14 h-14 flex justify-center items-center bg-white rounded-full shadow-sm`}
-            >
-              <SvgXml xml={IconMasterCard} style={tw`w-16 h-16 rounded-md`} />
-            </View>
-            <View style={tw`ml-4`}>
-              <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-                Mastercard
-              </Text>
-              <Text style={tw`font-PoppinsRegular text-sm text-black`}>
-                **** **** **** 4568
-              </Text>
-              <View style={tw`flex-row gap-7 items-center mt-1`}>
-                <Text style={tw`font-PoppinsMedium text-sm text-black`}>
-                  Exp: 06/26
-                </Text>
-                <Text style={tw`font-PoppinsMedium text-sm text-black`}>
-                  CVV: 123
-                </Text>
-              </View>
-            </View>
-          </View>
-
-          <View style={tw`w-full bg-[#e7e9eb]  rounded-xl mt-4`}>
-            <View style={tw`flex-row  rounded-t-lg bg-white px-5 py-2`}>
-              <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>
-                Order bill
-              </Text>
-            </View>
-            <View style={tw`px-5 py-3`}>
-              <View style={tw`flex-row justify-between items-center`}>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  Total items:
-                </Text>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  3
-                </Text>
-              </View>
-              <View style={tw`flex-row justify-between items-center mt-2`}>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  Sub total:
-                </Text>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  $50.55
-                </Text>
-              </View>
-              <View style={tw`flex-row justify-between items-center mt-2`}>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  Delivery charge:
-                </Text>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  $4.45
-                </Text>
-              </View>
-              <View style={tw`flex-row justify-between items-center mt-2`}>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  Tax:
-                </Text>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  $0.5
-                </Text>
-              </View>
-              {/*  ====== border bottom ---------- */}
-              <View style={tw`w-full mb-2`}>
-                <Text
-                  style={tw`w-full mx-auto border-b border-regularText  `}
-                ></Text>
-              </View>
-
-              <View style={tw`flex-row justify-between items-center`}>
-                <Text style={tw`font-PoppinsSemiBold text-lg text-black`}>
-                  Total:
-                </Text>
-                <Text style={tw`font-PoppinsSemiBold text-lg text-black`}>
-                  $55.05
-                </Text>
-              </View>
-            </View>
-          </View>
-
+          {/* -======================== order info ================== */}
+          <OrderBill
+            headerTitle={"Order bill"}
+            totalItems={parsedCartInfo?.total_products}
+            subTotal={parsedCartInfo?.total_price}
+            deliveryCharge={0}
+            tax={0}
+            total={parsedCartInfo?.total_price}
+          />
+          {/*  --====================== time and date or profile ================== */}
           <View style={tw`mt-3 mb-5`}>
             <View style={tw`mb-3`}>
               <Text style={tw`font-PoppinsRegular text-base text-black`}>
@@ -272,7 +245,7 @@ const placeOrder = () => {
                 shopper
               </Text>
               <TouchableOpacity
-                onPress={() => setIsShopperModal(true)}
+                onPress={() => handlePresentModalPress()}
                 style={tw`border border-gray-400 w-full h-12 rounded-sm flex-row justify-between items-center px-5`}
               >
                 <Text style={tw`font-PoppinsRegular text-sm text-black`}>
@@ -305,38 +278,17 @@ const placeOrder = () => {
         <View style={styles.centeredViewCalender}>
           <View style={styles.modalViewCalender}>
             <Calendar
-              style={{
-                height: 400,
-              }}
-              theme={{
-                backgroundColor: "#ffffff",
-                calendarBackground: "#ffffff",
-                textSectionTitleColor: "#b6c1cd",
-                selectedDayBackgroundColor: "#00adf5",
-                selectedDayTextColor: "#ffffff",
-                todayTextColor: "#00adf5",
-                dayTextColor: "#2d4150",
-                textDisabledColor: "#dd99ee",
-              }}
-              // Initially visible month. Default = now
-              current={"2025-05-03"}
-              // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
-              minDate={"2022-01-01"}
-              // Max date
-              maxDate={"2026-12-31"}
-              // Handler which gets executed on day press
-              onDayPress={(day) => {
-                console.log("Selected day", day);
-              }}
-              // Mark specific dates
-              markedDates={{
-                "2025-05-03": {
-                  selected: true,
-                  marked: true,
-                  selectedColor: "blue",
+              style={[
+                {
+                  height: 400,
+                  width: 350,
                 },
-              }}
+                tw`rounded-lg`,
+              ]}
+              dayComponent={({ date }) => renderDay(date)}
+              markedDates={markedDates}
             />
+
             <View style={tw`w-full flex-row justify-between `}>
               <TouchableOpacity
                 onPress={() => setIsCalenderModal(!isCalenderModal)}
@@ -369,7 +321,7 @@ const placeOrder = () => {
 
       {/* ------ is time modal is open ----------------- */}
       <Modal
-        onDismiss={() => console.log("dismissed")}
+        onDismiss={() => setIsTimeModal(!isTimeModal)}
         animationType="slide"
         transparent={true}
         visible={isTimeModal}
@@ -431,93 +383,199 @@ const placeOrder = () => {
       </Modal>
 
       {/* ------ shopper modal open ------------ */}
-      <Dialog
-        width={"100%"}
-        height={"60%"}
-        bottom={true}
-        containerStyle={tw`flex-1 bg-white rounded-t-3xl p-5`}
-        visible={isShopperModal}
-        onDismiss={() => console.log("dismissed")}
-        panDirection={PanningProvider.Directions.DOWN}
-      >
-        <Text style={tw`font-PoppinsMedium text-base text-center text-black`}>
-          Choose your Shopper
-        </Text>
-        <Text style={tw` border-b w-full`}></Text>
-
-        <View style={tw`flex-row items-center  mt-8 w-[85%] gap-7`}>
-          <Checkbox
-            value={isSelected}
-            onValueChange={setSelection}
-            color="#000"
-            // selectedIconColor="#000000"
-            // borderColor="#000000"
-          />
-          <View
-            style={tw` flex-row bg-white shadow-md rounded-lg w-full px-5  py-3 gap-4`}
+      <BottomSheetModalProvider>
+        <BottomSheetModal ref={bottomSheetModalRef} snapPoints={["50%", "90%"]}>
+          <BottomSheetScrollView
+            contentContainerStyle={styles.contentContainer}
           >
-            <Image style={tw`w-16 h-16 rounded-full`} source={ImgShopperTwo} />
-            <View>
-              <Text
-                style={tw`font-PoppinsSemiBold text-base w-full text-black`}
+            <Text
+              style={tw`font-PoppinsMedium text-base text-center text-black`}
+            >
+              Choose your Shopper
+            </Text>
+            <Text style={tw` border-b w-full`}></Text>
+            <ScrollView>
+              {/* ================= Shopper list -============================ */}
+              {getAllShoppers?.data.map((item: any, index: number) => (
+                <TouchableOpacity
+                  onPress={() => handleCheckBox()}
+                  key={item?.id}
+                  style={tw`flex-row items-center  mt-6 w-[85%] gap-7`}
+                >
+                  <TouchableOpacity
+                    onPress={() => handleCheckBox()}
+                    style={tw.style(
+                      `border w-5 h-5  justify-center items-center rounded-sm`,
+                      isChecked ? `bg-primary border-0` : `bg-transparent`
+                    )}
+                  >
+                    {isChecked ? (
+                      <Text style={tw`text-white text-sm`}>✔</Text>
+                    ) : null}
+                  </TouchableOpacity>
+                  <View
+                    style={tw` flex-row items-center bg-white shadow-md rounded-lg w-full px-5  py-3 gap-4`}
+                  >
+                    <Image
+                      style={tw`w-16 h-16 rounded-full`}
+                      source={ImgShopperOne}
+                    />
+                    <Text
+                      style={tw`font-PoppinsSemiBold text-base w-full text-black`}
+                    >
+                      Random Shopper
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+
+              {/*  ------------- button ---------- */}
+              <View
+                style={tw`flex-row justify-between items-center mt-12 px-6`}
               >
-                Theresa Webb
-              </Text>
-              <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>
-                My Personal Shopper
-              </Text>
-              <Link
-                href={"/user/shoppers/myShoppers"}
-                style={tw`underline font-PoppinsRegular text-sm text-primary `}
+                <TouchableOpacity
+                  onPress={() => handleCloseModalPress()}
+                  style={tw`bg-[#E8E8E8] px-10 py-2.5 rounded-full`}
+                >
+                  <Text style={tw`font-PoppinsMedium text-black text-lg`}>
+                    Cancel
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => handleCloseModalPress()}
+                  style={tw`bg-primary px-10 py-2.5 rounded-full`}
+                >
+                  <Text style={tw`font-PoppinsMedium text-white text-lg`}>
+                    Select
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </BottomSheetScrollView>
+        </BottomSheetModal>
+      </BottomSheetModalProvider>
+
+      {/* ------ shopper modal open ------------ */}
+      {/* <BottomSheetModalProvider>
+        <BottomSheetModal ref={bottomSheetModalRef} snapPoints={["50%", "90%"]}>
+          <BottomSheetScrollView
+            contentContainerStyle={styles.contentContainer}
+          >
+            <Text
+              style={tw`font-PoppinsMedium text-base text-center text-black`}
+            >
+              Choose your Shopper
+            </Text>
+            <Text style={tw` border-b w-full`}></Text>
+            <ScrollView>
+              <View style={tw`flex-row items-center  mt-8 w-[85%] gap-7`}>
+                <TouchableOpacity
+                  onPress={() => handleCheckBox()}
+                  style={tw.style(
+                    `border w-5 h-5  justify-center items-center rounded-sm`,
+                    isChecked ? `bg-primary border-0` : `bg-transparent`
+                  )}
+                >
+                  {isChecked ? (
+                    <Text style={tw`text-white text-sm`}>✔</Text>
+                  ) : null}
+                </TouchableOpacity>
+                <View
+                  style={tw` flex-row bg-white shadow-md rounded-lg w-full px-5  py-3 gap-4`}
+                >
+                  <Image
+                    style={tw`w-16 h-16 rounded-full`}
+                    source={ImgShopperTwo}
+                  />
+                  <View>
+                    <Text
+                      style={tw`font-PoppinsSemiBold text-base w-full text-black`}
+                    >
+                      Theresa Webb
+                    </Text>
+                    <Text
+                      style={tw`font-PoppinsRegular text-sm text-regularText`}
+                    >
+                      My Personal Shopper
+                    </Text>
+                    <Link
+                      href={"/user/shoppers/myShoppers"}
+                      style={tw`underline font-PoppinsRegular text-sm text-primary `}
+                    >
+                      Change
+                    </Link>
+                  </View>
+                </View>
+              </View>
+
+              <View style={tw`flex-row items-center  mt-6 w-[85%] gap-7`}>
+                <TouchableOpacity
+                  onPress={() => handleCheckBox()}
+                  style={tw.style(
+                    `border w-5 h-5  justify-center items-center rounded-sm`,
+                    isChecked ? `bg-primary border-0` : `bg-transparent`
+                  )}
+                >
+                  {isChecked ? (
+                    <Text style={tw`text-white text-sm`}>✔</Text>
+                  ) : null}
+                </TouchableOpacity>
+                <View
+                  style={tw` flex-row items-center bg-white shadow-md rounded-lg w-full px-5  py-3 gap-4`}
+                >
+                  <Image
+                    style={tw`w-16 h-16 rounded-full`}
+                    source={ImgShopperOne}
+                  />
+                  <Text
+                    style={tw`font-PoppinsSemiBold text-base w-full text-black`}
+                  >
+                    Random Shopper
+                  </Text>
+                </View>
+              </View>
+
+              <View
+                style={tw`flex-row justify-between items-center mt-12 px-6`}
               >
-                Change
-              </Link>
-            </View>
-          </View>
-        </View>
-
-        <View style={tw`flex-row items-center  mt-6 w-[85%] gap-7`}>
-          <Checkbox
-            value={isSelected}
-            onValueChange={setSelection}
-            color="#000"
-            // selectedIconColor="#000000"
-            // borderColor="#000000"
-          />
-          <View
-            style={tw` flex-row items-center bg-white shadow-md rounded-lg w-full px-5  py-3 gap-4`}
-          >
-            <Image style={tw`w-16 h-16 rounded-full`} source={ImgShopperOne} />
-            <Text style={tw`font-PoppinsSemiBold text-base w-full text-black`}>
-              Random Shopper
-            </Text>
-          </View>
-        </View>
-
-        <View style={tw`flex-row justify-between items-center mt-12 px-6`}>
-          <TouchableOpacity
-            onPress={() => setIsShopperModal(!isShopperModal)}
-            style={tw`bg-[#E8E8E8] px-10 py-2.5 rounded-full`}
-          >
-            <Text style={tw`font-PoppinsMedium text-black text-lg`}>
-              Cancel
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setIsShopperModal(!isShopperModal)}
-            style={tw`bg-primary px-10 py-2.5 rounded-full`}
-          >
-            <Text style={tw`font-PoppinsMedium text-white text-lg`}>
-              Select
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </Dialog>
+                <TouchableOpacity
+                  onPress={() => handleCloseModalPress()}
+                  style={tw`bg-[#E8E8E8] px-10 py-2.5 rounded-full`}
+                >
+                  <Text style={tw`font-PoppinsMedium text-black text-lg`}>
+                    Cancel
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => handleCloseModalPress()}
+                  style={tw`bg-primary px-10 py-2.5 rounded-full`}
+                >
+                  <Text style={tw`font-PoppinsMedium text-white text-lg`}>
+                    Select
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </BottomSheetScrollView>
+        </BottomSheetModal>
+      </BottomSheetModalProvider> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 32,
+    justifyContent: "center",
+    backgroundColor: "grey",
+  },
+  contentContainer: {
+    flex: 1,
+    paddingRight: 16,
+    paddingLeft: 16,
+    height: 400,
+  },
   centeredViewCalender: {
     flex: 1,
     justifyContent: "center",

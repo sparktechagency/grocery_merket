@@ -1,7 +1,7 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
-import { Link, router } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import tw from "@/src/lib/tailwind";
 import { SvgXml } from "react-native-svg";
 import {
@@ -14,6 +14,13 @@ import {
 import TButton from "@/src/lib/buttons/TButton";
 
 const payment = () => {
+  const { userInfo, cartInfo } = useLocalSearchParams();
+
+  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const parsedCartInfo = cartInfo ? JSON.parse(cartInfo) : null;
+
+  console.log(parsedCartInfo, "Parsed data");
+
   return (
     <View style={tw`flex-1`}>
       <BackWithComponent onPress={() => router.back()} title={"Payment"} />
@@ -132,47 +139,6 @@ const payment = () => {
                 </Text>
               </View>
             </View>
-          </View>
-
-          <View style={tw`mt-4`}>
-            <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-              Payment
-            </Text>
-            <Text style={tw`border-b border-gray-800`}></Text>
-
-            <View
-              style={tw`flex-row items-center px-5 py-4 rounded-xl bg-[#eceff1] mb-3 shadow-md mt-5`}
-            >
-              <View
-                style={tw`w-14 h-14 flex justify-center items-center bg-white rounded-full shadow-sm`}
-              >
-                <SvgXml xml={IconMasterCard} style={tw`w-16 h-16 rounded-md`} />
-              </View>
-              <View style={tw`ml-4`}>
-                <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-                  Mastercard
-                </Text>
-                <Text style={tw`font-PoppinsRegular text-sm text-black`}>
-                  **** **** **** 4568
-                </Text>
-                <View style={tw`flex-row gap-7 items-center mt-1`}>
-                  <Text style={tw`font-PoppinsMedium text-sm text-black`}>
-                    Exp: 06/26
-                  </Text>
-                  <Text style={tw`font-PoppinsMedium text-sm text-black`}>
-                    CVV: 123
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-          <View style={tw`w-full flex justify-end items-end mt-3`}>
-            <Link
-              href={"/user/paymentSystem/myCard"}
-              style={tw`underline font-PoppinsRegular text-sm text-primary `}
-            >
-              Change
-            </Link>
           </View>
         </View>
 

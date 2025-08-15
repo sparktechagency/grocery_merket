@@ -27,6 +27,7 @@ import {
   BottomSheetModalProvider,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
+import OrderBill from "@/src/components/OrderBill";
 
 const cart = () => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -217,73 +218,16 @@ const cart = () => {
 
               {/* ------------------------ add to cart item info ---------------- */}
 
-              <View style={tw`bg-[#F3F5F7] p-4 my-10 rounded-xl`}>
-                <View style={tw`flex-row justify-between items-center`}>
-                  <Text
-                    style={tw`font-PoppinsRegular text-base text-regularText`}
-                  >
-                    Total items:
-                  </Text>
-                  <Text
-                    style={tw`font-PoppinsRegular text-base text-regularText`}
-                  >
-                    {getCartData?.total_products}
-                  </Text>
-                </View>
-                <View style={tw`flex-row justify-between items-center mt-2.5`}>
-                  <Text
-                    style={tw`font-PoppinsRegular text-base text-regularText`}
-                  >
-                    Sub total:
-                  </Text>
-                  <Text
-                    style={tw`font-PoppinsRegular text-base text-regularText`}
-                  >
-                    $ {getCartData?.total_price}
-                  </Text>
-                </View>
-                <View style={tw`flex-row justify-between items-center mt-2.5`}>
-                  <Text
-                    style={tw`font-PoppinsRegular text-base text-regularText`}
-                  >
-                    Delivery charge:
-                  </Text>
-                  <Text
-                    style={tw`font-PoppinsRegular text-base text-regularText`}
-                  >
-                    $ 0
-                  </Text>
-                </View>
-                <View style={tw`flex-row justify-between items-center mt-2.5`}>
-                  <Text
-                    style={tw`font-PoppinsRegular text-base text-regularText`}
-                  >
-                    Tax:
-                  </Text>
-                  <Text
-                    style={tw`font-PoppinsRegular text-base text-regularText`}
-                  >
-                    $ 0
-                  </Text>
-                </View>
-                {/*  ====== border bottom ---------- */}
-                <View style={tw`w-full mb-3`}>
-                  <Text
-                    style={tw`w-full mx-auto border-b border-regularText  `}
-                  ></Text>
-                </View>
+              <OrderBill
+                headerTitle={""}
+                totalItems={getCartData?.total_products}
+                subTotal={getCartData?.total_price}
+                deliveryCharge={0}
+                tax={0}
+                total={getCartData?.total_price}
+              />
 
-                <View style={tw`flex-row justify-between items-center`}>
-                  <Text style={tw`font-PoppinsSemiBold text-lg text-black`}>
-                    Total:
-                  </Text>
-                  <Text style={tw`font-PoppinsSemiBold text-lg text-black`}>
-                    $ {getCartData?.total_price}
-                  </Text>
-                </View>
-              </View>
-
-              <View style={tw`rounded-full mb-6`}>
+              <View style={tw`rounded-full pb-6 pt-4`}>
                 <TButton
                   // onPress={handleSubmit(onSubmit)}
                   onPress={() => router.push("/user/addToCart/checkOut")}
@@ -349,7 +293,7 @@ const cart = () => {
               <View style={tw`ml-4`}>
                 <Text
                   numberOfLines={1}
-                  style={tw`font-PoppinsSemiBold text-base text-black`}
+                  style={tw`flex-1 font-PoppinsSemiBold text-base text-black`}
                 >
                   {singleItem?.cart?.product_name}
                 </Text>

@@ -21,16 +21,12 @@ import TButton from "@/src/lib/buttons/TButton";
 import { useGetCartQuery } from "@/src/redux/apiSlices/cartSlices";
 import { Image } from "expo-image";
 import { useGetProfileQuery } from "@/src/redux/apiSlices/profileSlieces";
+import OrderBill from "@/src/components/OrderBill";
 
 const checkOut = () => {
   // ---------------------------- all apis ----------------------------------
   const { data: getCartData } = useGetCartQuery({});
   const { data: getProfileInfo } = useGetProfileQuery({});
-
-  console.log(
-    getProfileInfo?.data,
-    "get cart data----------------------------------->"
-  );
 
   return (
     <View style={tw`flex-1`}>
@@ -51,21 +47,9 @@ const checkOut = () => {
               </View>
               <Text style={tw`text-center text-black mt-2`}>Checkout</Text>
             </View>
+
             {/* Arrow */}
-            <View>
-              <SvgXml xml={IconLeftLineArrow} />
-            </View>
-            {/* Step 2: Payment */}
-            <View style={tw`items-center`}>
-              <View
-                style={tw`w-14 h-14 rounded-full border-2 border-primary justify-center items-center`}
-              >
-                <SvgXml xml={IconPayment} width={24} height={24} />
-              </View>
-              <Text style={tw`text-center text-black mt-2`}>Payment</Text>
-            </View>
-            {/* Arrow */}
-            <View>
+            <View style={tw` flex-1 justify-center items-center pb-3`}>
               <SvgXml xml={IconLeftLineArrow} />
             </View>
             {/* Step 3: Place Order */}
@@ -174,83 +158,28 @@ const checkOut = () => {
             </View>
           </View>
 
-          <View style={tw`w-full bg-[#e7e9eb]  rounded-xl mt-4`}>
-            <View style={tw`flex-row  rounded-t-lg bg-white px-5 py-2`}>
-              <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>
-                Order bill
-              </Text>
-            </View>
-            <View style={tw`px-5 py-3`}>
-              <View style={tw`flex-row justify-between items-center`}>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  Total items:
-                </Text>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  $ {getCartData?.total_products}
-                </Text>
-              </View>
-              <View style={tw`flex-row justify-between items-center mt-2`}>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  Sub total:
-                </Text>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  $ {getCartData?.total_price}
-                </Text>
-              </View>
-              <View style={tw`flex-row justify-between items-center mt-2`}>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  Delivery charge:
-                </Text>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  $0
-                </Text>
-              </View>
-              <View style={tw`flex-row justify-between items-center mt-2`}>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  Tax:
-                </Text>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  $0
-                </Text>
-              </View>
-              {/*  ====== border bottom ---------- */}
-              <View style={tw`w-full mb-2`}>
-                <Text
-                  style={tw`w-full mx-auto border-b border-regularText  `}
-                ></Text>
-              </View>
-
-              <View style={tw`flex-row justify-between items-center`}>
-                <Text style={tw`font-PoppinsSemiBold text-lg text-black`}>
-                  Total:
-                </Text>
-                <Text style={tw`font-PoppinsSemiBold text-lg text-black`}>
-                  $ {getCartData?.total_price}
-                </Text>
-              </View>
-            </View>
-          </View>
+          {/* ----=============================== order bill info ===================== */}
+          <OrderBill
+            headerTitle={"Order Bill"}
+            totalItems={getCartData?.total_products}
+            subTotal={getCartData?.total_price}
+            deliveryCharge={0}
+            tax={0}
+            total={getCartData?.total_price}
+          />
 
           <View style={tw`rounded-full my-4`}>
             <TButton
-              // onPress={handleSubmit(onSubmit)}
-              onPress={() => router.push("/user/paymentSystem/payment")}
+              onPress={() =>
+                router.push({
+                  pathname: "/user/paymentSystem/placeOrder",
+                  // pathname: "/user/paymentSystem/payment",
+                  params: {
+                    userInfo: JSON.stringify(getProfileInfo?.data),
+                    cartInfo: JSON.stringify(getCartData),
+                  },
+                })
+              }
               title="Next"
               containerStyle={tw`rounded-full `}
             />
