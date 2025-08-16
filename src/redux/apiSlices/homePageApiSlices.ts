@@ -1,3 +1,4 @@
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import { api } from "../api/baseApi";
 
 const homePageApiSlices = api.injectEndpoints({
@@ -100,6 +101,21 @@ const homePageApiSlices = api.injectEndpoints({
       }),
       invalidatesTags: ["productByStore"],
     }),
+    setUserLocation: build.mutation({
+      query: (location) => ({
+        url: `/app/setUserLocation`,
+        method: "POST",
+        body: location,
+      }),
+      invalidatesTags: ["userLocation"],
+    }),
+    getUserLocation: build.query({
+      query: () => ({
+        url: `/app/kroger/getUserLocation`,
+        method: "GET",
+      }),
+      providesTags: ["userLocation "],
+    }),
   }),
 });
 
@@ -117,4 +133,6 @@ export const {
   useProductByCategoryMutation,
   useKogerAllStoreQuery,
   useProductByStoreMutation,
+  useSetUserLocationMutation,
+  useGetUserLocationQuery,
 } = homePageApiSlices;

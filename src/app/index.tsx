@@ -35,8 +35,8 @@ const index = () => {
     AppLoader();
 
     setTimeout(() => {
-      // router.push("/user/drawer/home");
-      router.push("/user/addToCart/checkOut");
+      router.push("/user/drawer/home");
+      // router.push("/user/addToCart/checkOut");
       // router.replace("/user/onboarding/onboarding");
     }, 10);
   }, []);

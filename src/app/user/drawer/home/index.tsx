@@ -23,13 +23,16 @@ import { router } from "expo-router";
 import {
   useKogerAllCategoriesQuery,
   useProductByCategoryMutation,
+  useSetUserLocationMutation,
 } from "@/src/redux/apiSlices/homePageApiSlices";
 import ProductCard from "@/src/components/ProductCard";
 import { useGetCartQuery } from "@/src/redux/apiSlices/cartSlices";
+import useLocation from "@/src/hook/useLocation";
 
 const HomeScreen = () => {
   const [notification, setNotification] = React.useState(false);
   const [randomCategoryData, setRandomCategoryData] = React.useState(null);
+  const { longitude, latitude, errorMsg } = useLocation();
 
   // --------------------------- all api --------------------------
   const { data: categoriesData, isLoading: isCategoryLoading } =
@@ -37,6 +40,7 @@ const HomeScreen = () => {
   const [category, { isError, isLoading: isRandomCategoryProductLoading }] =
     useProductByCategoryMutation();
   const { data: cartItem } = useGetCartQuery({});
+  const [location] = useSetUserLocationMutation();
 
   const randomCategoryName =
     categoriesData?.categories[
@@ -54,8 +58,22 @@ const HomeScreen = () => {
     }
   };
 
+  const stgLongitude = longitude?.toString() ?? "";
+  const stgLatitude = latitude?.toString() ?? "";
+
   useEffect(() => {
+    const setLocation = async () => {
+      try {
+        await location({
+          longitude: stgLongitude,
+          latitude: stgLatitude,
+        }).unwrap();
+      } catch (error) {
+        console.log(error, "set user location not match -------------------");
+      }
+    };
     randomCategoryLoad();
+    setLocation();
   }, []);
 
   const categoryItem = ({ item }: any) => (

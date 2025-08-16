@@ -111,6 +111,8 @@ export const api = createApi({
     "krogerCard",
     "notification",
     "profile",
+    "payment",
+    "userLocation",
   ],
 });
 
