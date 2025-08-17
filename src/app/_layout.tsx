@@ -13,7 +13,7 @@ const RootLayout = () => {
     <SafeAreaView style={tw`flex-1`}>
       <Provider store={store}>
         <StripeProvider
-          publishableKey={`pk_test_51RbhTC4N80HjlCdTCfm0GSfR5ZJNe5fzcuyUJoJkeZ9DMltcug9PNMsM8qloibYOkVpp2DmdGyfwChuHXhIQL3a100dBNfACrQ`}
+          publishableKey={`pk_test_51QwUCRCdHy67C4DzwE8yFjVldhnk3iSKcvOD4y8x7QUheUhtgjFMn9lyiZGGWAAmChWMhKXLrwdaNjMCsC4ukrhl002YH6YMVr`}
         >
           <AlertNotificationRoot>
             <GestureHandlerRootView style={{ flex: 1 }}>

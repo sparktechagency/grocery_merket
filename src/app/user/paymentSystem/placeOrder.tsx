@@ -25,14 +25,18 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetScrollView,
-  BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useGetAllShopperQuery } from "@/src/redux/apiSlices/profileSlieces";
-import { usePaymentIntentMutation } from "@/src/redux/apiSlices/payment";
+import {
+  useConfirmPaymentMutation,
+  usePaymentIntentMutation,
+} from "@/src/redux/apiSlices/payment";
+import { confirmPayment, useStripe } from "@stripe/stripe-react-native";
 
 const placeOrder = () => {
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
   const [shopperId, setShopperId] = React.useState<string>("");
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const handlePresentModalPress = useCallback(async () => {
@@ -49,10 +53,69 @@ const placeOrder = () => {
   // ******************************* API CALLS ****************************************************
   const { data: getAllShoppers, isLoading: isGetAllShopperLoading } =
     useGetAllShopperQuery({});
-
   const [createIntent, intentResult] = usePaymentIntentMutation();
+  const [confirmPayment] = useConfirmPaymentMutation({});
 
   // -===================== payment system  ==========================-
+
+  const handleSetupInitialPayment = async () => {
+    try {
+      const response = await createIntent({ shopper_id: "15" }).unwrap();
+      const clientSecret = response.data.client_secret;
+      // Handle the case where a valid client secret is not returned
+      if (!clientSecret) {
+        router.push({
+          pathname: "/Toaster",
+          params: {
+            response: "Could not initialize payment sheet. Please try again.",
+          },
+        });
+        return;
+      }
+
+      let paymentIntentId = {
+        payment_id: response?.data?.payment_id,
+        payment_intent_id: response?.data?.payment_intent_id,
+      };
+      const { error: initError } = await initPaymentSheet({
+        merchantDisplayName: "Example, Inc.",
+        paymentIntentClientSecret: clientSecret,
+      });
+      if (initError) {
+        // handle error
+        router.push({
+          pathname: "/Toaster",
+          params: { response: initError?.message || initError },
+        });
+      } else {
+        checkout(paymentIntentId);
+      }
+    } catch (error) {
+      console.log(error, "payment intent not created");
+    }
+  };
+  const checkout = async (paymentIntentId) => {
+    try {
+      const { error } = await presentPaymentSheet();
+      if (error) {
+        router.push({
+          pathname: "/Toaster",
+          params: { response: error?.message || error },
+        });
+      } else {
+        const response = await confirmPayment(paymentIntentId).unwrap();
+        if (response) {
+          router.push("/user/paymentSystem/orderSuccess");
+        }
+      }
+    } catch (error) {
+      console.log(error, "payment not successful---------->");
+      router.push({
+        pathname: "/Toaster",
+        params: { response: error?.message || error },
+      });
+    }
+  };
 
   return (
     <View style={tw`flex-1 `}>
@@ -163,7 +226,9 @@ const placeOrder = () => {
 
         <View style={tw`rounded-full my-4`}>
           <TButton
-            onPress={() => router.push("/user/paymentSystem/orderSuccess")}
+            isLoading={intentResult?.isLoading}
+            onPress={() => handleSetupInitialPayment()}
+            // onPress={() => router.push("/user/paymentSystem/orderSuccess")}
             title="Place Order"
             containerStyle={tw`rounded-full `}
           />
