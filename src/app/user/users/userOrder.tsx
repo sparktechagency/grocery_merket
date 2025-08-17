@@ -13,6 +13,7 @@ import { IconDeliver, IconDownArrow, IconUpArrow } from "@/assets/icon";
 import { SvgXml } from "react-native-svg";
 import tw from "@/src/lib/tailwind";
 import Collapsible from "react-native-collapsible";
+import { useGetAllOrdersQuery } from "@/src/redux/apiSlices/orderSlices";
 
 const orderData = [
   {
@@ -89,6 +90,11 @@ const orderData = [
 
 const userOrder = () => {
   const [isCollapsed, setIsCollapsed] = React.useState(true);
+
+  // +++++++++++++++++++ All api ++++++++++++++++++++++++++++
+  const { data: getAllOrders } = useGetAllOrdersQuery({});
+
+  console.log(getAllOrders, "this is getAllOrders-=============>");
   return (
     <View style={tw`flex-1`}>
       <BackWithComponent

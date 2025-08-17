@@ -14,6 +14,7 @@ import {
   IconLocationProfile,
   IconLocationSelected,
   IconLogOut,
+  IconMyShopper,
   IconNotificationSelected,
   IconOrderSelected,
   IconProfileSelected,
@@ -91,6 +92,28 @@ const profile = () => {
             </View>
             <Pressable
               onPress={() => router.push("/user/users/userDetails")}
+              style={tw`py-2.5 px-3.5 bg-white rounded-full`}
+            >
+              <SvgXml xml={IconGetterThen} />
+            </Pressable>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => router.push("/user/shoppers/myShoppers")}
+            style={tw`flex-row justify-between items-center`}
+          >
+            <View style={tw`flex-row justify-start items-center gap-3`}>
+              <View
+                style={tw`w-10 h-10 justify-center text-center items-center bg-[#ECFFF1] mr-5 rounded-full`}
+              >
+                <SvgXml xml={IconMyShopper} />
+              </View>
+              <Text style={tw`font-PoppinsMedium text-base text-black`}>
+                My Shopper
+              </Text>
+            </View>
+            <Pressable
+              onPress={() => router.push("/user/shoppers/myShoppers")}
               style={tw`py-2.5 px-3.5 bg-white rounded-full`}
             >
               <SvgXml xml={IconGetterThen} />

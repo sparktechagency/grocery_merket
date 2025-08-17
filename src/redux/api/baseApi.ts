@@ -113,6 +113,7 @@ export const api = createApi({
     "profile",
     "payment",
     "userLocation",
+    "order",
   ],
 });
 

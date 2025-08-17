@@ -418,6 +418,11 @@ export const IconLeftLineArrow = `<svg width="100" height="55" viewBox="0 0 35 3
 </svg>
 
 `;
+export const IconMyShopper = `<svg width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M13 16.8824V12.7647L9.4 9.23529L14.2 5.70588L16.6 9.23529H19M25 16.8824C25 19.1565 23.1196 21 20.8 21C18.4804 21 16.6 19.1565 16.6 16.8824C16.6 14.6082 18.4804 12.7647 20.8 12.7647C23.1196 12.7647 25 14.6082 25 16.8824ZM9.4 16.8824C9.4 19.1565 7.5196 21 5.2 21C2.8804 21 1 19.1565 1 16.8824C1 14.6082 2.8804 12.7647 5.2 12.7647C7.5196 12.7647 9.4 14.6082 9.4 16.8824ZM17.8 2.17647C17.8 2.82622 17.2627 3.35294 16.6 3.35294C15.9373 3.35294 15.4 2.82622 15.4 2.17647C15.4 1.52672 15.9373 1 16.6 1C17.2627 1 17.8 1.52672 17.8 2.17647Z" stroke="#23AA49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+`;
 export const IconPlaceOrderSelected = `<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <rect width="30" height="30" fill="url(#pattern0_2323_2568)"/>
 <defs>

@@ -11,7 +11,7 @@ import { router } from "expo-router";
 import { FlatList } from "react-native-gesture-handler";
 
 const myShoppers = () => {
-  const [isShopper, setIsShopper] = React.useState(true);
+  const [isShopper, setIsShopper] = React.useState(false);
 
   const shopperData = [
     {
@@ -68,7 +68,11 @@ const myShoppers = () => {
 
   return (
     <View style={tw`flex-1 bg-white`}>
-      <BackWithComponent onPress={() => router.back()} title={"My Shopper"} />
+      <BackWithComponent
+        onPress={() => router.back()}
+        title={"My Shopper"}
+        containerStyle={tw`shadow-md`}
+      />
 
       {isShopper ? (
         <View>

@@ -41,7 +41,7 @@ const BackWithComponent = ({
             >
               <View
                 style={[
-                  tw`bg-white w-10 h-10 justify-center items-center rounded-lg`,
+                  tw`bg-white w-10 h-10 justify-center items-center shadow-lg rounded-lg`,
                   fastComponentContentStyle,
                 ]}
               >
