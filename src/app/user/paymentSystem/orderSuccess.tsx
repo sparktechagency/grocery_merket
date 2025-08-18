@@ -35,8 +35,8 @@ const orderSuccess = () => {
         <View style={tw`rounded-full mb-6`}>
           <TButton
             // onPress={handleSubmit(onSubmit)}
-            onPress={() => router.push("/user/users/userOrderTrack")}
-            title="Truck Order"
+            onPress={() => router.push("/user/drawer/home")}
+            title="Back to Home"
             containerStyle={tw`rounded-full `}
           />
         </View>

@@ -1,100 +1,40 @@
 import {
   View,
   Text,
-  Image,
   Pressable,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React from "react";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
-import { IconDeliver, IconDownArrow, IconUpArrow } from "@/assets/icon";
+import {
+  IconDeliver,
+  IconDownArrow,
+  IconPending,
+  IconTickMark,
+  IconUpArrow,
+} from "@/assets/icon";
 import { SvgXml } from "react-native-svg";
 import tw from "@/src/lib/tailwind";
 import Collapsible from "react-native-collapsible";
 import { useGetAllOrdersQuery } from "@/src/redux/apiSlices/orderSlices";
 
-const orderData = [
-  {
-    orderId: 500,
-    placedOn: "18 Jan 2025",
-    items: 4,
-    price: 50,
-    status: "Canceled",
-  },
-  {
-    orderId: 501,
-    placedOn: "19 Jan 2025",
-    items: 3,
-    price: 35,
-    status: "Delivered",
-  },
-  {
-    orderId: 502,
-    placedOn: "20 Jan 2025",
-    items: 5,
-    price: 75,
-    status: "Pending",
-  },
-  {
-    orderId: 503,
-    placedOn: "21 Jan 2025",
-    items: 2,
-    price: 20,
-    status: "Canceled",
-  },
-  {
-    orderId: 504,
-    placedOn: "22 Jan 2025",
-    items: 6,
-    price: 90,
-    status: "Delivered",
-  },
-  {
-    orderId: 505,
-    placedOn: "23 Jan 2025",
-    items: 1,
-    price: 10,
-    status: "Pending",
-  },
-  {
-    orderId: 506,
-    placedOn: "24 Jan 2025",
-    items: 7,
-    price: 120,
-    status: "Delivered",
-  },
-  {
-    orderId: 507,
-    placedOn: "25 Jan 2025",
-    items: 3,
-    price: 45,
-    status: "Canceled",
-  },
-  {
-    orderId: 508,
-    placedOn: "26 Jan 2025",
-    items: 4,
-    price: 55,
-    status: "Pending",
-  },
-  {
-    orderId: 509,
-    placedOn: "27 Jan 2025",
-    items: 2,
-    price: 30,
-    status: "Delivered",
-  },
-];
-
 const userOrder = () => {
-  const [isCollapsed, setIsCollapsed] = React.useState(true);
+  const [expanded, setExpanded] = React.useState({});
+
+  const toggle = (key) => {
+    setExpanded((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
 
   // +++++++++++++++++++ All api ++++++++++++++++++++++++++++
-  const { data: getAllOrders } = useGetAllOrdersQuery({});
+  const { data: getAllOrders, isLoading: isOrderDataLoading } =
+    useGetAllOrdersQuery({});
 
-  console.log(getAllOrders, "this is getAllOrders-=============>");
   return (
     <View style={tw`flex-1`}>
       <BackWithComponent
@@ -102,275 +42,255 @@ const userOrder = () => {
         title={"Track your order"}
       />
 
-      <ScrollView>
-        <View style={tw`mx-5  gap-2`}>
-          <View style={tw`bg-[#e8eaec] rounded-lg px-5 py-4`}>
-            <View style={tw`flex-row justify-between items-center `}>
-              <View style={tw`flex-row justify-start items-center gap-3`}>
-                <View
-                  style={tw`p-3 border-2 border-white bg-[#e8fdee] rounded-full shadow-lg `}
-                >
-                  <SvgXml xml={IconDeliver} />
-                </View>
-                <View>
-                  <Text style={tw`font-semibold text-base text-primary`}>
-                    Order id: #500
-                  </Text>
-                  <View style={tw`flex-row gap-1`}>
-                    <Text style={tw`font-PoppinsRegular text-sm text-black`}>
-                      Placed on:
-                    </Text>
-                    <Text style={tw`font-semibold text-sm`}>18 Jan 2025</Text>
-                  </View>
-                  <View>
-                    <View style={tw`flex-row gap-5`}>
-                      <View style={tw`flex-row gap-1`}>
-                        <Text
-                          style={tw`font-PoppinsRegular text-sm text-black`}
-                        >
-                          Items:
-                        </Text>
-                        <Text style={tw`font-semibold text-sm`}>4</Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {isOrderDataLoading ? (
+          <View style={tw`flex-1 justify-center items-center`}>
+            <ActivityIndicator size={"large"} color="#23AA49" />
+          </View>
+        ) : getAllOrders?.data?.length === 0 ? (
+          <View style={tw`flex-1 justify-center items-center`}>
+            <Text style={tw`text-center text-lg text-gray-500 font-semibold`}>
+              No order found
+            </Text>
+          </View>
+        ) : (
+          getAllOrders?.data.map((item, index) => {
+            const key = item?.id ?? index;
+            const isOpen = !!expanded[key];
+
+            // -------------- time and date --------------
+            const timestamp = item?.created_at;
+            const dateObject = new Date(timestamp);
+            const options = {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            };
+            const formattedDate = dateObject.toLocaleDateString(
+              "en-US",
+              options
+            );
+
+            return (
+              <View key={key} style={tw`mx-5 gap-2`}>
+                <View style={tw`bg-[#e8eaec] rounded-lg px-5 py-4`}>
+                  <View style={tw`flex-row justify-between items-center`}>
+                    <View style={tw`flex-row justify-start items-center gap-3`}>
+                      <View
+                        style={tw`p-3 border-2 border-white bg-[#e8fdee] rounded-full shadow-lg`}
+                      >
+                        <SvgXml xml={IconDeliver} />
                       </View>
-                      <View style={tw`flex-row gap-1`}>
+
+                      <View>
                         <Text
-                          style={tw`font-PoppinsRegular text-sm text-black`}
+                          style={tw`flex-1 font-semibold text-base text-primary`}
                         >
-                          price:
+                          Order id: {item?.order_number}
                         </Text>
-                        <Text style={tw`font-semibold text-sm`}>$50</Text>
+
+                        <View style={tw`flex-row gap-1`}>
+                          <Text
+                            style={tw`font-PoppinsRegular text-sm text-black`}
+                          >
+                            Placed on:
+                          </Text>
+                          <Text style={tw`flex-1 font-semibold text-sm`}>
+                            {formattedDate}
+                          </Text>
+                        </View>
+
+                        <View>
+                          <View style={tw`flex-row gap-5`}>
+                            <View style={tw`flex-row gap-1`}>
+                              <Text
+                                style={tw`font-PoppinsRegular text-sm text-black`}
+                              >
+                                Items:
+                              </Text>
+                              <Text style={tw`font-semibold text-sm`}>
+                                {item?.items}
+                              </Text>
+                            </View>
+                            <View style={tw`flex-row gap-1`}>
+                              <Text
+                                style={tw`font-PoppinsRegular text-sm text-black`}
+                              >
+                                price:
+                              </Text>
+                              <Text style={tw`font-semibold text-sm`}>
+                                $ {item?.price}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
                       </View>
                     </View>
+
+                    <Pressable
+                      onPress={() => toggle(key)}
+                      style={tw`p-2 bg-white rounded-full shadow-lg`}
+                    >
+                      {isOpen ? (
+                        <SvgXml xml={IconUpArrow} />
+                      ) : (
+                        <SvgXml xml={IconDownArrow} />
+                      )}
+                    </Pressable>
+                  </View>
+
+                  <View
+                    style={tw`flex-row justify-between mt-6 bg-white rounded-lg w-full p-4`}
+                  >
+                    <View style={tw`flex-row justify-start items-center gap-1`}>
+                      <Text
+                        style={[
+                          tw`w-4 h-4 rounded-full `,
+                          item?.status_timeline?.order_delivered?.completed
+                            ? tw`bg-primary`
+                            : tw`bg-darkGreen`,
+                        ]}
+                      />
+
+                      <Text
+                        style={[
+                          tw`font-PoppinsRegular text-sm  mr-3`,
+                          item?.status_timeline?.order_delivered?.completed
+                            ? tw`text-primary`
+                            : tw`text-darkGreen`,
+                        ]}
+                      >
+                        {item?.status_timeline?.order_delivered?.completed
+                          ? "Delivered"
+                          : "Pending"}
+                      </Text>
+                    </View>
+
+                    <TouchableOpacity
+                      onPress={() => router.push("/user/addToCart/cart")}
+                    >
+                      <Text
+                        style={tw`px-3 py-1 bg-[#FF8000] text-white rounded-lg`}
+                      >
+                        Re-order
+                      </Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
-              </View>
-              <Pressable
-                onPress={() => setIsCollapsed(!isCollapsed)}
-                style={tw`p-2 bg-white rounded-full shadow-lg`}
-              >
-                {isCollapsed ? (
-                  <SvgXml xml={IconDownArrow} />
-                ) : (
-                  <SvgXml xml={IconUpArrow} />
-                )}
-              </Pressable>
-            </View>
 
-            <View
-              style={tw`flex-row justify-between mt-6 bg-white rounded-lg w-full p-4`}
-            >
-              <View style={tw`flex-row justify-start items-center gap-1`}>
-                <Text style={tw`w-4 h-4 rounded-full bg-primary`}></Text>
-                <Text style={tw`font-PoppinsRegular text-sm text-primary mr-3`}>
-                  Delivered
-                </Text>
-              </View>
-              <TouchableOpacity>
-                <Text
-                  style={tw`px-3 py-1 bg-[#FF8000]  text-white rounded-lg `}
-                >
-                  Re-order
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <Collapsible collapsed={isCollapsed}>
-            <Pressable
-              onPress={() => router.push("/user/users/userOrderTrack")}
-            >
-              <View style={tw`px-7 py-2 bg-white rounded-lg gap-2`}>
-                <View style={tw`flex-row justify-between`}>
-                  <Text style={tw`font-PoppinsMedium text-sm text-primary`}>
-                    Order placed
-                  </Text>
-                  <Text style={tw`font-PoppinsRegular text-sm text-black`}>
-                    18 Jan 2025
-                  </Text>
-                </View>
-                <View style={tw`flex-row justify-between`}>
-                  <Text style={tw`font-PoppinsMedium text-sm text-primary`}>
-                    Order confirmed
-                  </Text>
-                  <Text style={tw`font-PoppinsRegular text-sm text-black`}>
-                    18 Jan 2025
-                  </Text>
-                </View>
-                <View style={tw`flex-row justify-between`}>
-                  <Text style={tw`font-PoppinsMedium text-sm text-primary`}>
-                    Order picked-up
-                  </Text>
-                  <Text style={tw`font-PoppinsRegular text-sm text-black`}>
-                    18 Jan 2025
-                  </Text>
-                </View>
-                <View style={tw`flex-row justify-between`}>
-                  <Text style={tw`font-PoppinsMedium text-sm text-regularText`}>
-                    Out of delivery
-                  </Text>
-                  <Text
-                    style={tw`font-PoppinsRegular text-sm text-regularText`}
-                  >
-                    {" "}
-                    18 Jan 2025
-                  </Text>
-                </View>
-                <View style={tw`flex-row justify-between`}>
-                  <Text style={tw`font-PoppinsMedium text-sm text-regularText`}>
-                    Order delivered
-                  </Text>
-                  <Text
-                    style={tw`font-PoppinsRegular text-sm text-regularText`}
-                  >
-                    18 Jan 2025
-                  </Text>
-                </View>
-                <View style={tw`flex-row justify-end items-center`}>
-                  <Text
-                    style={tw`font-PoppinsRegular text-sm text-[#9B53FF] mr-3`}
-                  >
-                    Pending
-                  </Text>
-                  <Text style={tw`w-4 h-4 rounded-full bg-[#9B53FF]`}></Text>
-                </View>
-              </View>
-            </Pressable>
-          </Collapsible>
-        </View>
-        <View style={tw`mx-5`}>
-          <View style={tw`bg-[#e8eaec] rounded-lg px-5 py-4`}>
-            <View style={tw`flex-row justify-between items-center `}>
-              <View style={tw`flex-row justify-start items-center gap-3`}>
-                <View
-                  style={tw`p-3 border-2 border-white bg-[#e8fdee] rounded-full shadow-lg `}
-                >
-                  <SvgXml xml={IconDeliver} />
-                </View>
-                <View>
-                  <Text style={tw`font-semibold text-base text-primary`}>
-                    Order id: #500
-                  </Text>
-                  <View style={tw`flex-row gap-1`}>
-                    <Text style={tw`font-PoppinsRegular text-sm text-black`}>
-                      Placed on:
-                    </Text>
-                    <Text style={tw`font-semibold text-sm`}>18 Jan 2025</Text>
-                  </View>
-                  <View>
-                    <View style={tw`flex-row gap-5`}>
-                      <View style={tw`flex-row gap-1`}>
+                {/* ------------------- when open this item show only toggling ------------------- */}
+                <Collapsible collapsed={!isOpen}>
+                  <Pressable>
+                    <View style={tw`px-7 py-2 bg-white rounded-lg gap-2`}>
+                      <View style={tw`flex-row justify-between`}>
                         <Text
-                          style={tw`font-PoppinsRegular text-sm text-black`}
+                          style={[
+                            tw`font-PoppinsMedium text-sm`,
+                            item?.status_timeline?.order_placed?.completed
+                              ? tw`text-primary`
+                              : tw`text-regularText`,
+                          ]}
                         >
-                          Items:
+                          {item?.status_timeline?.order_placed?.label}
                         </Text>
-                        <Text style={tw`font-semibold text-sm`}>4</Text>
+
+                        <SvgXml
+                          xml={
+                            item?.status_timeline?.order_placed?.timestamp
+                              ? IconTickMark
+                              : IconPending
+                          }
+                        />
                       </View>
-                      <View style={tw`flex-row gap-1`}>
+
+                      <View style={tw`flex-row justify-between`}>
                         <Text
-                          style={tw`font-PoppinsRegular text-sm text-black`}
+                          style={[
+                            tw`font-PoppinsMedium text-sm `,
+                            item?.status_timeline?.order_confirmed?.completed
+                              ? tw`text-primary`
+                              : tw`text-regularText`,
+                          ]}
                         >
-                          price:
+                          {item?.status_timeline?.order_confirmed?.label}
                         </Text>
-                        <Text style={tw`font-semibold text-sm`}>$50</Text>
+                        <SvgXml
+                          xml={
+                            item?.status_timeline?.order_confirmed?.timestamp
+                              ? IconTickMark
+                              : IconPending
+                          }
+                        />
+                      </View>
+
+                      <View style={tw`flex-row justify-between`}>
+                        <Text
+                          style={[
+                            tw`font-PoppinsMedium text-sm text-primary`,
+                            item?.status_timeline?.order_pickedup?.completed
+                              ? tw`text-primary`
+                              : tw`text-regularText`,
+                          ]}
+                        >
+                          {item?.status_timeline?.order_pickedup?.label}
+                        </Text>
+                        <SvgXml
+                          xml={
+                            item?.status_timeline?.order_pickedup?.timestamp
+                              ? IconTickMark
+                              : IconPending
+                          }
+                        />
+                      </View>
+
+                      <View style={tw`flex-row justify-between`}>
+                        <Text
+                          style={[
+                            tw`font-PoppinsMedium text-sm text-regularText`,
+                            item?.status_timeline?.order_delivered?.completed
+                              ? tw`text-primary`
+                              : tw`text-regularText`,
+                          ]}
+                        >
+                          {item?.status_timeline?.order_pickedup?.label}
+                        </Text>
+                        <SvgXml
+                          xml={
+                            item?.status_timeline?.order_delivered?.timestamp
+                              ? IconTickMark
+                              : IconPending
+                          }
+                        />
+                      </View>
+                      <View style={tw`flex-row justify-end items-center`}>
+                        <Text
+                          style={[
+                            tw`font-PoppinsRegular text-sm  mr-3`,
+                            item?.status_timeline?.order_delivered?.completed
+                              ? tw`text-primary`
+                              : tw`text-darkGreen`,
+                          ]}
+                        >
+                          {item?.status_timeline?.order_delivered?.completed
+                            ? "Delivered"
+                            : "Pending"}
+                        </Text>
+                        <Text
+                          style={[
+                            tw`w-4 h-4 rounded-full `,
+                            item?.status_timeline?.order_delivered?.completed
+                              ? tw`bg-primary`
+                              : tw`bg-darkGreen`,
+                          ]}
+                        />
                       </View>
                     </View>
-                  </View>
-                </View>
+                  </Pressable>
+                </Collapsible>
               </View>
-              <Pressable
-                onPress={() => setIsCollapsed(!isCollapsed)}
-                style={tw`p-2 bg-white rounded-full shadow-lg`}
-              >
-                {isCollapsed ? (
-                  <SvgXml xml={IconDownArrow} />
-                ) : (
-                  <SvgXml xml={IconUpArrow} />
-                )}
-              </Pressable>
-            </View>
-
-            <View
-              style={tw`flex-row justify-between mt-6 bg-white rounded-lg w-full p-4`}
-            >
-              <View style={tw`flex-row justify-start items-center gap-1`}>
-                <Text style={tw`w-4 h-4 rounded-full bg-red-600`}></Text>
-                <Text style={tw`font-PoppinsRegular text-sm text-red-600 mr-3`}>
-                  Canceled
-                </Text>
-              </View>
-              <TouchableOpacity>
-                <Text
-                  style={tw`px-3 py-1 bg-[#FF8000]  text-white rounded-lg `}
-                >
-                  Re-order
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <Collapsible collapsed={isCollapsed}>
-            <Pressable
-              onPress={() => router.push("/user/users/userOrderTrack")}
-            >
-              <View style={tw`px-7 py-2 bg-white rounded-lg gap-2`}>
-                <View style={tw`flex-row justify-between`}>
-                  <Text style={tw`font-PoppinsMedium text-sm text-primary`}>
-                    Order placed
-                  </Text>
-                  <Text style={tw`font-PoppinsRegular text-sm text-black`}>
-                    18 Jan 2025
-                  </Text>
-                </View>
-                <View style={tw`flex-row justify-between`}>
-                  <Text style={tw`font-PoppinsMedium text-sm text-primary`}>
-                    Order confirmed
-                  </Text>
-                  <Text style={tw`font-PoppinsRegular text-sm text-black`}>
-                    18 Jan 2025
-                  </Text>
-                </View>
-                <View style={tw`flex-row justify-between`}>
-                  <Text style={tw`font-PoppinsMedium text-sm text-primary`}>
-                    Order picked-up
-                  </Text>
-                  <Text style={tw`font-PoppinsRegular text-sm text-black`}>
-                    18 Jan 2025
-                  </Text>
-                </View>
-                <View style={tw`flex-row justify-between`}>
-                  <Text style={tw`font-PoppinsMedium text-sm text-regularText`}>
-                    Out of delivery
-                  </Text>
-                  <Text
-                    style={tw`font-PoppinsRegular text-sm text-regularText`}
-                  >
-                    {" "}
-                    18 Jan 2025
-                  </Text>
-                </View>
-                <View style={tw`flex-row justify-between`}>
-                  <Text style={tw`font-PoppinsMedium text-sm text-regularText`}>
-                    Order delivered
-                  </Text>
-                  <Text
-                    style={tw`font-PoppinsRegular text-sm text-regularText`}
-                  >
-                    18 Jan 2025
-                  </Text>
-                </View>
-                <View style={tw`flex-row justify-end items-center`}>
-                  <Text
-                    style={tw`font-PoppinsRegular text-sm text-[#9B53FF] mr-3`}
-                  >
-                    Pending
-                  </Text>
-                  <Text style={tw`w-4 h-4 rounded-full bg-[#9B53FF]`}></Text>
-                </View>
-              </View>
-            </Pressable>
-          </Collapsible>
-        </View>
+            );
+          })
+        )}
       </ScrollView>
     </View>
   );
