@@ -39,6 +39,13 @@ const cartSlices = api.injectEndpoints({
       }),
       invalidatesTags: ["cart"],
     }),
+    deleteAllCart: build.mutation({
+      query: () => ({
+        url: "/app/deleteAllCart",
+        method: "DELETE",
+      }),
+      invalidatesTags: ["cart"],
+    }),
   }),
 });
 
@@ -48,4 +55,5 @@ export const {
   useLazyGetCartByIdQuery,
   useDeleteCartItemMutation,
   useUpdateCartItemMutation,
+  useDeleteAllCartMutation,
 } = cartSlices;

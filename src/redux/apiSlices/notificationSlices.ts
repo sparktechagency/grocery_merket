@@ -20,8 +20,8 @@ const notificationSlices = api.injectEndpoints({
     }),
 
     getNotification: builder.query({
-      query: () => ({
-        url: `/app/getNotification/1`,
+      query: (id) => ({
+        url: `/app/getNotification/${id}`,
         method: "GET",
       }),
       providesTags: ["notification"],

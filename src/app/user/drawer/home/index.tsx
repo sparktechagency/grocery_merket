@@ -26,8 +26,12 @@ import {
   useSetUserLocationMutation,
 } from "@/src/redux/apiSlices/homePageApiSlices";
 import ProductCard from "@/src/components/ProductCard";
-import { useGetCartQuery } from "@/src/redux/apiSlices/cartSlices";
+import {
+  useDeleteAllCartMutation,
+  useGetCartQuery,
+} from "@/src/redux/apiSlices/cartSlices";
 import useLocation from "@/src/hook/useLocation";
+import { useDeleteAllWishlistMutation } from "@/src/redux/apiSlices/wishlistSlices";
 
 const HomeScreen = () => {
   const [notification, setNotification] = React.useState(false);
@@ -41,6 +45,8 @@ const HomeScreen = () => {
     useProductByCategoryMutation();
   const { data: cartItem } = useGetCartQuery({});
   const [location] = useSetUserLocationMutation();
+  const [allCartDelete] = useDeleteAllCartMutation();
+  const [allWishlistDelete] = useDeleteAllWishlistMutation();
 
   const randomCategoryName =
     categoriesData?.categories[
@@ -64,6 +70,8 @@ const HomeScreen = () => {
   useEffect(() => {
     const setLocation = async () => {
       try {
+        // await allCartDelete({}).unwrap();
+        // await allWishlistDelete({}).unwrap();
         await location({
           longitude: stgLongitude,
           latitude: stgLatitude,

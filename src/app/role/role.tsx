@@ -12,6 +12,7 @@ const role = () => {
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem("role", jsonValue);
+
       // router.push("/auth");
 
       router.replace("/auth");
@@ -50,6 +51,7 @@ const role = () => {
 '
           title="Become an user"
         />
+
         <IwtButton
           containerStyle={tw`rounded-md bg-transparent my-4 border border-[#4e4e4e33]`}
           titleStyle={tw`font-PoppinsBold text-base text-black`}

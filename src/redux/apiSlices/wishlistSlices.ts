@@ -31,6 +31,13 @@ const wishListSlices = api.injectEndpoints({
       }),
       invalidatesTags: ["wishlist"],
     }),
+    deleteAllWishlist: build.mutation({
+      query: () => ({
+        url: "/app/deleteAllWishlist",
+        method: "DELETE",
+      }),
+      invalidatesTags: ["wishlist"],
+    }),
   }),
 });
 
@@ -39,4 +46,5 @@ export const {
   useGetWishlistQuery,
   useLazyGetWishlistByIdQuery,
   useDeleteWishlistItemMutation,
+  useDeleteAllWishlistMutation,
 } = wishListSlices;
