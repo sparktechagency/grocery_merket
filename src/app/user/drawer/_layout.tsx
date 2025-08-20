@@ -13,7 +13,6 @@ import {
 } from "@react-navigation/drawer";
 import { SvgXml } from "react-native-svg";
 import { IconCross } from "@/assets/icon";
-import { Checkbox, Slider } from "react-native-ui-lib";
 import {
   ImgBread,
   ImgBurger,
@@ -32,12 +31,6 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const stores = ["Abc 1", "Mackdonalds", "Starbucks", "Abc 2"];
   const [selectedStores, setSelectedStores] = React.useState(false);
 
-  const toggleCheckbox = (store: string) => {
-    setSelectedStores((prev: any) => ({
-      ...prev,
-      [store]: !prev[store],
-    }));
-  };
   const categoryData = [
     {
       id: 1,
@@ -98,7 +91,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         </Pressable>
       </View>
 
-      <Slider
+      {/* <Slider
         containerStyle={tw`w-72 text-center mx-auto`}
         value={sliderState}
         onValueChange={(value) => setSliderState(value)}
@@ -108,7 +101,8 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         thumbTintColor="#00AF91"
         minimumTrackTintColor="#00332E"
         maximumTrackTintColor="#00332E"
-      />
+      /> */}
+
       <View style={tw`flex-row justify-between items-center px-6 mt-4`}>
         <Text style={tw`font-PoppinsMedium text-base text-black`}>
           ${sliderState}
@@ -125,19 +119,8 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           {stores.map((store, index) => (
             <TouchableOpacity
               key={index}
-              onPress={() => toggleCheckbox(store)}
               style={tw`flex-row items-center mb-4 w-[48%]`}
             >
-              <Checkbox
-                size={18}
-                color="black"
-                // label="Both"
-                labelStyle={tw`font-PoppinsBold text-base text-[#262626]`}
-                value={!!selectedStores[store]}
-                onValueChange={() => toggleCheckbox(store)}
-                style={tw`mr-1.5 rounded-none`}
-              />
-
               <Text style={tw`text-base text-black font-PoppinsSemiBold`}>
                 {store}
               </Text>
@@ -163,15 +146,6 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                     {category.title}
                   </Text>
                 </View>
-                <Checkbox
-                  size={18}
-                  color="black"
-                  // label="Both"
-                  labelStyle={tw`font-PoppinsBold text-base text-[#262626]`}
-                  // value={!!selectedStores[store]}
-                  // onValueChange={() => toggleCheckbox(store)}
-                  style={tw`mr-1.5 rounded-none`}
-                />
               </View>
             )
           )}

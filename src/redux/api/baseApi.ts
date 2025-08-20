@@ -114,6 +114,7 @@ export const api = createApi({
     "payment",
     "userLocation",
     "order",
+    "shopper",
   ],
 });
 

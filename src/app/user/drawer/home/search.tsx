@@ -1,32 +1,20 @@
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
-  TouchableNativeFeedback,
-  Keyboard,
+  TextInput,
   TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
-import React from "react";
-import { Controller, useForm } from "react-hook-form";
-import InputText from "@/src/lib/inputs/InputText";
 import tw from "@/src/lib/tailwind";
 import { SvgXml } from "react-native-svg";
 import { IconSearchFilter } from "@/assets/icon";
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
+import { useEffect, useState } from "react";
 
 const Search = () => {
   const navigation = useNavigation();
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      history: "",
-    },
-  });
-  const onSubmit = (data: any) => console.log(data);
+  const [query, setQuery] = useState("");
 
   const searchHistory = [
     {
@@ -50,7 +38,21 @@ const Search = () => {
       title: "Fresh lettuce",
     },
   ];
-  // style={tw`flex-row justify-between items-center w-full`}
+
+  const handleSearch = () => {
+    if (query.trim()) {
+      // Navigate and pass search query as param
+      router.push({
+        pathname: `/user/searchValueItem`,
+        params: { searchQuery: query },
+      });
+    }
+  };
+
+  // useEffect(() => {
+  //   setQuery(" ");
+  // }, [query]);
+
   return (
     <View style={tw`flex-1 h-full px-5 mt-4`}>
       <TouchableWithoutFeedback
@@ -61,28 +63,13 @@ const Search = () => {
         <View style={tw`flex-1`}>
           <View style={tw`flex-row justify-between items-center gap-2 w-full`}>
             <View style={tw`flex-1`}>
-              <Controller
-                control={control}
-                rules={{
-                  required: {
-                    value: true,
-                    message: "Enter Your Username",
-                  },
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <InputText
-                    value={value}
-                    onChangeText={(test) => onChange(test)}
-                    onBlur={onBlur}
-                    touched
-                    errorText={errors?.history?.message}
-                    textInputProps={{
-                      placeholder: "Search for product or stores...",
-                    }}
-                    containerStyle={tw`rounded-full w-full`}
-                  />
-                )}
-                name="history"
+              <TextInput
+                returnKeyType="search"
+                onSubmitEditing={handleSearch}
+                value={query}
+                onChangeText={setQuery}
+                style={tw` bg-gray-300 py-3 px-4 rounded-full`}
+                placeholder="Search for product or stores..."
               />
             </View>
 

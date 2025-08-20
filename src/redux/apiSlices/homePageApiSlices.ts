@@ -73,8 +73,8 @@ const homePageApiSlices = api.injectEndpoints({
       providesTags: ["kogerAllCategories"],
     }),
     searchKogerProducts: build.query({
-      query: () => ({
-        url: `app/kroger/products/search?search=wine&per_page=100`,
+      query: ({ query }) => ({
+        url: `app/kroger/products/search?search=${query}&per_page=100`,
         method: "GET",
       }),
       providesTags: ["searchKogerProduct"],

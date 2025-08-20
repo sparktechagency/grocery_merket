@@ -1,6 +1,5 @@
 import { View, Text, Pressable } from "react-native";
 import React from "react";
-import { Dialog, PanningProvider } from "react-native-ui-lib";
 import tw from "@/src/lib/tailwind";
 import { SvgXml } from "react-native-svg";
 import { IconClockShopper, IconLocationWhite } from "@/assets/icon";
@@ -13,7 +12,7 @@ const deliver = () => {
     <View>
       <Text>mapArrived</Text>
 
-      <Dialog
+      {/* <Dialog
         width={"100%"}
         height={"35%"}
         visible={isVisibleModal}
@@ -35,7 +34,7 @@ const deliver = () => {
             </View>
 
             <View style={tw`flex-row items-start px-4 py-6`}>
-              {/* Left timeline section */}
+          
               <View style={tw`items-center`}>
                 <View
                   style={tw`w-8 h-8 rounded-full bg-[#FEB97A] items-center justify-center`}
@@ -48,7 +47,6 @@ const deliver = () => {
                 <View style={tw`w-2 h-2 bg-[#0A0A28] rounded-full mt-1`} />
               </View>
 
-              {/* Text info */}
               <View style={tw`ml-4`}>
                 <Text style={tw`text-sm font-semibold text-gray-900`}>
                   Estimated Time
@@ -62,7 +60,7 @@ const deliver = () => {
 
           <View style={tw`rounded-full mt-3 h-12 `}>
             <TButton
-              // onPress={handleSubmit(onSubmit)}
+          
               onPress={() =>
                 router.push("/shopper/deliveryOrder/confirmationDeliverSuccess")
               }
@@ -71,7 +69,7 @@ const deliver = () => {
             />
           </View>
         </View>
-      </Dialog>
+      </Dialog> */}
     </View>
   );
 };

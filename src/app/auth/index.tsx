@@ -5,7 +5,6 @@ import { useForm, Controller } from "react-hook-form";
 import tw from "@/src/lib/tailwind";
 import InputText from "@/src/lib/inputs/InputText";
 import { IconEyes, IconEyesShow, IconNext } from "@/assets/icon";
-import { Checkbox } from "react-native-ui-lib";
 import TButton from "@/src/lib/buttons/TButton";
 import { Logo } from "@/assets/images";
 import { SvgXml } from "react-native-svg";

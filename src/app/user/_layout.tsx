@@ -1,4 +1,3 @@
-import React from "react";
 import { Stack } from "expo-router";
 import tw from "../../lib/tailwind";
 
@@ -19,6 +18,7 @@ const RootLayout = () => {
       <Stack.Screen name="messaging/messaging" />
       <Stack.Screen name="notification/notification" />
       <Stack.Screen name="notification/orderAccept" />
+      <Stack.Screen name="searchValueItem" />
     </Stack>
   );
 };

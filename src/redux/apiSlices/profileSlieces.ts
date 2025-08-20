@@ -20,25 +20,25 @@ const profileSlices = api.injectEndpoints({
 
     getAllShopper: builder.query({
       query: () => ({
-        url: "/app/getAllShopper?page=1&per_page=20",
+        url: "/app/getAllShopper?page=1&per_page=30",
         method: "GET",
       }),
-      providesTags: ["profile"],
+      providesTags: ["shopper"],
     }),
     getPersonalShopper: builder.query({
       query: () => ({
         url: "/app/personalShopper",
         method: "GET",
       }),
-      providesTags: ["profile"],
+      providesTags: ["shopper"],
     }),
     makeShopper: builder.mutation({
-      query: (shopperData) => ({
+      query: (userId) => ({
         url: "/app/makeShopper",
         method: "POST",
-        body: shopperData,
+        body: { user_id: userId },
       }),
-      invalidatesTags: ["profile"],
+      invalidatesTags: ["shopper"],
     }),
 
     removeShopper: builder.mutation({
@@ -46,7 +46,7 @@ const profileSlices = api.injectEndpoints({
         url: `/app/removeShopper`,
         method: "DELETE",
       }),
-      invalidatesTags: ["profile"],
+      invalidatesTags: ["shopper"],
     }),
 
     getMyOffer: builder.query({

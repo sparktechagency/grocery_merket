@@ -1,8 +1,7 @@
-import { FlatList, Text, TextInput, View } from "react-native";
+import { FlatList, Image, Text, TextInput, View } from "react-native";
 
 import { useRouter } from "expo-router";
 import React from "react";
-import { Avatar } from "react-native-ui-lib";
 import tw from "@/src/lib/tailwind";
 import TButton from "@/src/lib/buttons/TButton";
 import BackButton from "@/src/lib/backHeader/BackButton";
@@ -109,8 +108,8 @@ const message = () => {
               router.back();
             }}
           />
-          <Avatar
-            size={32}
+          <Image
+            style={tw`w-10 h-10 rounded-full`}
             source={{
               uri: "https://randomuser.me/api/portraits/women/55.jpg",
             }}
@@ -145,8 +144,8 @@ const message = () => {
                     </Text>
                   </View>
                 </View>
-                <Avatar
-                  size={32}
+                <Image
+                  style={tw`w-10 h-10 rounded-full`}
                   source={{
                     uri: "https://randomuser.me/api/portraits/women/55.jpg",
                   }}
@@ -155,8 +154,8 @@ const message = () => {
             )}
             {item.user || (
               <View style={tw` flex-row items-start gap-2 px-4`}>
-                <Avatar
-                  size={32}
+                <Image
+                  style={tw`w-10 h-10 rounded-full`}
                   source={{
                     uri: "https://randomuser.me/api/portraits/women/65.jpg",
                   }}

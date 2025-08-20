@@ -1,5 +1,12 @@
-import { View, Text, TouchableOpacity, Pressable } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
+import React, { useCallback, useRef } from "react";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
 import tw from "@/src/lib/tailwind";
@@ -14,12 +21,24 @@ import {
   IconGetterThen,
   IconPrivacy,
 } from "@/assets/icon";
-import { Dialog, PanningProvider } from "react-native-ui-lib";
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetScrollView,
+} from "@gorhom/bottom-sheet";
 
 const settings = () => {
-  const [isVisibleModal, setIsVisibleModal] = React.useState(false);
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const handlePresentModalPress = useCallback(async () => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+
+  const handleCloseModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.dismiss();
+  }, []);
+
   return (
-    <View>
+    <View style={tw`flex-1`}>
       <BackWithComponent onPress={() => router.back()} title={"Settings"} />
       <View style={tw`bg-[#e8eaec] p-3.5 rounded-xl mx-5 shadow-md gap-5`}>
         <TouchableOpacity
@@ -45,7 +64,7 @@ const settings = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => setIsVisibleModal(!isVisibleModal)}
+          onPress={handlePresentModalPress}
           style={tw`flex-row justify-between items-center`}
         >
           <View style={tw`flex-row justify-start items-center gap-3`}>
@@ -59,7 +78,7 @@ const settings = () => {
             </Text>
           </View>
           <Pressable
-            onPress={() => setIsVisibleModal(!isVisibleModal)}
+            onPress={handlePresentModalPress}
             style={tw`py-2.5 px-3.5 bg-white rounded-full`}
           >
             <SvgXml xml={IconGetterThen} />
@@ -109,82 +128,113 @@ const settings = () => {
 
       {/* ================= Privacy modal ================ */}
 
-      <Dialog
-        width={"100%"}
-        height={"40%"}
-        visible={isVisibleModal}
-        containerStyle={tw`flex-1 bg-white rounded-t-3xl `}
-        onDismiss={() => setIsVisibleModal(false)}
-        panDirection={PanningProvider.Directions.DOWN}
-        bottom={true}
-      >
-        <View>
-          <View style={tw`flex-row justify-between items-center mt-6 mx-6`}>
-            <Text> </Text>
-            <Text style={tw`font-PoppinsMedium text-xl text-black`}>
-              Privacy
-            </Text>
-            <Pressable
-              style={tw``}
-              onPress={() => setIsVisibleModal(!isVisibleModal)}
-            >
-              <SvgXml width={32} height={32} xml={IconCross} />
-            </Pressable>
-          </View>
-          {/*  ====== border bottom ---------- */}
-          <View style={tw`w-full px-5`}>
-            <Text
-              style={tw`w-full mx-auto border-b border-regularText  `}
-            ></Text>
-          </View>
-          <View style={tw`px-8 mt-10`}>
-            <TouchableOpacity
-              onPress={() => router.push("/auth/addFingerPrint")}
-              style={tw`flex-row justify-between items-center border  rounded-xl border-primary p-2.5`}
-            >
-              <View style={tw`flex-row justify-start items-center gap-3`}>
-                <View
-                  style={tw`w-10 h-10 justify-center text-center items-center bg-[#ECFFF1] mr-5 rounded-full`}
-                >
-                  <SvgXml xml={IconFingerPrivacy} />
-                </View>
-                <Text style={tw`font-PoppinsMedium text-base text-black`}>
-                  Add Fingerprint
+      <BottomSheetModalProvider>
+        <BottomSheetModal ref={bottomSheetModalRef} snapPoints={["50%", "90%"]}>
+          <BottomSheetScrollView
+            contentContainerStyle={styles.contentContainer}
+          >
+            <View>
+              <View style={tw`flex-row justify-between items-center mt-6 mx-6`}>
+                <Text> </Text>
+                <Text style={tw`font-PoppinsMedium text-xl text-black`}>
+                  Privacy
                 </Text>
+                <Pressable style={tw``} onPress={handleCloseModalPress}>
+                  <SvgXml width={32} height={32} xml={IconCross} />
+                </Pressable>
               </View>
-              <Pressable
-                onPress={() => router.push("/auth/addFingerPrint")}
-                style={tw`py-2.5 px-3.5 bg-[#ECFFF1] rounded-full`}
-              >
-                <SvgXml xml={IconGetterThen} />
-              </Pressable>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => router.push("/auth/addFace")}
-              style={tw`flex-row justify-between items-center border  rounded-xl border-primary p-2.5 mt-3`}
-            >
-              <View style={tw`flex-row justify-start items-center gap-3`}>
-                <View
-                  style={tw`w-10 h-10 justify-center text-center items-center bg-[#ECFFF1] mr-5 rounded-full`}
+              {/*  ====== border bottom ---------- */}
+              <View style={tw`w-full px-5`}>
+                <Text
+                  style={tw`w-full mx-auto border-b border-regularText  `}
+                ></Text>
+              </View>
+              <View style={tw`px-8 mt-10`}>
+                <TouchableOpacity
+                  onPress={() => router.push("/auth/addFingerPrint")}
+                  style={tw`flex-row justify-between items-center border  rounded-xl border-primary p-2.5`}
                 >
-                  <SvgXml xml={IconFacePrivacy} />
-                </View>
-                <Text style={tw`font-PoppinsMedium text-base text-black`}>
-                  Add face id
-                </Text>
+                  <View style={tw`flex-row justify-start items-center gap-3`}>
+                    <View
+                      style={tw`w-10 h-10 justify-center text-center items-center bg-[#ECFFF1] mr-5 rounded-full`}
+                    >
+                      <SvgXml xml={IconFingerPrivacy} />
+                    </View>
+                    <Text style={tw`font-PoppinsMedium text-base text-black`}>
+                      Add Fingerprint
+                    </Text>
+                  </View>
+                  <Pressable
+                    onPress={() => router.push("/auth/addFingerPrint")}
+                    style={tw`py-2.5 px-3.5 bg-[#ECFFF1] rounded-full`}
+                  >
+                    <SvgXml xml={IconGetterThen} />
+                  </Pressable>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => router.push("/auth/addFace")}
+                  style={tw`flex-row justify-between items-center border  rounded-xl border-primary p-2.5 mt-3`}
+                >
+                  <View style={tw`flex-row justify-start items-center gap-3`}>
+                    <View
+                      style={tw`w-10 h-10 justify-center text-center items-center bg-[#ECFFF1] mr-5 rounded-full`}
+                    >
+                      <SvgXml xml={IconFacePrivacy} />
+                    </View>
+                    <Text style={tw`font-PoppinsMedium text-base text-black`}>
+                      Add face id
+                    </Text>
+                  </View>
+                  <Pressable
+                    onPress={() => router.push("/auth/addFace")}
+                    style={tw`py-2.5 px-3.5 bg-[#ECFFF1] rounded-full`}
+                  >
+                    <SvgXml xml={IconGetterThen} />
+                  </Pressable>
+                </TouchableOpacity>
               </View>
-              <Pressable
-                onPress={() => router.push("/auth/addFace")}
-                style={tw`py-2.5 px-3.5 bg-[#ECFFF1] rounded-full`}
-              >
-                <SvgXml xml={IconGetterThen} />
-              </Pressable>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Dialog>
+            </View>
+          </BottomSheetScrollView>
+        </BottomSheetModal>
+      </BottomSheetModalProvider>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 32,
+    justifyContent: "center",
+    backgroundColor: "grey",
+  },
+  contentContainer: {
+    flex: 1,
+    paddingRight: 16,
+    paddingLeft: 16,
+    height: 400,
+  },
+  centeredViewCalender: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalViewCalender: {
+    margin: 20,
+    backgroundColor: "white",
+    width: "85%",
+    borderRadius: 28,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+});
 
 export default settings;
