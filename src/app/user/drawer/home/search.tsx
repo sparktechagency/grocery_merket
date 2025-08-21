@@ -11,10 +11,12 @@ import { SvgXml } from "react-native-svg";
 import { IconSearchFilter } from "@/assets/icon";
 import { router, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
+import { useFilters } from "../../useContext/filterContext";
 
 const Search = () => {
   const navigation = useNavigation();
   const [query, setQuery] = useState("");
+  const { filters } = useFilters();
 
   const searchHistory = [
     {
@@ -39,19 +41,24 @@ const Search = () => {
     },
   ];
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (query.trim()) {
-      // Navigate and pass search query as param
-      router.push({
-        pathname: `/user/searchValueItem`,
-        params: { searchQuery: query },
-      });
+      try {
+        const search = query.trim();
+        const searchParams = {
+          ...filters,
+          search,
+        };
+        // Navigate and pass search query as param
+        router.push({
+          pathname: `/user/searchValueItem`,
+          params: { searchQuery: JSON.stringify(searchParams) },
+        });
+      } catch (error) {
+        console.log(error, "this is error");
+      }
     }
   };
-
-  // useEffect(() => {
-  //   setQuery(" ");
-  // }, [query]);
 
   return (
     <View style={tw`flex-1 h-full px-5 mt-4`}>

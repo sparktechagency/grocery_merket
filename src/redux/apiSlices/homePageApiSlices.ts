@@ -50,13 +50,32 @@ const homePageApiSlices = api.injectEndpoints({
       providesTags: ["user"],
     }),
     searchProductsWithFilter: build.query({
-      query: (searchParams) => ({
-        url: `/app/SearchProductWithFilter?search=Shampoo&per_page=100`,
-        method: "GET",
-        body: searchParams,
-      }),
+      query: (params) => {
+        const queryString = new URLSearchParams();
+
+        // ✅ Required field
+        if (params?.search) queryString.append("search", params.search);
+
+        // ✅ Optional fields
+        if (params?.storeName?.length) {
+          queryString.append("storeName", params.storeName.join(", "));
+        }
+        if (params?.categories?.length) {
+          queryString.append("categories", params.categories.join(", "));
+        }
+        if (params?.price) queryString.append("price", params.price.toString());
+        if (params?.per_page) {
+          queryString.append("per_page", params.per_page.toString());
+        }
+
+        return {
+          url: `/app/SearchProductWithFilter?${queryString.toString()}`,
+          method: "GET",
+        };
+      },
       providesTags: ["searchProductsWithFilter"],
     }),
+
     productDetails: build.mutation({
       query: (productId) => ({
         url: `/app/kroger/products/${productId}`,
