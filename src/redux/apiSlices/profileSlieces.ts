@@ -56,6 +56,12 @@ const profileSlices = api.injectEndpoints({
       }),
       providesTags: ["profile"],
     }),
+    getShopperDetails: builder.query({
+      query: (id) => ({
+        url: `/app/shopperDetails/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -67,4 +73,5 @@ export const {
   useMakeShopperMutation,
   useRemoveShopperMutation,
   useGetMyOfferQuery,
+  useGetShopperDetailsQuery,
 } = profileSlices;

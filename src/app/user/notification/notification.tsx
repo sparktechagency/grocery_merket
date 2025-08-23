@@ -1,66 +1,113 @@
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+  Image,
+} from "react-native";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router } from "expo-router";
 import tw from "@/src/lib/tailwind";
-import { notificationData } from "@/assets/data/NotificationData";
+import { useGetNotificationsQuery } from "@/src/redux/apiSlices/notificationSlices";
+import { PrimaryColor } from "@/utils/utils";
 
 const notification = () => {
+  // ------------------ all apis ------------------
+  const { data, isLoading: isLoadingNotification } = useGetNotificationsQuery(
+    {}
+  );
+
   return (
     <View style={tw`flex-1`}>
       <BackWithComponent onPress={() => router.back()} title={"Notification"} />
       <ScrollView style={tw`mx-5`} showsVerticalScrollIndicator={false}>
-        <TouchableOpacity style={tw`flex justify-end items-end`}>
-          <Text
-            style={tw`underline text-regularText font-PoppinsRegular text-sm`}
-          >
-            Clear all
-          </Text>
-        </TouchableOpacity>
-
         <View style={tw`gap-3`}>
-          {notificationData.map((notification) => (
-            <TouchableOpacity
-              onPress={() =>
-                notification.status === "arrived"
-                  ? router.push("/user/notification/orderAccept")
-                  : notification.status === "pickUp"
-                  ? router.push("/user/shoppers/beforeChatShopper")
-                  : // router.push("/")
-                    null
-              }
-              key={notification.id}
-              style={tw`flex-row p-3 w-[99%] gap-2 rounded-lg ${
-                notification.status === "arrived"
-                  ? "bg-[#DEFFE7]"
-                  : notification.status === "pickUp"
-                  ? "bg-[#DEFFE7]"
-                  : "bg-[#e6e8eb]"
-              }`}
-            >
-              <Image
-                style={tw`w-16 h-16 border-2 border-white rounded-full`}
-                source={notification.image}
-              />
+          {isLoadingNotification ? (
+            <ActivityIndicator size={"large"} color={PrimaryColor} />
+          ) : data?.notifications.length === 0 ? (
+            <View style={tw`flex-row justify-center items-center`}>
+              <Text style={tw`font-PoppinsRegular text-lg text-regularText `}>
+                No Notification
+              </Text>
+            </View>
+          ) : (
+            data?.notifications.map((notification) => {
+              // -------------- time and date --------------
+              const timestamp = notification?.created_at;
+              const dateObject = new Date(timestamp);
+              const options = {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              };
+              const formattedDate = dateObject.toLocaleDateString(
+                "en-US",
+                options
+              );
 
-              <View>
-                <Text style={tw`font-PoppinsSemiBold text-sm text-black `}>
-                  {notification.title}
-                </Text>
-                <View style={tw`w-[95%]  overflow-hidden pr-6`}>
-                  <Text
-                    // numberOfLines={3}
-                    style={tw`font-PoppinsRegular text-sm text-regularText `}
+              return (
+                <TouchableOpacity
+                  onPress={() =>
+                    notification.type === "arrived"
+                      ? router.push({
+                          pathname: "/user/notification/orderAccept",
+                          params: { shopperId: notification?.shopper_id },
+                        })
+                      : notification.type === "order pickedup"
+                      ? router.push({
+                          pathname: "/user/shoppers/beforeChatShopper",
+                          params: { shopperId: notification?.shopper_id },
+                        })
+                      : null
+                  }
+                  key={notification.id}
+                  style={tw`flex-row p-3 w-[99%] gap-2 rounded-lg ${
+                    notification.type === "arrived"
+                      ? "bg-[#DEFFE7]"
+                      : notification.type === "order pickedup"
+                      ? "bg-[#DEFFE7]"
+                      : "bg-[#e6e8eb]"
+                  }`}
+                >
+                  <View
+                    style={tw`w-14 h-14 justify-center items-center border-2 border-white rounded-full`}
                   >
-                    {notification.description}
-                  </Text>
-                </View>
-                <Text style={tw`font-PoppinsRegular text-xs text-black`}>
-                  {notification.time}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))}
+                    <Image
+                      style={tw`w-10 h-10 `}
+                      source={{ uri: data?.icon }}
+                      resizeMode="center"
+                    />
+                  </View>
+
+                  <View>
+                    <Text
+                      style={tw`flex-1 font-PoppinsSemiBold text-sm text-black `}
+                    >
+                      {notification?.title}
+                    </Text>
+                    <View style={tw`w-[95%]  overflow-hidden pr-6`}>
+                      <Text
+                        numberOfLines={2}
+                        style={tw`flex-1 font-PoppinsRegular text-sm text-regularText `}
+                      >
+                        {notification?.message}
+                      </Text>
+                    </View>
+                    <View style={tw`flex-row items-center gap-2`}>
+                      <Text style={tw`font-PoppinsRegular text-sm text-black`}>
+                        {formattedDate}
+                      </Text>
+
+                      <Text style={tw`font-PoppinsRegular text-sm text-black`}>
+                        {dateObject.toLocaleTimeString("en-US")}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              );
+            })
+          )}
         </View>
       </ScrollView>
     </View>

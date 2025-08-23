@@ -1,12 +1,17 @@
 import { FlatList, Image, Text, TextInput, View } from "react-native";
 
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import tw from "@/src/lib/tailwind";
 import TButton from "@/src/lib/buttons/TButton";
 import BackButton from "@/src/lib/backHeader/BackButton";
+import {
+  useGetProfileQuery,
+  useGetShopperDetailsQuery,
+} from "@/src/redux/apiSlices/profileSlieces";
 
 const message = () => {
+  const { shopperId } = useLocalSearchParams();
   const router = useRouter();
   const [message, setMessage] = React.useState("");
   const [allMessages, setAllMessages] = React.useState([
@@ -87,22 +92,14 @@ const message = () => {
     },
   ]);
 
+  // =========================== apis ===============================
+  const { data: shopperInfo, isLoading } = useGetShopperDetailsQuery(shopperId);
+  const { data: getProfileData } = useGetProfileQuery({});
+
   return (
     <View style={tw`bg-white flex-1`}>
-      <View style={tw`px-4 py-3 flex-row items-center gap-2`}>
-        <View style={tw`flex-row items-center gap-2`}>
-          {/* <TouchableOpacity
-            onPress={() => {
-              router.back();
-            }}
-            style={tw`flex-row items-center gap-2 `}
-          >
-            <View
-              style={tw`bg-white  h-10 justify-center items-center rounded-lg`}
-            >
-              <SvgXml xml={} />
-            </View>
-          </TouchableOpacity> */}
+      <View style={tw`px-4 py-3 bg-white shadow-lg flex-row items-center `}>
+        <View style={tw`flex-row items-center gap-1 `}>
           <BackButton
             onPress={() => {
               router.back();
@@ -111,12 +108,12 @@ const message = () => {
           <Image
             style={tw`w-10 h-10 rounded-full`}
             source={{
-              uri: "https://randomuser.me/api/portraits/women/55.jpg",
+              uri: shopperInfo?.data?.photo,
             }}
           />
         </View>
         <Text style={tw`text-xl text-deepBlue400 font-PoppinsBold`}>
-          Larry Smith
+          {shopperInfo?.data?.name}
         </Text>
       </View>
 

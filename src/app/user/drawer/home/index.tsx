@@ -134,7 +134,7 @@ const HomeScreen = () => {
           <View style={tw`flex-row items-center gap-3`}>
             <TouchableOpacity
               onPress={() =>
-                router.push("/user/priceComparison/priceComparison")
+                router.push("/user/priceComparisons/priceComparison")
               }
               style={tw`relative p-3 bg-white shadow-lg rounded-lg`}
             >

@@ -16,8 +16,7 @@ const RootLayout = () => {
       <Stack.Screen name="addToCart/checkOut" />
       <Stack.Screen name="addToCart/simpleCart" />
       <Stack.Screen name="messaging/messaging" />
-      <Stack.Screen name="notification/notification" />
-      <Stack.Screen name="notification/orderAccept" />
+      <Stack.Screen name="notification" />
       <Stack.Screen name="searchValueItem" />
     </Stack>
   );

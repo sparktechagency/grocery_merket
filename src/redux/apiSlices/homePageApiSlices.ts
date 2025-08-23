@@ -11,8 +11,8 @@ const homePageApiSlices = api.injectEndpoints({
       providesTags: ["homeBanner"],
     }),
     searchForPriceComparison: build.query({
-      query: () => ({
-        url: "/app/searchForPriceComparison?search=meat&per_page=30",
+      query: (search) => ({
+        url: `/app/searchForPriceComparison?search=${search}&per_page=100`,
         method: "GET",
       }),
       providesTags: ["searchForPriceComparison"],
@@ -133,7 +133,15 @@ const homePageApiSlices = api.injectEndpoints({
         url: `/app/kroger/getUserLocation`,
         method: "GET",
       }),
-      providesTags: ["userLocation "],
+      providesTags: ["userLocation"],
+    }),
+
+    getRecommendationProducts: build.query({
+      query: () => ({
+        url: `/app/kroger/recommendation`,
+        method: "GET",
+      }),
+      providesTags: ["getRecommendationProducts"],
     }),
   }),
 });

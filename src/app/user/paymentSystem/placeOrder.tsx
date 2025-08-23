@@ -60,7 +60,7 @@ const placeOrder = () => {
 
   const handleSetupInitialPayment = async () => {
     try {
-      const response = await createIntent({ shopper_id: "15" }).unwrap();
+      const response = await createIntent({ shopper_id: "2" }).unwrap();
       const clientSecret = response.data.client_secret;
       // Handle the case where a valid client secret is not returned
       if (!clientSecret) {
