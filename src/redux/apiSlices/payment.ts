@@ -32,7 +32,6 @@ const paymentSlices = api.injectEndpoints({
       }),
       invalidatesTags: ["payment"],
     }),
-
     getAllTransactions: builder.query({
       query: () => ({
         url: `/app/payment/getAllTransactions`,

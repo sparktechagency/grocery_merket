@@ -16,7 +16,6 @@ const homePageApiSlices = api.injectEndpoints({
       }),
       providesTags: ["searchForPriceComparison"],
     }),
-
     addFaceId: build.mutation({
       query: (faceIdData) => ({
         url: "/app/addFaceId",
@@ -32,7 +31,6 @@ const homePageApiSlices = api.injectEndpoints({
       }),
       providesTags: ["user"],
     }),
-
     addFingerId: build.mutation({
       query: (fingerIdData) => ({
         url: "/app/addFingerId",
@@ -74,7 +72,6 @@ const homePageApiSlices = api.injectEndpoints({
       },
       providesTags: ["searchProductsWithFilter"],
     }),
-
     productDetails: build.mutation({
       query: (productId) => ({
         url: `/app/kroger/products/${productId}`,
@@ -82,7 +79,6 @@ const homePageApiSlices = api.injectEndpoints({
       }),
       invalidatesTags: ["productDetails"],
     }),
-
     kogerAllCategories: build.query({
       query: () => ({
         url: `/app/kroger/products/categories`,
@@ -134,10 +130,9 @@ const homePageApiSlices = api.injectEndpoints({
       }),
       providesTags: ["userLocation"],
     }),
-
     getRecommendationProducts: build.query({
       query: () => ({
-        url: `/app/kroger/recommendation`,
+        url: `/app/recommendationProduct`,
         method: "GET",
       }),
       providesTags: ["getRecommendationProducts"],
@@ -161,4 +156,5 @@ export const {
   useProductByStoreMutation,
   useSetUserLocationMutation,
   useGetUserLocationQuery,
+  useGetRecommendationProductsQuery,
 } = homePageApiSlices;

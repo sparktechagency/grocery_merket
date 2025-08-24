@@ -2,54 +2,20 @@ import {
   View,
   Text,
   ScrollView,
-  Image,
   TouchableOpacity,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
-import React from "react";
-import { ImgStoreOne, ImgStoreTwo } from "@/assets/images";
 import { SvgXml } from "react-native-svg";
 import { IconArrowCorner } from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
 import { router } from "expo-router";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { useKogerAllStoreQuery } from "@/src/redux/apiSlices/homePageApiSlices";
-
-const storeName = [
-  {
-    id: 1,
-    image: ImgStoreOne,
-    store_name: "Mackdonalds",
-  },
-  {
-    id: 2,
-    image: ImgStoreTwo,
-    store_name: "Starbucks",
-  },
-  {
-    id: 3,
-    image: ImgStoreOne,
-    store_name: "ABC",
-  },
-  {
-    id: 4,
-    image: ImgStoreTwo,
-    store_name: "ABC 1",
-  },
-  {
-    id: 5,
-    image: ImgStoreOne,
-    store_name: "ABC 2",
-  },
-  {
-    id: 6,
-    image: ImgStoreTwo,
-    store_name: "ABC 3",
-  },
-];
+import { PrimaryColor } from "@/utils/utils";
 
 const Stores = () => {
-  const { data } = useKogerAllStoreQuery({});
+  const { data, isLoading } = useKogerAllStoreQuery({});
   return (
     <View style={tw`flex-1`}>
       <ScrollView contentContainerStyle={tw` px-4 mb-10`}>
@@ -60,32 +26,52 @@ const Stores = () => {
         />
 
         <View style={tw`gap-3 mt-2`}>
-          {data?.stores.map((store, index) => (
-            <TouchableOpacity
-              onPress={() => router.push("/user/storeProducts/storeProduct")}
-              key={index}
-              activeOpacity={0.8}
-              style={tw`bg-white px-4 py-2 rounded-xl flex-row justify-between items-center shadow-sm`}
+          {isLoading ? (
+            <ActivityIndicator size={"large"} color={PrimaryColor} />
+          ) : data?.stores.length === 0 ? (
+            <Text
+              style={tw`font-PoppinsRegular text-base text-regularText text-center`}
             >
-              <Text
-                numberOfLines={1}
-                style={tw`font-PoppinsSemiBold  text-sm flex-1 text-black`}
+              No Store
+            </Text>
+          ) : (
+            data?.stores.map((store, index) => (
+              <TouchableOpacity
+                onPress={() =>
+                  router.push({
+                    pathname: "/user/storeByProduct",
+                    params: { storeName: JSON.stringify(store) },
+                  })
+                }
+                key={index}
+                activeOpacity={0.8}
+                style={tw`bg-white px-4 py-2 rounded-xl flex-row justify-between items-center shadow-sm`}
               >
-                {store}
-              </Text>
-              <Pressable
-                onPress={() => router.push("/user/storeProducts/storeProduct")}
-                style={tw`p-1.5 bg-[#e4e4e4] rounded-full`}
-              >
-                <SvgXml
-                  xml={IconArrowCorner}
-                  width={20}
-                  height={20}
+                <Text
+                  numberOfLines={1}
+                  style={tw`font-PoppinsSemiBold  text-sm flex-1 text-black`}
+                >
+                  {store}
+                </Text>
+                <Pressable
+                  onPress={() =>
+                    router.push({
+                      pathname: "/user/storeByProduct",
+                      params: { storeName: JSON.stringify(store) },
+                    })
+                  }
                   style={tw`p-1.5 bg-[#e4e4e4] rounded-full`}
-                />
-              </Pressable>
-            </TouchableOpacity>
-          ))}
+                >
+                  <SvgXml
+                    xml={IconArrowCorner}
+                    width={20}
+                    height={20}
+                    style={tw`p-1.5 bg-[#e4e4e4] rounded-full`}
+                  />
+                </Pressable>
+              </TouchableOpacity>
+            ))
+          )}
         </View>
       </ScrollView>
     </View>

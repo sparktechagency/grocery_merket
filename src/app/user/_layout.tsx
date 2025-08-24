@@ -18,6 +18,7 @@ const RootLayout = () => {
       <Stack.Screen name="messaging/messaging" />
       <Stack.Screen name="notification" />
       <Stack.Screen name="searchValueItem" />
+      <Stack.Screen name="storeByProduct" />
     </Stack>
   );
 };

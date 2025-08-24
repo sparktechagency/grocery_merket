@@ -16,6 +16,7 @@ import {
   IconLeftLineArrow,
   IconPlaceOrderSelected,
   IconRightArrowSingle,
+  IconStar,
 } from "@/assets/icon";
 
 import TButton from "@/src/lib/buttons/TButton";
@@ -26,16 +27,20 @@ import {
   BottomSheetModalProvider,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
-import { useGetAllShopperQuery } from "@/src/redux/apiSlices/profileSlieces";
+import {
+  useGetAllShopperQuery,
+  useGetPersonalShopperQuery,
+  useGetShopperDetailsQuery,
+} from "@/src/redux/apiSlices/profileSlieces";
 import {
   useConfirmPaymentMutation,
   usePaymentIntentMutation,
 } from "@/src/redux/apiSlices/payment";
-import { confirmPayment, useStripe } from "@stripe/stripe-react-native";
+import { useStripe } from "@stripe/stripe-react-native";
 
 const placeOrder = () => {
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
-  const [shopperId, setShopperId] = React.useState<string>("");
+  const [shopperId, setShopperId] = React.useState<number>(0);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -55,12 +60,16 @@ const placeOrder = () => {
     useGetAllShopperQuery({});
   const [createIntent, intentResult] = usePaymentIntentMutation();
   const [confirmPayment] = useConfirmPaymentMutation({});
+  const { data: shopperDetails } = useGetShopperDetailsQuery(shopperId);
+  const { data: personalShopper } = useGetPersonalShopperQuery({});
 
   // -===================== payment system  ==========================-
 
   const handleSetupInitialPayment = async () => {
     try {
-      const response = await createIntent({ shopper_id: "2" }).unwrap();
+      const response = await createIntent({
+        shopper_id: Number(shopperId),
+      }).unwrap();
       const clientSecret = response.data.client_secret;
       // Handle the case where a valid client secret is not returned
       if (!clientSecret) {
@@ -215,7 +224,9 @@ const placeOrder = () => {
                   style={tw`border border-gray-400 w-full h-12 rounded-sm flex-row justify-between items-center px-5`}
                 >
                   <Text style={tw`font-PoppinsRegular text-sm text-black`}>
-                    Choose your shopper
+                    {shopperDetails
+                      ? shopperDetails?.data?.name
+                      : "Select your Shopper"}
                   </Text>
                   <SvgXml xml={IconRightArrowSingle} />
                 </TouchableOpacity>
@@ -275,17 +286,24 @@ const placeOrder = () => {
                     ) : null}
                   </TouchableOpacity>
                   <View
-                    style={tw` flex-row items-center bg-white shadow-md rounded-lg w-full px-5  py-3 gap-4`}
+                    style={[
+                      tw` flex-row items-center bg-white shadow-md rounded-lg w-full px-5  py-3 gap-4`,
+                    ]}
                   >
                     <Image
                       style={tw`w-16 h-16 rounded-full`}
                       source={ImgShopperOne}
                     />
-                    <Text
-                      style={tw`font-PoppinsSemiBold text-base w-full text-black`}
-                    >
-                      {item?.name}
-                    </Text>
+                    <View>
+                      <Text
+                        style={tw`font-PoppinsSemiBold text-base w-full text-black`}
+                      >
+                        {item?.name}
+                      </Text>
+                      {personalShopper?.shopper?.id === item?.id ? (
+                        <SvgXml xml={IconStar} />
+                      ) : null}
+                    </View>
                   </View>
                 </TouchableOpacity>
               ))}
@@ -293,7 +311,9 @@ const placeOrder = () => {
               {/*  ------------- button ---------- */}
               <View style={tw`flex-row justify-between items-center mt-5 px-5`}>
                 <TouchableOpacity
-                  onPress={() => handleCloseModalPress()}
+                  onPress={() => {
+                    handleCloseModalPress(), setShopperId(0);
+                  }}
                   style={tw`bg-[#E8E8E8] px-10 py-2.5 rounded-full`}
                 >
                   <Text style={tw`font-PoppinsMedium text-black text-lg`}>

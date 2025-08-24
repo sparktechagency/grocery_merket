@@ -21,6 +21,7 @@ import DiscountCarousel from "@/src/components/Carousel";
 
 import { router } from "expo-router";
 import {
+  useGetRecommendationProductsQuery,
   useKogerAllCategoriesQuery,
   useProductByCategoryMutation,
   useSetUserLocationMutation,
@@ -32,11 +33,13 @@ import {
 } from "@/src/redux/apiSlices/cartSlices";
 import useLocation from "@/src/hook/useLocation";
 import { useDeleteAllWishlistMutation } from "@/src/redux/apiSlices/wishlistSlices";
+import { useGetNotificationsQuery } from "@/src/redux/apiSlices/notificationSlices";
 
 const HomeScreen = () => {
   const [notification, setNotification] = React.useState(false);
   const [randomCategoryData, setRandomCategoryData] = React.useState(null);
   const { longitude, latitude, errorMsg } = useLocation();
+  const [recommendedCategory, setRecommendedCategory] = React.useState("");
 
   // --------------------------- all api --------------------------
   const { data: categoriesData, isLoading: isCategoryLoading } =
@@ -45,6 +48,9 @@ const HomeScreen = () => {
     useProductByCategoryMutation();
   const { data: cartItem } = useGetCartQuery({});
   const [location] = useSetUserLocationMutation();
+  const { data: recommendedData, isLoading: isRecommendedLoading } =
+    useGetRecommendationProductsQuery({});
+  const { data: notificationData } = useGetNotificationsQuery({});
   const [allCartDelete] = useDeleteAllCartMutation();
   const [allWishlistDelete] = useDeleteAllWishlistMutation();
 
@@ -76,13 +82,24 @@ const HomeScreen = () => {
           longitude: stgLongitude,
           latitude: stgLatitude,
         }).unwrap();
+        // ----------------- find my category ---------------------
+        if (recommendedData?.data?.length > 0) {
+          const validItem = recommendedData?.data.find(
+            (item) => item.categories
+          );
+          if (validItem) {
+            const parsedCategories = JSON.parse(validItem?.categories);
+            const firstCategory = parsedCategories[0];
+            setRecommendedCategory(firstCategory);
+          }
+        }
       } catch (error) {
         console.log(error, "set user location not match -------------------");
       }
     };
     randomCategoryLoad();
     setLocation();
-  }, []);
+  }, [recommendedData, stgLongitude, stgLatitude]);
 
   const categoryItem = ({ item }: any) => (
     <TouchableOpacity
@@ -153,16 +170,17 @@ const HomeScreen = () => {
                 </Text>
               ) : null}
             </TouchableOpacity>
+
             <TouchableOpacity
               onPress={() => router.push("/user/notification/notification")}
               style={tw`relative p-3 bg-white shadow-lg rounded-lg`}
             >
               <SvgXml xml={IconNotification} />
-              {notification ? (
+              {notificationData?.notifications?.length > 0 ? (
                 <Text
-                  style={tw`absolute top-0 right-0 px-1 bg-orange text-white rounded-full`}
+                  style={tw`absolute w-6 text-center -top-2 -right-1 px-1 bg-orange text-white rounded-full`}
                 >
-                  2
+                  {notificationData?.notifications?.length}
                 </Text>
               ) : null}
             </TouchableOpacity>
@@ -204,7 +222,7 @@ const HomeScreen = () => {
           </View>
         </View>
 
-        {/* ============== Beast Seller section =============== */}
+        {/* ============== render random section =============== */}
 
         <View>
           <View style={tw`flex-row justify-between items-center mt-4  px-4`}>
@@ -265,6 +283,82 @@ const HomeScreen = () => {
                     productPrice={item?.regular_price}
                     promoPrice={item?.promo_price}
                     categoryName={randomCategoryName}
+                    shopName={item.storeName}
+                    productWidth={item.size}
+                    shopOnPress={() =>
+                      router.push({
+                        pathname: "/addToCardModal",
+                        params: { id: item?.id },
+                      })
+                    }
+                  />
+                );
+              }}
+            />
+          </View>
+        </View>
+
+        {/* **************************** recommended product section ****************** */}
+
+        <View>
+          <View style={tw`flex-row justify-between items-center mt-4  px-4`}>
+            <Text style={tw`font-PoppinsSemiBold text-lg text-black`}>
+              Recommended for you
+            </Text>
+            <TouchableOpacity
+              onPress={() =>
+                router.push({
+                  pathname: "/user/storeProducts/storeProduct",
+                  params: { categoryData: recommendedCategory },
+                })
+              }
+              style={tw`flex-row justify-center gap-1 items-center`}
+            >
+              <Text>View all</Text>
+              <SvgXml xml={IconRightArrowSingle} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={tw`pl-6 py-3 flex-1`}>
+            <FlatList
+              data={recommendedData?.data}
+              keyExtractor={(item) => item.id.toString()}
+              horizontal={true}
+              contentContainerStyle={tw`gap-3`}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              ListEmptyComponent={
+                isRecommendedLoading ? (
+                  <View style={tw`justify-center items-center`}>
+                    <ActivityIndicator
+                      size="large"
+                      color={tw.color("red-500")}
+                    />
+                  </View>
+                ) : (
+                  <Text style={tw`text-center mt-4 text-gray-500`}>
+                    No products available.
+                  </Text>
+                )
+              }
+              renderItem={({ index, item }) => {
+                return (
+                  <ProductCard
+                    onPress={() =>
+                      router.push({
+                        pathname: "/user/storeProducts/productDetails",
+                        params: {
+                          productId: item?.id,
+                          category: recommendedCategory,
+                        },
+                      })
+                    }
+                    productName={item?.name}
+                    productId={item?.id}
+                    productImg={item?.images}
+                    productPrice={item?.regular_price}
+                    promoPrice={item?.promo_price}
+                    categoryName={recommendedCategory}
                     shopName={item.storeName}
                     productWidth={item.size}
                     shopOnPress={() =>
