@@ -235,13 +235,22 @@ const placeOrder = () => {
           </View>
         </ScrollView>
 
-        <View style={tw`rounded-full my-4`}>
+        <View
+          style={tw`flex-1 flex-row justify-between rounded-full my-4 gap-3`}
+        >
+          <TButton
+            isLoading={intentResult?.isLoading}
+            onPress={() => router.push("/user/cryptoPayments/cryptoPayment")}
+            // onPress={() => router.push("/user/paymentSystem/orderSuccess")}
+            title="Place Order To Crypto"
+            containerStyle={tw`rounded-lg flex-1 bg-orange `}
+          />
           <TButton
             isLoading={intentResult?.isLoading}
             onPress={() => handleSetupInitialPayment()}
             // onPress={() => router.push("/user/paymentSystem/orderSuccess")}
-            title="Place Order"
-            containerStyle={tw`rounded-full `}
+            title="Place Order To Card"
+            containerStyle={tw`rounded-lg flex-1`}
           />
         </View>
       </View>
