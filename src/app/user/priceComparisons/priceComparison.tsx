@@ -6,26 +6,19 @@ import TButton from "@/src/lib/buttons/TButton";
 import InputText from "@/src/lib/inputs/InputText";
 import { IconSearch } from "@/assets/icon";
 import { useState } from "react";
-import { useSearchForPriceComparisonQuery } from "@/src/redux/apiSlices/homePageApiSlices";
 
 const priceComparison = () => {
   const [searchValue, setSearchValue] = useState("");
 
-  // ---------------------- apis -----------------------
-  const { data: searchForPriceComparison } = useSearchForPriceComparisonQuery(
-    {}
-  );
-
   const handleSearch = async () => {
     try {
-      const response = await searchForPriceComparison(searchValue).unwrap();
-      if (response) {
-        console.log(response, "this is response");
-
-        // router.push({
-        //   pathname: "/user/priceComparison/priceComparisonProduct",
-        //   params: { searchValue: searchValue },
-        // });
+      if (searchValue) {
+        router.push({
+          pathname: "/user/priceComparisons/priceComparisonProduct",
+          params: {
+            searchValue: JSON.stringify(searchValue),
+          },
+        });
       }
     } catch (error) {
       console.log(error, "this is error");
@@ -50,13 +43,23 @@ const priceComparison = () => {
           containerStyle={tw`rounded-full mt-4`}
         />
 
-        <View style={tw`w-full  rounded-full my-3`}>
-          <TButton
-            onPress={() => handleSearch()}
-            title="Search"
-            containerStyle={tw`rounded-full `}
-          />
-        </View>
+        {searchValue ? (
+          <View style={tw`w-full  rounded-full my-3`}>
+            <TButton
+              onPress={() => handleSearch()}
+              title="Search"
+              containerStyle={tw`rounded-full `}
+            />
+          </View>
+        ) : (
+          <View style={tw`w-full  rounded-full my-3`}>
+            <TButton
+              disabled
+              title="Search"
+              containerStyle={tw`rounded-full bg-slate-600`}
+            />
+          </View>
+        )}
       </View>
     </View>
   );

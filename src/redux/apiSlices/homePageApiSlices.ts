@@ -1,4 +1,3 @@
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import { api } from "../api/baseApi";
 
 const homePageApiSlices = api.injectEndpoints({
@@ -12,7 +11,7 @@ const homePageApiSlices = api.injectEndpoints({
     }),
     searchForPriceComparison: build.query({
       query: (search) => ({
-        url: `/app/searchForPriceComparison?search=${search}&per_page=100`,
+        url: `/app/searchForPriceComparison?search=${search}&per_page=50`,
         method: "GET",
       }),
       providesTags: ["searchForPriceComparison"],

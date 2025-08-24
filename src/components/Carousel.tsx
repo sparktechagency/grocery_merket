@@ -1,9 +1,8 @@
 import React from "react";
-import { Image, View } from "react-native";
+import { View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 
 import tw from "twrnc";
-import { ImgBanner } from "@/assets/images";
 import { _HIGHT, _WIDTH } from "@/utils/utils";
 import Animated, {
   interpolate,
@@ -11,10 +10,10 @@ import Animated, {
 } from "react-native-reanimated";
 import { parallaxLayout } from "react-native-reanimated-carousel/lib/module/layouts/parallax";
 import { useHomeBannerQuery } from "../redux/apiSlices/homePageApiSlices";
+import { Image } from "expo-image";
 
 const DiscountCarousel = () => {
   const { data } = useHomeBannerQuery({});
-  console.log(data?.banners, "caroucel bannder ---------->");
   return (
     <View style={tw``}>
       <Carousel
@@ -27,7 +26,7 @@ const DiscountCarousel = () => {
           alignItems: "center",
         }}
         width={_WIDTH / 2 + _WIDTH * 0.33}
-        data={[1, 2, 3]}
+        data={data?.banners}
         renderItem={({ item, index, animationValue }) => {
           return (
             <CustomItem
@@ -92,7 +91,14 @@ const CustomItem: React.FC<ItemProps> = ({ index, animationValue, item }) => {
           maskStyle,
         ]}
       >
-        <Image source={ImgBanner} resizeMode="contain" />
+        <Image
+          style={{
+            width: _WIDTH * 0.84,
+            height: _HIGHT * 0.18,
+          }}
+          source={{ uri: item?.banner_image }}
+          contentFit="contain"
+        />
       </Animated.View>
     </View>
   );

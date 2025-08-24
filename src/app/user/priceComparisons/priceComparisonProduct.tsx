@@ -1,58 +1,108 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
-import React from "react";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { FlatList } from "react-native-gesture-handler";
-import { CartData } from "@/src/components/CardData";
 import tw from "@/src/lib/tailwind";
+import { PrimaryColor } from "@/utils/utils";
+import { useSearchForPriceComparisonQuery } from "@/src/redux/apiSlices/homePageApiSlices";
+import { Image } from "expo-image";
 
 const priceComparisonProduct = () => {
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => router.push("/user/storeProducts/productDetails")}
-      style={tw`flex-row justify-between items-center p-3 rounded-2xl bg-white mb-3 shadow-lg`}
-    >
-      <View style={tw`flex-row gap-4`}>
-        <Image
-          source={item?.image}
-          style={tw`w-14 h-14 rounded-md`}
-          resizeMode="contain"
-        />
-        <View>
-          <Text style={tw`font-PoppinsMedium text-lg text-black`}>
-            {item?.title}
-          </Text>
-          <Text
-            style={tw`font-PoppinsRegular w-auto text-sm px-1.5 py-0.5 bg-[#FF5F00] rounded-sm text-white`}
-          >
-            {item?.brand}
-          </Text>
-        </View>
-      </View>
+  const { searchValue } = useLocalSearchParams();
+  const parsedQuery = searchValue ? JSON.parse(searchValue as string) : {};
 
-      <Text style={tw`font-PoppinsSemiBold text-lg text-primary mt-1`}>
-        ${item?.price}
-      </Text>
-    </TouchableOpacity>
-  );
+  // ---------------------- apis -----------------------
+  const { data: searchForPriceComparison, isLoading } =
+    useSearchForPriceComparisonQuery(parsedQuery);
+
+  const renderItem = ({ item }) => {
+    const parsedCategories = JSON.parse(item?.categories);
+    const firstCategory = parsedCategories[0];
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          router.push({
+            pathname: "/user/storeProducts/productDetails",
+            params: { productId: item?.id, category: firstCategory },
+          })
+        }
+        style={tw`flex-row justify-between items-center p-3 rounded-2xl bg-white mb-3 shadow-lg`}
+      >
+        <View style={tw`flex-row flex-1 items-center gap-4`}>
+          <Image
+            source={{ uri: item?.image }}
+            style={tw`w-14 h-14 rounded-md`}
+            contentFit="contain"
+          />
+          <View style={tw`flex-1`}>
+            <Text
+              numberOfLines={1}
+              style={tw`font-PoppinsMedium text-base text-black`}
+            >
+              {item?.name}
+            </Text>
+            <Text
+              numberOfLines={1}
+              style={tw`font-PoppinsRegular text-sm text-orange mt-0.5`}
+            >
+              {item?.storeName}
+            </Text>
+          </View>
+        </View>
+
+        <View style={tw`items-end`}>
+          {item?.promo_price !== "0" ? (
+            <View>
+              <Text style={tw`font-PoppinsSemiBold text-sm text-primary`}>
+                $ {item?.promo_price}
+              </Text>
+              <Text
+                style={tw`font-PoppinsSemiBold text-xs text-gray-500 line-through`}
+              >
+                $ {item?.regular_price}
+              </Text>
+            </View>
+          ) : (
+            <Text style={tw`font-PoppinsSemiBold text-sm text-primary`}>
+              $ {item?.regular_price}
+            </Text>
+          )}
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
-    <View>
+    <View style={tw`flex-1`}>
       <BackWithComponent
         onPress={() => router.back()}
         title="Price Comparison"
       />
-      <FlatList
-        data={CartData}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-        ListHeaderComponent={() => (
-          <Text style={tw`font-PoppinsMedium text-xl text-black my-3`}>
-            Fresh Apple
-          </Text>
-        )}
-        contentContainerStyle={tw`px-5`}
-      />
+
+      {isLoading ? (
+        <ActivityIndicator size={"large"} color={PrimaryColor} />
+      ) : (
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          data={searchForPriceComparison?.data}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderItem}
+          ListHeaderComponent={() => (
+            <Text style={tw`font-PoppinsMedium text-xl text-black my-3`}>
+              Fresh Apple
+            </Text>
+          )}
+          contentContainerStyle={tw`px-5 `}
+          ListEmptyComponent={() => (
+            <View style={tw`flex-1 items-center justify-center`}>
+              <Text style={tw`font-PoppinsMedium text-sm text-black`}>
+                No data found
+              </Text>
+            </View>
+          )}
+        />
+      )}
     </View>
   );
 };

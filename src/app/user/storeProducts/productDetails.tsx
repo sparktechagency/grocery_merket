@@ -19,10 +19,7 @@ import {
 } from "@/src/redux/apiSlices/homePageApiSlices";
 import ProductCard from "@/src/components/ProductCard";
 import { Image } from "expo-image";
-import {
-  useAddToCartMutation,
-  useUpdateCartItemMutation,
-} from "@/src/redux/apiSlices/cartSlices";
+import { useAddToCartMutation } from "@/src/redux/apiSlices/cartSlices";
 
 const productDetails = () => {
   const { productId, category: paramsCategory } = useLocalSearchParams();
