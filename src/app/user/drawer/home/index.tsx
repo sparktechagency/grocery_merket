@@ -172,7 +172,7 @@ const HomeScreen = () => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => router.push("/user/notification/notification")}
+              onPress={() => router.push("/user/notifications/notification")}
               style={tw`relative p-3 bg-white shadow-lg rounded-lg`}
             >
               <SvgXml xml={IconNotification} />

@@ -51,7 +51,7 @@ const notification = () => {
                   onPress={() =>
                     notification.type === "arrived"
                       ? router.push({
-                          pathname: "/user/notification/orderAccept",
+                          pathname: "/user/notifications/orderAccept",
                           params: { shopperId: notification?.shopper_id },
                         })
                       : notification.type === "order pickedup"

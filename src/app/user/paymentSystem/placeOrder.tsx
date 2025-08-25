@@ -22,6 +22,7 @@ import {
 import TButton from "@/src/lib/buttons/TButton";
 import { ImgShopperOne } from "@/assets/images";
 import OrderBill from "@/src/components/OrderBill";
+import CryptoCurrency from "@/src/json/CryptoCurrency.json";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -40,15 +41,24 @@ import { useStripe } from "@stripe/stripe-react-native";
 
 const placeOrder = () => {
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
+  const [selectedIndexCurrency, setSelectedIndexCurrency] = React.useState("");
   const [shopperId, setShopperId] = React.useState<number>(0);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const bottomSheetModalRef2 = useRef<BottomSheetModal>(null);
   const handlePresentModalPress = useCallback(async () => {
     bottomSheetModalRef.current?.present();
   }, []);
   const handleCloseModalPress = useCallback(() => {
     bottomSheetModalRef.current?.dismiss();
+  }, []);
+
+  const handlePresentModalPressCurrency = useCallback(async () => {
+    bottomSheetModalRef2.current?.present();
+  }, []);
+  const handleCloseModalPressCurrency = useCallback(() => {
+    bottomSheetModalRef2.current?.dismiss();
   }, []);
 
   const { userInfo, cartInfo } = useLocalSearchParams();
@@ -76,7 +86,7 @@ const placeOrder = () => {
         router.push({
           pathname: "/Toaster",
           params: {
-            response: "Could not initialize payment sheet. Please try again.",
+            res: "Could not initialize payment sheet. Please try again.",
           },
         });
         return;
@@ -94,7 +104,7 @@ const placeOrder = () => {
         // handle error
         router.push({
           pathname: "/Toaster",
-          params: { response: initError?.message || initError },
+          params: { res: initError?.message || initError },
         });
       } else {
         checkout(paymentIntentId);
@@ -109,7 +119,7 @@ const placeOrder = () => {
       if (error) {
         router.push({
           pathname: "/Toaster",
-          params: { response: error?.message || error },
+          params: { res: error?.message || error },
         });
       } else {
         const response = await confirmPayment(paymentIntentId).unwrap();
@@ -121,227 +131,338 @@ const placeOrder = () => {
       console.log(error, "payment not successful---------->");
       router.push({
         pathname: "/Toaster",
-        params: { response: error?.message || error },
+        params: { res: error?.message || error },
       });
     }
   };
 
   return (
     <View style={tw`flex-1 `}>
-      <BackWithComponent onPress={() => router.back()} title={"Place Order"} />
-      <View style={tw`justify-between flex-grow px-5`}>
-        <ScrollView>
-          <View style={tw``}>
-            {/* ------------------- Steps ---------------- */}
-            <View style={tw`flex-row items-center justify-between px-4 py-4`}>
-              {/* Step 1: Checkout */}
-              <View style={tw`items-center`}>
-                <View style={tw`border-2 border-primary rounded-full`}>
-                  <View
-                    style={tw`w-14 h-14 rounded-full bg-primary justify-center items-center m-1`}
-                  >
-                    <SvgXml xml={IconCheckout} width={24} height={24} />
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      >
+        <BackWithComponent
+          onPress={() => router.back()}
+          title={"Place Order"}
+        />
+        <View style={tw`justify-between flex-grow px-5`}>
+          <ScrollView>
+            <View style={tw``}>
+              {/* ------------------- Steps ---------------- */}
+              <View style={tw`flex-row items-center justify-between px-4 py-4`}>
+                {/* Step 1: Checkout */}
+                <View style={tw`items-center`}>
+                  <View style={tw`border-2 border-primary rounded-full`}>
+                    <View
+                      style={tw`w-14 h-14 rounded-full bg-primary justify-center items-center m-1`}
+                    >
+                      <SvgXml xml={IconCheckout} width={24} height={24} />
+                    </View>
                   </View>
+                  <Text style={tw`text-center text-black mt-2`}>Checkout</Text>
                 </View>
-                <Text style={tw`text-center text-black mt-2`}>Checkout</Text>
-              </View>
-              {/* Arrow */}
-              <View style={tw` flex-1 justify-center items-center pb-3`}>
-                <SvgXml xml={IconLeftLineArrow} />
-              </View>
+                {/* Arrow */}
+                <View style={tw` flex-1 justify-center items-center pb-3`}>
+                  <SvgXml xml={IconLeftLineArrow} />
+                </View>
 
-              {/* Step 3: Place Order */}
-              <View style={tw`items-center`}>
-                <View style={tw`border-2 border-primary rounded-full`}>
-                  <View
-                    style={tw`w-14 h-14 rounded-full  bg-primary justify-center items-center m-1`}
-                  >
-                    <SvgXml
-                      xml={IconPlaceOrderSelected}
-                      width={24}
-                      height={24}
-                    />
+                {/* Step 3: Place Order */}
+                <View style={tw`items-center`}>
+                  <View style={tw`border-2 border-primary rounded-full`}>
+                    <View
+                      style={tw`w-14 h-14 rounded-full  bg-primary justify-center items-center m-1`}
+                    >
+                      <SvgXml
+                        xml={IconPlaceOrderSelected}
+                        width={24}
+                        height={24}
+                      />
+                    </View>
                   </View>
+                  <Text style={tw`text-center text-black mt-2`}>
+                    Place order
+                  </Text>
                 </View>
-                <Text style={tw`text-center text-black mt-2`}>Place order</Text>
               </View>
-            </View>
 
-            {/*  ======================= userInfo =-================================== */}
+              {/*  ======================= userInfo =-================================== */}
 
-            <View style={tw`w-full bg-[#e7e9eb] rounded-xl  mt-2`}>
-              <View
-                style={tw`flex-row justify-between items-center rounded-t-lg bg-white px-5 py-2`}
-              >
-                <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>
-                  Delivery address
-                </Text>
-                <Link
-                  href={"/user/users/userDetails"}
-                  style={tw`underline font-PoppinsRegular text-[#56A5FF]`}
+              <View style={tw`w-full bg-[#e7e9eb] rounded-xl  mt-2`}>
+                <View
+                  style={tw`flex-row justify-between items-center rounded-t-lg bg-white px-5 py-2`}
                 >
-                  Change
-                </Link>
-              </View>
-              <View style={tw`px-5 py-3`}>
-                <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-                  {parsedUserInfo?.name}
-                </Text>
-                <Text
-                  style={tw`font-PoppinsRegular text-base text-regularText`}
-                >
-                  {parsedUserInfo?.address}
-                </Text>
-
-                <Text style={tw`font-PoppinsRegular text-base text-black mb-2`}>
-                  Mobile:
+                  <Text
+                    style={tw`font-PoppinsRegular text-sm text-regularText`}
+                  >
+                    Delivery address
+                  </Text>
+                  <Link
+                    href={"/user/users/userDetails"}
+                    style={tw`underline font-PoppinsRegular text-[#56A5FF]`}
+                  >
+                    Change
+                  </Link>
+                </View>
+                <View style={tw`px-5 py-3`}>
+                  <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
+                    {parsedUserInfo?.name}
+                  </Text>
                   <Text
                     style={tw`font-PoppinsRegular text-base text-regularText`}
                   >
-                    {parsedUserInfo?.phone}
+                    {parsedUserInfo?.address}
                   </Text>
-                </Text>
+
+                  <Text
+                    style={tw`font-PoppinsRegular text-base text-black mb-2`}
+                  >
+                    Mobile:
+                    <Text
+                      style={tw`font-PoppinsRegular text-base text-regularText`}
+                    >
+                      {parsedUserInfo?.phone}
+                    </Text>
+                  </Text>
+                </View>
+              </View>
+
+              {/* -======================== order info ================== */}
+              <OrderBill
+                headerTitle={"Order bill"}
+                totalItems={parsedCartInfo?.total_products}
+                subTotal={parsedCartInfo?.total_price}
+                deliveryCharge={0}
+                tax={0}
+                total={parsedCartInfo?.total_price}
+              />
+              {/*  --====================== shopper profile ================== */}
+              <View style={tw`mt-3 mb-5`}>
+                <View style={tw``}>
+                  <Text style={tw`font-PoppinsRegular text-base text-black`}>
+                    shopper
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => handlePresentModalPress()}
+                    style={tw`border border-gray-400 w-full h-12 rounded-sm flex-row justify-between items-center px-5`}
+                  >
+                    <Text style={tw`font-PoppinsRegular text-sm text-black`}>
+                      {shopperDetails
+                        ? shopperDetails?.data?.name
+                        : "Select your Shopper"}
+                    </Text>
+                    <SvgXml xml={IconRightArrowSingle} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {/*  ====================== Selected your currency ================== */}
+              <View style={tw`mt-3 mb-5`}>
+                <View style={tw``}>
+                  <Text style={tw`font-PoppinsRegular text-base text-black`}>
+                    If You Payment Crypto? Selected your currency
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => handlePresentModalPressCurrency()}
+                    style={tw`border border-gray-400 w-full h-12 rounded-sm flex-row justify-between items-center px-5`}
+                  >
+                    <Text style={tw`font-PoppinsRegular text-sm text-black`}>
+                      {selectedIndexCurrency
+                        ? selectedIndexCurrency
+                        : "Select your Currency"}
+                    </Text>
+                    <SvgXml xml={IconRightArrowSingle} />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
+          </ScrollView>
 
-            {/* -======================== order info ================== */}
-            <OrderBill
-              headerTitle={"Order bill"}
-              totalItems={parsedCartInfo?.total_products}
-              subTotal={parsedCartInfo?.total_price}
-              deliveryCharge={0}
-              tax={0}
-              total={parsedCartInfo?.total_price}
-            />
-            {/*  --====================== time and date or profile ================== */}
-            <View style={tw`mt-3 mb-5`}>
-              <View style={tw``}>
-                <Text style={tw`font-PoppinsRegular text-base text-black`}>
-                  shopper
-                </Text>
-                <TouchableOpacity
-                  onPress={() => handlePresentModalPress()}
-                  style={tw`border border-gray-400 w-full h-12 rounded-sm flex-row justify-between items-center px-5`}
-                >
-                  <Text style={tw`font-PoppinsRegular text-sm text-black`}>
-                    {shopperDetails
-                      ? shopperDetails?.data?.name
-                      : "Select your Shopper"}
-                  </Text>
-                  <SvgXml xml={IconRightArrowSingle} />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </ScrollView>
+          {/* ===================== Button  ====================   */}
 
-        <View
-          style={tw`flex-1 flex-row justify-between rounded-full my-4 gap-3`}
-        >
-          <TButton
-            isLoading={intentResult?.isLoading}
-            onPress={() => router.push("/user/cryptoPayments/cryptoPayment")}
-            // onPress={() => router.push("/user/paymentSystem/orderSuccess")}
-            title="Place Order To Crypto"
-            containerStyle={tw`rounded-lg flex-1 bg-orange `}
-          />
-          <TButton
-            isLoading={intentResult?.isLoading}
-            onPress={() => handleSetupInitialPayment()}
-            // onPress={() => router.push("/user/paymentSystem/orderSuccess")}
-            title="Place Order To Card"
-            containerStyle={tw`rounded-lg flex-1`}
-          />
-        </View>
-      </View>
-
-      {/* ------ shopper modal open ------------ */}
-      <BottomSheetModalProvider>
-        <BottomSheetModal ref={bottomSheetModalRef} snapPoints={["50%", "90%"]}>
-          <BottomSheetScrollView
-            contentContainerStyle={styles.contentContainer}
+          <View
+            style={tw`flex-1 flex-row justify-between rounded-full my-4 gap-3`}
           >
-            <Text
-              style={tw`font-PoppinsMedium text-base text-center text-black`}
+            {shopperDetails && selectedIndexCurrency ? (
+              <TButton
+                onPress={() =>
+                  router.push({
+                    pathname: "/user/cryptoPayments/cryptoPayment",
+                    params: {
+                      shopperId: shopperId,
+                      currency: selectedIndexCurrency,
+                    },
+                  })
+                }
+                title="Place Order To Crypto"
+                containerStyle={tw`rounded-lg flex-1 bg-orange `}
+              />
+            ) : (
+              <TButton
+                onPress={() =>
+                  router.push({
+                    pathname: "/Toaster",
+                    params: { res: "Please select your currency and Shopper" },
+                  })
+                }
+                title="Place Order To Crypto"
+                containerStyle={tw`rounded-lg flex-1 bg-orange `}
+              />
+            )}
+
+            {shopperDetails ? (
+              <TButton
+                isLoading={intentResult?.isLoading}
+                onPress={() => handleSetupInitialPayment()}
+                title="Place Order To Card"
+                containerStyle={tw`rounded-lg flex-1`}
+              />
+            ) : (
+              <TButton
+                onPress={() =>
+                  router.push({
+                    pathname: "/Toaster",
+                    params: { res: "Please select your Shopper" },
+                  })
+                }
+                title="Place Order To Card"
+                containerStyle={tw`rounded-lg flex-1`}
+              />
+            )}
+          </View>
+        </View>
+
+        {/* ------ currency modal open ------------ */}
+        <BottomSheetModalProvider>
+          <BottomSheetModal
+            ref={bottomSheetModalRef2}
+            snapPoints={["40%", "80%"]}
+          >
+            <BottomSheetScrollView
+              contentContainerStyle={styles.contentContainer}
             >
-              Choose your Shopper
-            </Text>
-            <Text style={tw` border-b w-full`}></Text>
-            <ScrollView>
-              {/* ================= Shopper list -============================ */}
-              {getAllShoppers?.data.map((item: any, index: number) => (
-                <TouchableOpacity
-                  onPress={() => {
-                    setSelectedIndex(index);
-                    setShopperId(item?.id);
-                  }}
-                  key={item?.id}
-                  style={tw`flex-row items-center  mt-6 w-[85%] gap-7`}
-                >
+              <Text
+                style={tw`font-PoppinsMedium text-base text-center text-black`}
+              >
+                Select your Currency
+              </Text>
+              <Text style={tw` border-b w-full`}></Text>
+              <ScrollView>
+                {/* ================= Shopper list -============================ */}
+                {CryptoCurrency.map((item: any, index: number) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleCloseModalPressCurrency();
+                      setSelectedIndexCurrency(item?.currency);
+                    }}
+                    key={item?.id}
+                    style={tw` border-b border-black  justify-center items-center py-3 px-3`}
+                  >
+                    <Text
+                      style={tw`font-PoppinsSemiBold text-sm text-center text-yellow-600`}
+                    >
+                      {item?.currency}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </BottomSheetScrollView>
+          </BottomSheetModal>
+        </BottomSheetModalProvider>
+
+        {/* ------ shopper modal open ------------ */}
+        <BottomSheetModalProvider>
+          <BottomSheetModal
+            ref={bottomSheetModalRef}
+            snapPoints={["50%", "90%"]}
+          >
+            <BottomSheetScrollView
+              contentContainerStyle={styles.contentContainer}
+            >
+              <Text
+                style={tw`font-PoppinsMedium text-base text-center text-black`}
+              >
+                Choose your Shopper
+              </Text>
+              <Text style={tw` border-b w-full`}></Text>
+              <ScrollView>
+                {/* ================= Shopper list -============================ */}
+                {getAllShoppers?.data.map((item: any, index: number) => (
                   <TouchableOpacity
                     onPress={() => {
                       setSelectedIndex(index);
                       setShopperId(item?.id);
                     }}
-                    style={tw.style(
-                      `border w-5 h-5  justify-center items-center rounded-sm`,
-                      selectedIndex === index
-                        ? `bg-primary border-0`
-                        : `bg-transparent`
-                    )}
+                    key={item?.id}
+                    style={tw`flex-row items-center  mt-6 w-[85%] gap-7`}
                   >
-                    {selectedIndex === index ? (
-                      <Text style={tw`text-white text-sm`}>✔</Text>
-                    ) : null}
-                  </TouchableOpacity>
-                  <View
-                    style={[
-                      tw` flex-row items-center bg-white shadow-md rounded-lg w-full px-5  py-3 gap-4`,
-                    ]}
-                  >
-                    <Image
-                      style={tw`w-16 h-16 rounded-full`}
-                      source={ImgShopperOne}
-                    />
-                    <View>
-                      <Text
-                        style={tw`font-PoppinsSemiBold text-base w-full text-black`}
-                      >
-                        {item?.name}
-                      </Text>
-                      {personalShopper?.shopper?.id === item?.id ? (
-                        <SvgXml xml={IconStar} />
+                    <TouchableOpacity
+                      onPress={() => {
+                        setSelectedIndex(index);
+                        setShopperId(item?.id);
+                      }}
+                      style={tw.style(
+                        `border w-5 h-5  justify-center items-center rounded-sm`,
+                        selectedIndex === index
+                          ? `bg-primary border-0`
+                          : `bg-transparent`
+                      )}
+                    >
+                      {selectedIndex === index ? (
+                        <Text style={tw`text-white text-sm`}>✔</Text>
                       ) : null}
+                    </TouchableOpacity>
+                    <View
+                      style={[
+                        tw` flex-row items-center bg-white shadow-md rounded-lg w-full px-5  py-3 gap-4`,
+                      ]}
+                    >
+                      <Image
+                        style={tw`w-16 h-16 rounded-full`}
+                        source={ImgShopperOne}
+                      />
+                      <View>
+                        <Text
+                          style={tw`font-PoppinsSemiBold text-base w-full text-black`}
+                        >
+                          {item?.name}
+                        </Text>
+                        {personalShopper?.shopper?.id === item?.id ? (
+                          <SvgXml xml={IconStar} />
+                        ) : null}
+                      </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              ))}
+                  </TouchableOpacity>
+                ))}
 
-              {/*  ------------- button ---------- */}
-              <View style={tw`flex-row justify-between items-center mt-5 px-5`}>
-                <TouchableOpacity
-                  onPress={() => {
-                    handleCloseModalPress(), setShopperId(0);
-                  }}
-                  style={tw`bg-[#E8E8E8] px-10 py-2.5 rounded-full`}
+                {/*  ------------- button ---------- */}
+                <View
+                  style={tw`flex-row justify-between items-center mt-5 px-5`}
                 >
-                  <Text style={tw`font-PoppinsMedium text-black text-lg`}>
-                    Cancel
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => handleCloseModalPress()}
-                  style={tw`bg-primary px-10 py-2.5 rounded-full`}
-                >
-                  <Text style={tw`font-PoppinsMedium text-white text-lg`}>
-                    Select
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
-          </BottomSheetScrollView>
-        </BottomSheetModal>
-      </BottomSheetModalProvider>
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleCloseModalPress(), setShopperId(0);
+                    }}
+                    style={tw`bg-[#E8E8E8] px-10 py-2.5 rounded-full`}
+                  >
+                    <Text style={tw`font-PoppinsMedium text-black text-lg`}>
+                      Cancel
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleCloseModalPress()}
+                    style={tw`bg-primary px-10 py-2.5 rounded-full`}
+                  >
+                    <Text style={tw`font-PoppinsMedium text-white text-lg`}>
+                      Select
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
+            </BottomSheetScrollView>
+          </BottomSheetModal>
+        </BottomSheetModalProvider>
+      </ScrollView>
     </View>
   );
 };

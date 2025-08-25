@@ -12,13 +12,18 @@ const RootLayout = () => {
       }}
     >
       <Stack.Screen name="drawer" />
-      <Stack.Screen name="addToCart/cart" />
-      <Stack.Screen name="addToCart/checkOut" />
-      <Stack.Screen name="addToCart/simpleCart" />
-      <Stack.Screen name="messaging/messaging" />
+      <Stack.Screen name="addToCart" />
+      <Stack.Screen name="messaging" />
       <Stack.Screen name="notification" />
       <Stack.Screen name="searchValueItem" />
       <Stack.Screen name="storeByProduct" />
+      <Stack.Screen name="cryptoPayments" />
+      <Stack.Screen name="paymentSystem" />
+      <Stack.Screen name="priceComparisons" />
+      <Stack.Screen name="settings" />
+      <Stack.Screen name="shoppers" />
+      <Stack.Screen name="storeProducts" />
+      <Stack.Screen name="users" />
     </Stack>
   );
 };

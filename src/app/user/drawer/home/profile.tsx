@@ -6,13 +6,11 @@ import {
   Pressable,
   ScrollView,
 } from "react-native";
-import React from "react";
 import { ImgProfileImg } from "@/assets/images";
 import { SvgXml } from "react-native-svg";
 import {
   IconGetterThen,
   IconLocationProfile,
-  IconLocationSelected,
   IconLogOut,
   IconMyShopper,
   IconNotificationSelected,
@@ -145,7 +143,7 @@ const profile = () => {
 
         <View style={tw`bg-[#e8eaec] p-3.5 rounded-xl  gap-5`}>
           <TouchableOpacity
-            onPress={() => router.push("/user/notification/notification")}
+            onPress={() => router.push("/user/notifications/notification")}
             style={tw`flex-row justify-between items-center w-full`}
           >
             <View style={tw`flex-row justify-start items-center  gap-3`}>
@@ -159,7 +157,7 @@ const profile = () => {
               </Text>
             </View>
             <Pressable
-              onPress={() => router.push("/user/notification/notification")}
+              onPress={() => router.push("/user/notifications/notification")}
               style={tw`py-2.5 px-3.5 bg-white rounded-full`}
             >
               <SvgXml xml={IconGetterThen} />

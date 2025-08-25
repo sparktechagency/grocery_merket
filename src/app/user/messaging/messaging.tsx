@@ -1,7 +1,7 @@
-import { FlatList, Image, Text, TextInput, View } from "react-native";
+import { Alert, FlatList, Image, Text, TextInput, View } from "react-native";
 
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React from "react";
+import React, { useCallback } from "react";
 import tw from "@/src/lib/tailwind";
 import TButton from "@/src/lib/buttons/TButton";
 import BackButton from "@/src/lib/backHeader/BackButton";
@@ -9,92 +9,73 @@ import {
   useGetProfileQuery,
   useGetShopperDetailsQuery,
 } from "@/src/redux/apiSlices/profileSlieces";
+import { io } from "socket.io-client";
 
-const message = () => {
+import { useProfileQuery } from "@/src/redux/apiSlices/authSlices";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import {
+  useGetMessagesQuery,
+  useSendMessageMutation,
+} from "@/src/redux/apiSlices/messagingSlices";
+import { IMessageInterface } from "@/src/redux/interface/interface";
+
+const Message = () => {
   const { shopperId } = useLocalSearchParams();
+
   const router = useRouter();
   const [message, setMessage] = React.useState("");
-  const [allMessages, setAllMessages] = React.useState([
-    {
-      id: 1,
-      user: true,
-      name: "Emma Johnson",
-      time: "09:15",
-      message:
-        "Hey, how's the project coming along? Need any help with the design?",
-    },
-    {
-      id: 2,
-      user: false,
-      name: "Michael Chen",
-      time: "09:22",
-      message:
-        "Almost done! Just finishing up the last section. Should be ready by EOD.",
-    },
-    {
-      id: 3,
-      user: true,
-      name: "Emma Johnson",
-      time: "09:25",
-      message: "Great! Let me know if you want me to review anything.",
-    },
-    {
-      id: 4,
-      user: false,
-      name: "Sarah Williams",
-      time: "11:40",
-      message:
-        "Team meeting moved to 2pm. Don't forget to bring your progress reports!",
-    },
-    {
-      id: 5,
-      user: true,
-      name: "David Kim",
-      time: "12:05",
-      message: "Lunch today? I'm craving some sushi.",
-    },
-    {
-      id: 6,
-      user: false,
-      name: "Alex Rodriguez",
-      time: "12:10",
-      message: "Can't today - got a deadline. Maybe tomorrow?",
-    },
-    {
-      id: 7,
-      user: true,
-      name: "Olivia Martin",
-      time: "14:30",
-      message:
-        "Has anyone seen the client feedback from last week's presentation?",
-    },
-    {
-      id: 8,
-      user: false,
-      name: "James Wilson",
-      time: "14:35",
-      message: "It's in the shared drive under Client > Feedback > June",
-    },
-    {
-      id: 9,
-      user: true,
-      name: "Sophia Lee",
-      time: "16:45",
-      message:
-        "Reminder: Office closes early tomorrow for the holiday weekend.",
-    },
-    {
-      id: 10,
-      user: false,
-      name: "Daniel Brown",
-      time: "16:50",
-      message: "Thanks for the reminder! Almost forgot about that.",
-    },
-  ]);
+  const [allMessages, setAllMessages] = React.useState<
+    IMessageInterface[] | []
+  >([]);
 
   // =========================== apis ===============================
   const { data: shopperInfo, isLoading } = useGetShopperDetailsQuery(shopperId);
+  const {
+    data: getMessages,
+    isFetching,
+    refetch: messageRefetch,
+  } = useGetMessagesQuery(shopperId);
+
   const { data: getProfileData } = useGetProfileQuery({});
+  const socket = io(
+    `http://10.10.10.63:3100?userId=${getProfileData?.user?.id}`
+  );
+
+  // console.log(getProfileData);
+
+  const [sendMessage, sendMessageResults] = useSendMessageMutation();
+  const handleSendMessage = useCallback(async () => {
+    // console.log(message);
+    if (message?.length) {
+      const data = await sendMessage({
+        sender_id: getProfileData?.data?.id,
+        receiver_id: shopperId,
+        message: message,
+      }).unwrap();
+
+      socket.emit("private_message", {
+        user_id: getProfileData?.data?.id,
+        recevier_id: 6,
+        message: message,
+      });
+      messageRefetch();
+      setMessage("");
+      console.log(data);
+    } else {
+      console.log("Message is empty");
+      router.push("/Toaster?res=Message is empty");
+    }
+  }, [message]);
+
+  React.useEffect(() => {
+    setAllMessages(
+      (getMessages?.messages && [...getMessages?.messages])?.reverse() || []
+    );
+    socket.on("private_message", (data) => {
+      console.log("Connected to Socket.IO server");
+      console.log(data);
+    });
+  }, [getMessages?.success, isFetching]);
 
   return (
     <View style={tw`bg-white flex-1`}>
@@ -124,57 +105,67 @@ const message = () => {
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={tw`gap-3  py-10`}
-        data={allMessages?.sort((a, b) => b.id - a.id)}
-        renderItem={({ item }) => (
-          <>
-            {item.user && (
-              <View style={tw` flex-row items-start gap-2 px-4`}>
-                <View style={tw`flex-1 flex-row items-end gap-2`}>
-                  <Text style={tw`text-xs text-deepBlue75 font-PoppinsRegular`}>
-                    {item.time}
-                  </Text>
-                  <View
-                    style={tw`flex-1 bg-primary p-3 rounded-l-md rounded-b-md`}
-                  >
-                    <Text style={tw`text-base text-white font-PoppinsMedium`}>
-                      {item.message}
-                    </Text>
-                  </View>
-                </View>
-                <Image
-                  style={tw`w-10 h-10 rounded-full`}
-                  source={{
-                    uri: "https://randomuser.me/api/portraits/women/55.jpg",
-                  }}
-                />
-              </View>
-            )}
-            {item.user || (
-              <View style={tw` flex-row items-start gap-2 px-4`}>
-                <Image
-                  style={tw`w-10 h-10 rounded-full`}
-                  source={{
-                    uri: "https://randomuser.me/api/portraits/women/65.jpg",
-                  }}
-                />
-                <View style={tw`flex-1 flex-row items-end gap-2`}>
-                  <View
-                    style={tw`flex-1 bg-white p-3 rounded-r-md rounded-b-md`}
-                  >
+        data={allMessages}
+        renderItem={({ item }) => {
+          const myUserId = getProfileData?.user?.id === item?.sender_id;
+          // console.log(myUserId);
+          return (
+            <>
+              {myUserId && (
+                <View style={tw` flex-row items-start gap-2 px-4`}>
+                  <View style={tw`flex-1 flex-row items-end gap-2`}>
                     <Text
-                      style={tw`text-base text-deepBlue400 font-PoppinsMedium`}
+                      style={tw`text-xs text-deepBlue75 font-PoppinsRegular`}
                     >
-                      {item.message}
+                      {item.created_at &&
+                        new Date(item.created_at).toLocaleDateString("en-US")}
+                    </Text>
+                    <View
+                      style={tw`flex-1 bg-primary p-3 rounded-l-md rounded-b-md`}
+                    >
+                      <Text style={tw`text-base text-white font-PoppinsMedium`}>
+                        {item.message}
+                      </Text>
+                    </View>
+                  </View>
+                  <Image
+                    style={tw`w-10 h-10 rounded-full`}
+                    source={{
+                      uri: item?.image,
+                    }}
+                  />
+                </View>
+              )}
+              {myUserId || (
+                <View style={tw` flex-row items-start gap-2 px-4`}>
+                  <Image
+                    style={tw`w-10 h-10 rounded-full`}
+                    source={{
+                      uri: item?.image,
+                    }}
+                  />
+                  <View style={tw`flex-1 flex-row items-end gap-2`}>
+                    <View
+                      style={tw`flex-1 bg-white p-3 rounded-r-md rounded-b-md`}
+                    >
+                      <Text
+                        style={tw`text-base text-deepBlue400 font-PoppinsMedium`}
+                      >
+                        {item.message}
+                      </Text>
+                    </View>
+                    <Text
+                      style={tw`text-xs text-deepBlue75 font-PoppinsRegular`}
+                    >
+                      {item.created_at &&
+                        new Date(item.created_at).toLocaleDateString("en-US")}
                     </Text>
                   </View>
-                  <Text style={tw`text-xs text-deepBlue75 font-PoppinsRegular`}>
-                    {item.time}
-                  </Text>
                 </View>
-              </View>
-            )}
-          </>
-        )}
+              )}
+            </>
+          );
+        }}
       />
       <View
         style={tw`flex-row items-center border border-gray-200 mx-3 m-3 rounded-full  gap-2`}
@@ -189,18 +180,7 @@ const message = () => {
           title="Send"
           onPress={() => {
             // Send message
-            setAllMessages((pre) => {
-              return [
-                ...pre,
-                {
-                  id: pre.length + 1,
-                  user: true,
-                  name: "You",
-                  time: new Date().toLocaleTimeString(),
-                  message: message,
-                },
-              ];
-            });
+            handleSendMessage();
           }}
           containerStyle={tw` bg-transparent px-4`}
           titleStyle={tw`text-deepBlue400 text-base font-PoppinsBold`}
@@ -210,4 +190,4 @@ const message = () => {
   );
 };
 
-export default message;
+export default Message;

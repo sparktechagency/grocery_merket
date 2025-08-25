@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "currency": "BTC"
+  },
+  {
+    "id": 2,
+    "currency": "ETH"
+  },
+  {
+    "id": 3,
+    "currency": "USDT"
+  },
+  {
+    "id": 4,
+    "currency": "USDT"
+  },
+  {
+    "id": 5,
+    "currency": "USDC"
+  }
+]

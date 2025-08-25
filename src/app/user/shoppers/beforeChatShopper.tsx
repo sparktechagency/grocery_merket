@@ -10,6 +10,7 @@ import { useGetShopperDetailsQuery } from "@/src/redux/apiSlices/profileSlieces"
 
 const beforeChatShopper = () => {
   const { shopperId } = useLocalSearchParams();
+
   // -=========================== apis  ===============================
   const { data, isLoading } = useGetShopperDetailsQuery(shopperId);
 

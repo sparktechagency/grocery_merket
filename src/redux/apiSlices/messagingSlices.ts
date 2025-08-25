@@ -1,4 +1,5 @@
 import { api } from "../api/baseApi";
+import { IFetchingInterface, IMessageInterface } from "../interface/interface";
 
 const messagingApiSlices = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -11,9 +12,9 @@ const messagingApiSlices = api.injectEndpoints({
       invalidatesTags: ["messages"],
     }),
 
-    sendMessages: builder.query({
-      query: () => ({
-        url: "/app/messages/sentMessages",
+    getMessages: builder.query<IFetchingInterface, any>({
+      query: (id) => ({
+        url: `/app/messages/message/${id}`,
         method: "GET",
       }),
       providesTags: ["messages"],
@@ -45,8 +46,8 @@ const messagingApiSlices = api.injectEndpoints({
 
 export const {
   useSendMessageMutation,
-  useSendMessagesQuery,
   useUnreadCountQuery,
   useReceivedMessagesQuery,
   useConnectMutation,
+  useGetMessagesQuery,
 } = messagingApiSlices;

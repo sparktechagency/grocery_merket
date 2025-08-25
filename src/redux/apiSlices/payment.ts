@@ -1,3 +1,4 @@
+import CryptoPayment from "@/src/app/user/cryptoPayments/cryptoPayment";
 import { api } from "../api/baseApi";
 
 const paymentSlices = api.injectEndpoints({
@@ -39,6 +40,22 @@ const paymentSlices = api.injectEndpoints({
       }),
       providesTags: ["payment"],
     }),
+    createCryptoPaymentIntent: builder.mutation<any, any>({
+      query: (data) => ({
+        url: `/app/payment/create-crypto`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["payment"],
+    }),
+    confirmCryptoPayment: builder.mutation<any, any>({
+      query: (data) => ({
+        url: `/app/payment/confirm-crypto`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["payment"],
+    }),
   }),
 });
 
@@ -48,4 +65,6 @@ export const {
   useConfirmPaymentMutation,
   usePaymentReocderMutation,
   useGetAllTransactionsQuery,
+  useCreateCryptoPaymentIntentMutation,
+  useConfirmCryptoPaymentMutation,
 } = paymentSlices;
