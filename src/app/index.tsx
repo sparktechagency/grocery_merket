@@ -4,12 +4,16 @@ import * as Font from "expo-font";
 import tw from "@/src/lib/tailwind";
 import { router } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import { useGetProfileQuery } from "../redux/apiSlices/profileSlieces";
 
 SplashScreen.preventAutoHideAsync();
 
-const index = () => {
+const Index = () => {
+  const { data: userProfileInfo, isLoading, isError } = useGetProfileQuery({});
+
+  // load fonts
   React.useEffect(() => {
-    const AppLoader = async () => {
+    const loadFonts = async () => {
       await Font.loadAsync({
         PoppinsBlack: require("@/assets/fonts/Poppins/PoppinsBlack.ttf"),
         PoppinsBlackItalic: require("@/assets/fonts/Poppins/PoppinsBlackItalic.ttf"),
@@ -30,16 +34,38 @@ const index = () => {
         PoppinsThin: require("@/assets/fonts/Poppins/PoppinsThin.ttf"),
         PoppinsThinItalic: require("@/assets/fonts/Poppins/PoppinsThinItalic.ttf"),
       });
-      await SplashScreen.hideAsync();
     };
-    AppLoader();
 
-    setTimeout(() => {
-      router.push("/user/drawer/home");
-      // // router.push("/user/addToCart/checkOut");
-      // router.replace("/user/onboarding/onboarding");
-    }, 10);
+    loadFonts();
   }, []);
+
+  // decide navigation
+  React.useEffect(() => {
+    const decideNavigation = async () => {
+      if (isLoading) return; // wait until API finishes
+
+      try {
+        if (userProfileInfo?.status) {
+          if (userProfileInfo?.user?.role === "user") {
+            router.replace("/user/drawer/home");
+          } else if (userProfileInfo?.user?.role === "shopper") {
+            router.replace("/shopper/home/home");
+          } else {
+            router.replace("/user/onboarding/onboarding");
+          }
+        } else {
+          router.replace("/user/onboarding/onboarding");
+        }
+      } catch (error) {
+        console.log("Error in main layout:", error);
+        router.replace("/user/onboarding/onboarding");
+      } finally {
+        await SplashScreen.hideAsync();
+      }
+    };
+
+    decideNavigation();
+  }, [isLoading, userProfileInfo, isError]);
 
   return (
     <View style={tw`flex-1 bg-base`}>
@@ -54,4 +80,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

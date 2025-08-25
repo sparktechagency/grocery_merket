@@ -13,6 +13,7 @@ import {
   IconAddToCat,
   IconArrowCorner,
   IconComparison,
+  IconLocation,
   IconNotification,
   IconRightArrowSingle,
 } from "@/assets/icon";
@@ -34,9 +35,9 @@ import {
 import useLocation from "@/src/hook/useLocation";
 import { useDeleteAllWishlistMutation } from "@/src/redux/apiSlices/wishlistSlices";
 import { useGetNotificationsQuery } from "@/src/redux/apiSlices/notificationSlices";
+import { useGetProfileQuery } from "@/src/redux/apiSlices/profileSlieces";
 
 const HomeScreen = () => {
-  const [notification, setNotification] = React.useState(false);
   const [randomCategoryData, setRandomCategoryData] = React.useState(null);
   const { longitude, latitude, errorMsg } = useLocation();
   const [recommendedCategory, setRecommendedCategory] = React.useState("");
@@ -51,9 +52,9 @@ const HomeScreen = () => {
   const { data: recommendedData, isLoading: isRecommendedLoading } =
     useGetRecommendationProductsQuery({});
   const { data: notificationData } = useGetNotificationsQuery({});
+  const { data: userProfileInfo } = useGetProfileQuery({});
   const [allCartDelete] = useDeleteAllCartMutation();
   const [allWishlistDelete] = useDeleteAllWishlistMutation();
-
   const randomCategoryName =
     categoriesData?.categories[
       Math.floor(Math.random() * categoriesData?.categories.length)
@@ -141,12 +142,17 @@ const HomeScreen = () => {
         //  ---------------- profile section ------------------
       >
         <View style={tw`px-5 flex-row justify-between mt-3 mb-5`}>
-          <TouchableOpacity
-            onPress={() => router.push("/role/role")}
-            style={tw`justify-center items-center`}
-          >
-            <Text style={tw`font-PoppinsMedium text-base p-2`}>Login</Text>
-          </TouchableOpacity>
+          <View style={tw` flex-row gap-2 items-center`}>
+            <SvgXml xml={IconLocation} />
+            <View style={tw``}>
+              <Text style={tw`font-PoppinsMedium text-base `}>
+                {userProfileInfo?.user?.name}
+              </Text>
+              <Text style={tw`font-PoppinsRegular text-xs `}>
+                {userProfileInfo?.user?.address.slice(0, 10) + "..."}
+              </Text>
+            </View>
+          </View>
 
           <View style={tw`flex-row items-center gap-3`}>
             <TouchableOpacity
@@ -248,7 +254,7 @@ const HomeScreen = () => {
               data={randomCategoryData}
               keyExtractor={(item) => item.id.toString()}
               horizontal={true}
-              contentContainerStyle={tw`gap-3`}
+              contentContainerStyle={tw`gap-3 py-4 px-1`}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               ListEmptyComponent={
@@ -324,7 +330,7 @@ const HomeScreen = () => {
               data={recommendedData?.data}
               keyExtractor={(item) => item.id.toString()}
               horizontal={true}
-              contentContainerStyle={tw`gap-3`}
+              contentContainerStyle={tw`gap-3 py-4 px-1`}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               ListEmptyComponent={

@@ -12,9 +12,6 @@ const role = () => {
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem("role", jsonValue);
-
-      // router.push("/auth");
-
       router.replace("/auth");
     } catch (e) {
       Toast.show({

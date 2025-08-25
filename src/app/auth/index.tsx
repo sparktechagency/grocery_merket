@@ -39,21 +39,16 @@ const login = () => {
       const response = await credentials(data).unwrap();
       if (response) {
         await AsyncStorage.setItem("token", response?.token);
-        Toast.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: "Login Successful",
-          textBody: "Welcome back!",
-        });
+
         router.replace(
           role === "shopper" ? "/shopper/home/home" : "/user/drawer/home"
         );
       }
     } catch (error) {
       console.log(error, "Login error ----->");
-      Toast.show({
-        type: ALERT_TYPE.WARNING,
-        title: "Login Failed",
-        textBody: "Please check your credentials and try again.",
+      router.push({
+        pathname: "/Toaster",
+        params: { res: error?.message || error },
       });
     }
   };

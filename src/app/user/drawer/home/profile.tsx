@@ -32,6 +32,7 @@ const profile = () => {
   const removeRoleData = async () => {
     try {
       await AsyncStorage.removeItem("role");
+      await AsyncStorage.removeItem("token");
       router.push("/role/role");
       console.log("role data removed");
     } catch (e) {
