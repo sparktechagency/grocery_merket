@@ -76,9 +76,10 @@ const HomeScreen = () => {
 
   useEffect(() => {
     const setLocation = async () => {
+      if (!longitude || !latitude) return;
       try {
-        // await allCartDelete({}).unwrap();
-        // await allWishlistDelete({}).unwrap();
+        await allCartDelete({}).unwrap();
+        await allWishlistDelete({}).unwrap();
         await location({
           longitude: stgLongitude,
           latitude: stgLatitude,

@@ -8,7 +8,6 @@ import { IconEyes, IconEyesShow } from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
 import TButton from "@/src/lib/buttons/TButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import { useChangePasswordMutation } from "@/src/redux/apiSlices/authSlices";
 
 const changePassword = () => {
@@ -38,23 +37,16 @@ const changePassword = () => {
         new_password: data.new_password,
         confirmed_password: data.confirmed_password,
       };
-      console.log(payload, "this is payload");
       const response = await passwordData({ payload }).unwrap();
       console.log(response, "this is response----------->");
       if (response.status) {
-        Toast.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: "Success",
-          textBody: "Update yur new password.",
-        });
         router.replace("/auth/resetPassSuccess");
       }
     } catch (error) {
       console.log(error, "New password not added .");
-      Toast.show({
-        type: ALERT_TYPE.WARNING,
-        title: "Error",
-        textBody: "An error occurred while resending the  new password.",
+      router.push({
+        pathname: "/Toaster",
+        params: { res: error?.message || error },
       });
     }
   };

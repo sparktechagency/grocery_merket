@@ -1,6 +1,5 @@
-import { View, Text, Image, TouchableOpacity, Pressable } from "react-native";
+import { View, Text, TouchableOpacity, Pressable } from "react-native";
 import React from "react";
-import { ImgProfileImg } from "@/assets/images";
 import { SvgXml } from "react-native-svg";
 import {
   IconGetterThen,
@@ -13,16 +12,26 @@ import {
   IconTeliphone,
 } from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useGetProfileQuery } from "@/src/redux/apiSlices/profileSlieces";
+import { Image } from "expo-image";
+import { ImgNoShopper } from "@/assets/images";
 
 const profileShopper = () => {
+  // =-================== apis =====================
+  const { data: getUserProfileData } = useGetProfileQuery({});
+
   const removeRoleData = async () => {
     try {
       await AsyncStorage.removeItem("role");
-      router.push("/role/role");
+      await AsyncStorage.removeItem("token");
+      router.replace("/role/role");
     } catch (e) {
-      // remove error
+      router.push({
+        pathname: "/Toaster",
+        params: { res: e?.message || e },
+      });
     }
   };
 
@@ -31,20 +40,36 @@ const profileShopper = () => {
       <View
         style={tw` flex-row justify-start items-center bg-primaryShopper rounded-xl px-4 py-6 mt-5 gap-3 `}
       >
-        <Image style={tw`w-24 h-24 rounded-full `} source={ImgProfileImg} />
+        <View style={tw`w-20 h-20`}>
+          <Image
+            style={tw`w-20 h-20 rounded-full `}
+            source={ImgNoShopper}
+            contentFit="contain"
+          />
+        </View>
+
         <View>
           <Text style={tw`text-white font-PoppinsRegular text-sm my-2`}>
-            Interior Alaska Shopping Co.
+            {getUserProfileData?.user?.name
+              ? getUserProfileData?.user?.name
+              : "No Name"}
           </Text>
-          <View style={tw`flex-row gap-1 `}>
-            <SvgXml xml={IconTeliphone} />
+
+          {getUserProfileData?.user?.phone ? (
+            <View style={tw`flex-row gap-1 `}>
+              <SvgXml xml={IconTeliphone} />
+              <Text style={tw`text-white font-PoppinsRegular text-sm `}>
+                {getUserProfileData?.user?.phone}
+              </Text>
+            </View>
+          ) : (
             <Text style={tw`text-white font-PoppinsRegular text-sm `}>
-              +95632587456
+              No Phone
             </Text>
-          </View>
+          )}
 
           <Text style={tw`text-white font-PoppinsSemiBold text-sm mt-1`}>
-            Total: 500 deliveries
+            Total: {getUserProfileData?.user?.total_delivery} deliveries
           </Text>
         </View>
       </View>
@@ -140,24 +165,6 @@ const profileShopper = () => {
         </TouchableOpacity>
       </View>
 
-      <View style={tw`bg-[#e8eaec] p-3.5 rounded-xl  gap-5`}>
-        <TouchableOpacity
-          // onPress={() => router.push("/user/settings/settings")}
-          style={tw`flex-row justify-between items-center`}
-        >
-          <View style={tw`flex-row justify-start items-center gap-3`}>
-            <View
-              style={tw`w-10 h-10 justify-center text-center items-center bg-[#D8EFFF] mr-5 rounded-full`}
-            >
-              <SvgXml xml={IconPersonalShopper} />
-            </View>
-            <Text style={tw`font-PoppinsMedium text-base text-black`}>
-              Personal Shopper
-            </Text>
-          </View>
-          <Text style={tw`font-PoppinsRegular text-base text-black`}>100</Text>
-        </TouchableOpacity>
-      </View>
       {/* --------------------- log out button =---------------- */}
       <View style={tw`bg-[#FFE5E5] p-3.5 rounded-xl  gap-5`}>
         <TouchableOpacity

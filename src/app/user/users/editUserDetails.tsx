@@ -14,7 +14,6 @@ import TButton from "@/src/lib/buttons/TButton";
 import { SvgXml } from "react-native-svg";
 import { IconEdit } from "@/assets/icon";
 import { ImgProfileImg } from "@/assets/images";
-import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   useGetProfileQuery,
@@ -35,25 +34,19 @@ const editUserDetails = () => {
   const handleEditProfile = async () => {
     try {
       const userData = {
-        name: name ? name : profileDataRead?.data?.name,
-        phone: phone ? phone : profileDataRead?.data?.phone,
-        address: address ? address : profileDataRead?.data?.address,
+        name: name ? name : profileDataRead?.user?.name,
+        phone: phone ? phone : profileDataRead?.user?.phone,
+        address: address ? address : profileDataRead?.user?.address,
       };
       const response = await profileData(userData).unwrap();
       if (response.status) {
-        Toast.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: "Success",
-          textBody: "Congrats! Your Profile Update success!",
-        });
         router.replace("/user/users/userDetails");
       }
     } catch (error) {
       console.log(error, "Edit profile update not success .");
-      Toast.show({
-        type: ALERT_TYPE.WARNING,
-        title: "Update Failed",
-        textBody: "Please try again",
+      router.push({
+        pathname: "/Toaster",
+        params: { res: error?.message || error },
       });
     }
   };
@@ -106,7 +99,7 @@ const editUserDetails = () => {
               >
                 <TextInput
                   onChangeText={(text) => setName(text)}
-                  defaultValue={profileDataRead?.data?.name}
+                  defaultValue={profileDataRead?.user?.name}
                   style={tw`flex-1 text-base`}
                 />
               </View>
@@ -122,7 +115,7 @@ const editUserDetails = () => {
                 <TextInput
                   keyboardType="numeric"
                   onChangeText={(text) => setPhone(text)}
-                  defaultValue={profileDataRead?.data?.phone}
+                  defaultValue={profileDataRead?.user?.phone}
                   style={tw`flex-1 text-base`}
                 />
               </View>
@@ -137,7 +130,7 @@ const editUserDetails = () => {
               >
                 <TextInput
                   onChangeText={(text) => setAddress(text)}
-                  defaultValue={profileDataRead?.data?.address}
+                  defaultValue={profileDataRead?.user?.address}
                   style={tw`flex-1 text-base`}
                 />
               </View>

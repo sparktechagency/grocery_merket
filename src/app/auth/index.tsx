@@ -11,7 +11,6 @@ import { SvgXml } from "react-native-svg";
 import { useRole } from "@/src/hook/useRole";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLoginMutation } from "@/src/redux/apiSlices/authSlices";
-import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 const login = () => {
   const [isShow, setIsShow] = React.useState<boolean>(false);
   const [isChecked, setIsChecked] = React.useState<boolean>(false);
@@ -124,7 +123,7 @@ const login = () => {
                   touched
                   errorText={errors?.email?.message}
                   textInputProps={{
-                    placeholder: "madhab@gmail.com",
+                    placeholder: "Email",
                   }}
                   containerStyle={tw``}
                 />

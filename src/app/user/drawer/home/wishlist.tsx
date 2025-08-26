@@ -12,7 +12,6 @@ import { SvgXml } from "react-native-svg";
 import { IconAddToCartWhite, IconDelete } from "@/assets/icon";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { Swipeable } from "react-native-gesture-handler";
-import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import {
   useDeleteWishlistItemMutation,
   useGetWishlistQuery,

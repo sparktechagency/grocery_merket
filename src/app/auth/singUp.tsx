@@ -1,24 +1,16 @@
-import { View, Text, Image, Pressable, ScrollView } from "react-native";
+import { View, Text, Image, ScrollView } from "react-native";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Link, router, useRouter } from "expo-router";
+import { Link, router } from "expo-router";
 import { Logo } from "@/assets/images";
 import tw from "@/src/lib/tailwind";
 import InputText from "@/src/lib/inputs/InputText";
-import {
-  IconEyes,
-  IconEyesShow,
-  IconGoogle,
-  IconNext,
-  IconNextCorner,
-} from "@/assets/icon";
+import { IconEyes, IconEyesShow, IconNext } from "@/assets/icon";
 import TButton from "@/src/lib/buttons/TButton";
 import { SvgXml } from "react-native-svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRegisterMutation } from "@/src/redux/apiSlices/authSlices";
-import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import { useRole } from "@/src/hook/useRole";
-import { isLoading } from "expo-font";
 
 const singUp = () => {
   const role = useRole();
@@ -48,12 +40,6 @@ const singUp = () => {
       const response = await userData(payload).unwrap();
       //  await AsyncStorage.setItem("loginInfo", JSON.stringify(data));
       if (response) {
-        console.log(response, "Registration response ----->");
-        Toast.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: "Registration Successful",
-          textBody: "Welcome aboard!",
-        });
         router.replace({
           pathname: "/auth/OTPCode",
           params: { email: response?.user?.email },
@@ -61,10 +47,9 @@ const singUp = () => {
       }
     } catch (error) {
       console.log(error, "Registration error ----->");
-      Toast.show({
-        type: ALERT_TYPE.WARNING,
-        title: "Registration Failed",
-        textBody: "Please check your details and try again.",
+      router.push({
+        pathname: "/Toaster",
+        params: { res: error?.message || error },
       });
     }
   };
@@ -124,7 +109,7 @@ const singUp = () => {
                   touched
                   errorText={errors?.name?.message}
                   textInputProps={{
-                    placeholder: "Madhab Mozumder",
+                    placeholder: "Enter Your Name",
                   }}
                   containerStyle={tw``}
                 />

@@ -5,7 +5,6 @@ import IwtButton from "@/src/lib/buttons/IwtButton";
 import { router } from "expo-router";
 import tw from "@/src/lib/tailwind";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 const role = () => {
   const storeRoleData = async (value: string) => {
@@ -14,10 +13,10 @@ const role = () => {
       await AsyncStorage.setItem("role", jsonValue);
       router.replace("/auth");
     } catch (e) {
-      Toast.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Oops!",
-        textBody: "Your Role didn't match",
+      console.log("Error storing role data", e);
+      router.push({
+        pathname: "/Toaster",
+        params: { res: e?.message || "Error storing role data" },
       });
     }
   };

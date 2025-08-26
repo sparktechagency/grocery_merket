@@ -16,7 +16,16 @@
         "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.grocery_application"
+      "package": "com.anonymous.grocery_application",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyA3swfjp2TwJ-AVCVuaPEtLUB8qKmrZOLA"
+        }
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -43,6 +52,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "058eb787-8aba-4b36-b138-d731d081ebb9"
+      }
     }
   }
 }

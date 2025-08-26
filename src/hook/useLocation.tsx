@@ -4,7 +4,7 @@ import * as Location from "expo-location";
 const useLocation = () => {
   const [longitude, setLongitude] = useState<number | null>(null);
   const [latitude, setLatitude] = useState<number | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>("");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const getUserLocation = async () => {
     try {
@@ -19,14 +19,9 @@ const useLocation = () => {
       if (coords) {
         setLongitude(coords.longitude);
         setLatitude(coords.latitude);
-
-        await Location.reverseGeocodeAsync({
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-        });
       }
-    } catch (error) {
-      setErrorMsg(error.message);
+    } catch (error: any) {
+      setErrorMsg(error?.message || "Something went wrong");
     }
   };
 

@@ -7,7 +7,6 @@ import TButton from "@/src/lib/buttons/TButton";
 import { router } from "expo-router";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { useForgotPasswordMutation } from "@/src/redux/apiSlices/authSlices";
-import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 const forgetPassword = () => {
   // -------------------------- all api --------------------------
@@ -34,10 +33,9 @@ const forgetPassword = () => {
       }
     } catch (error) {
       console.log(error, "Error in submitting email");
-      Toast.show({
-        type: ALERT_TYPE.WARNING,
-        title: "Your email is not find",
-        textBody: "Please add a valid email",
+      router.push({
+        pathname: "/Toaster",
+        params: { res: error?.message || error },
       });
     }
   };

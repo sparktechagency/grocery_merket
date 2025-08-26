@@ -1,11 +1,9 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
 import tw from "@/src/lib/tailwind";
 import { OtpInput } from "react-native-otp-entry";
 import { router, useLocalSearchParams } from "expo-router";
 import { PrimaryColor } from "@/utils/utils";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
-import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import {
   useResendOTPMutation,
   useVerifyingOTPMutation,
@@ -21,18 +19,16 @@ const OTPCode = () => {
     try {
       const response = await resendOtp({ email }).unwrap();
       if (response) {
-        Toast.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: "OTP Resent",
-          textBody: "A new OTP has been sent to your email.",
+        router.push({
+          pathname: "/Toaster",
+          params: { res: "OTP resent again" },
         });
       }
     } catch (error) {
       console.log("Error resending OTP:", error);
-      Toast.show({
-        type: ALERT_TYPE.WARNING,
-        title: "Error",
-        textBody: "An error occurred while resending the OTP.",
+      router.push({
+        pathname: "/Toaster",
+        params: { res: error?.message || error },
       });
     }
   };
@@ -50,10 +46,9 @@ const OTPCode = () => {
       }
     } catch (error) {
       console.log("Error handling OTP filled:", error);
-      Toast.show({
-        type: ALERT_TYPE.WARNING,
-        title: "Error",
-        textBody: "An error occurred while processing the OTP.",
+      router.push({
+        pathname: "/Toaster",
+        params: { res: error?.message || error },
       });
     }
   };

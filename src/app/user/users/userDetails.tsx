@@ -1,8 +1,6 @@
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import React from "react";
 import { ImgProfileImg } from "@/assets/images";
-import { Controller, useForm } from "react-hook-form";
-import InputText from "@/src/lib/inputs/InputText";
 import tw from "@/src/lib/tailwind";
 import { SvgXml } from "react-native-svg";
 import { IconEdit } from "@/assets/icon";
@@ -67,7 +65,7 @@ const userDetails = () => {
                 <Text
                   style={tw`flex-1 font-PoppinsMedium text-base text-regularText `}
                 >
-                  {profileData?.data?.name}
+                  {profileData?.user?.name}
                 </Text>
               </View>
             </View>
@@ -82,8 +80,8 @@ const userDetails = () => {
                 <Text
                   style={tw`flex-1 font-PoppinsMedium text-base text-regularText `}
                 >
-                  {profileData?.data?.phone
-                    ? profileData?.data?.phone
+                  {profileData?.user?.phone
+                    ? profileData?.user?.phone
                     : "No Phone"}
                 </Text>
               </View>
@@ -98,8 +96,8 @@ const userDetails = () => {
                 <Text
                   style={tw`flex-1 font-PoppinsMedium text-base text-regularText `}
                 >
-                  {profileData?.data?.address
-                    ? profileData?.data?.address
+                  {profileData?.user?.address
+                    ? profileData?.user?.address
                     : "No Address"}
                 </Text>
               </View>
@@ -109,12 +107,12 @@ const userDetails = () => {
       </ScrollView>
       <View style={tw`w-full pb-6`}>
         <TButton
-          // onPress={handleSubmit(onSubmit)}
           onPress={() => router.push("/user/users/editUserDetails")}
           title="Edit"
-          containerStyle={tw`rounded-full mx-6  mt-10 ${
+          containerStyle={tw.style(
+            "rounded-full mx-6 mt-10",
             roleData === "user" ? "bg-primary" : "bg-primaryShopper"
-          }`}
+          )}
         />
       </View>
     </View>

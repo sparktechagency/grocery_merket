@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity, Image, Switch } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { FlatList, Pressable } from "react-native-gesture-handler";
-import { CartData } from "@/src/components/CardData";
 import tw from "@/src/lib/tailwind";
 import { router } from "expo-router";
 import { SvgXml } from "react-native-svg";
@@ -13,15 +12,48 @@ import {
 } from "@/assets/icon";
 import { ImgShopperShop } from "@/assets/images";
 import { LinearGradient } from "expo-linear-gradient";
+import { useGetProfileQuery } from "@/src/redux/apiSlices/profileSlieces";
+import { useGetShopperNotificationsQuery } from "@/src/redux/apiSlices/shopperNotificationsSlices";
+import {
+  useGetPendingOrderQuery,
+  useGetRecentOrderQuery,
+} from "@/src/redux/apiSlices/shopperHomeApiSlices";
+import OrderedCard from "@/src/components/OrderedCard";
+import useLocation from "@/src/hook/useLocation";
+import { useSetUserLocationMutation } from "@/src/redux/apiSlices/homePageApiSlices";
 
 const ShopperHome = () => {
-  const [notification, setNotification] = React.useState(false);
-
   const [isEnabled, setIsEnabled] = React.useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  const { longitude, latitude, errorMsg } = useLocation();
+
+  //  -------------- api  ----------------
+  const { data: getUserProfileData } = useGetProfileQuery({});
+  const { data: notifications } = useGetShopperNotificationsQuery({});
+  const { data: recentOrder } = useGetRecentOrderQuery({});
+  const { data: getPendingOrder } = useGetPendingOrderQuery({});
+  const [location] = useSetUserLocationMutation();
+
+  const stgLongitude = longitude?.toString() ?? "";
+  const stgLatitude = latitude?.toString() ?? "";
+
+  useEffect(() => {
+    const setLocation = async () => {
+      if (!longitude || !latitude) return;
+      try {
+        await location({
+          longitude: stgLongitude,
+          latitude: stgLatitude,
+        }).unwrap();
+      } catch (error) {
+        console.log(error, "set user location not match -------------------");
+      }
+    };
+    setLocation();
+  }, [longitude, latitude]);
 
   const headerComponent = () => (
-    <View style={tw`px-5`}>
+    <View style={tw`flex-1 px-5`}>
       <View style={tw` flex-row justify-between  my-5`}>
         <Pressable
           onPress={() => router.push("/shopper/profile/profileShopper")}
@@ -30,11 +62,12 @@ const ShopperHome = () => {
           <SvgXml xml={IconLocation} />
           <View>
             <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-              Hello, Benjamin
+              {getUserProfileData?.user?.name}
             </Text>
-
             <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>
-              Kodiak Island
+              {getUserProfileData?.user?.address
+                ? getUserProfileData?.user?.address
+                : "No Address"}
             </Text>
           </View>
         </Pressable>
@@ -52,7 +85,7 @@ const ShopperHome = () => {
             style={tw`relative p-3 bg-white shadow-lg rounded-lg`}
           >
             <SvgXml xml={IconNotification} />
-            {notification ? (
+            {notifications?.notifications?.length > 0 ? (
               <Text
                 style={tw`absolute top-0 right-0 px-1 bg-orange text-white rounded-full`}
               >
@@ -70,10 +103,10 @@ const ShopperHome = () => {
         <Image source={ImgShopperShop} />
         <View>
           <Text style={tw`font-PoppinsMedium text-base text-white`}>
-            4 delivery orders found!
+            {getPendingOrder?.data?.length || 0} delivery orders found!
           </Text>
           <TouchableOpacity
-            onPress={() => router.push("/shopper/deliveryOrder/deliveryOrder")}
+            onPress={() => router.push("/shopper/deliveryOrder/pendingOrder")}
             style={tw`flex-row justify-center mt-3 items-center px-3  w-32 h-7 bg-white rounded-full gap-2`}
           >
             <Text style={tw`text-primary`}>View Details</Text>
@@ -104,97 +137,38 @@ const ShopperHome = () => {
         </View>
       </View>
 
-      <View style={tw`my-3`}>
-        <Text style={tw`font-PoppinsSemiBold text-base text-black my-4`}>
-          Pending order
-        </Text>
-        {CartData?.map((item) => (
-          <View
-            key={item?.id}
-            style={tw`bg-gray-100 p-4 rounded-xl flex-row justify-between items-center shadow-md mb-4`}
-          >
-            <View style={tw`flex-1`}>
-              <Text style={tw`text-black font-PoppinsSemiBold`}>
-                Order id: <Text style={tw`font-PoppinsBold`}>#500</Text>
-              </Text>
-              <Text style={tw`text-regularText`}>
-                Customer: <Text style={tw`text-black`}>Rich</Text>
-              </Text>
-
-              <Text
-                style={tw`bg-[#FFE8FD] text-[#FF00EE] w-20 h-7 text-center px-3 py-1 mt-3 rounded-md text-xs font-PoppinsSemiBold`}
-              >
-                Pending
-              </Text>
-            </View>
-
-            <View style={tw`items-end`}>
-              <Text style={tw`text-primary font-PoppinsBold text-lg`}>
-                $50.00
-              </Text>
-              <TouchableOpacity
-                onPress={() =>
-                  router.push("/shopper/deliveryOrder/deliveryOrderMonitoring")
-                }
-                style={tw`mt-2 bg-primaryShopper px-4 py-1.5 rounded-lg`}
-              >
-                <Text style={tw`text-white font-PoppinsMedium text-sm`}>
-                  View details
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
-      </View>
-
       <Text style={tw`font-PoppinsSemiBold text-base text-black my-4`}>
-        Recent orders
+        Delivered orders
       </Text>
     </View>
   );
 
-  const renderItem = () => (
-    <View
-      style={tw`bg-gray-100 p-4 rounded-xl flex-row justify-between items-center mx-5 shadow-md mb-4`}
-    >
-      <View style={tw`flex-1`}>
-        <Text style={tw`text-black font-PoppinsSemiBold`}>
-          Order id: <Text style={tw`font-PoppinsBold`}>#500</Text>
-        </Text>
-        <Text style={tw`text-regularText`}>
-          Customer: <Text style={tw`text-black`}>Rich</Text>
-        </Text>
-
-        <Text
-          style={tw`bg-green-100 text-primary w-20 h-7 text-center px-3 py-1 mt-3 rounded-md text-xs font-PoppinsSemiBold`}
-        >
-          Delivered
-        </Text>
-      </View>
-
-      <View style={tw`items-end`}>
-        <Text style={tw`text-primary font-PoppinsBold text-lg`}>$50.00</Text>
-        <TouchableOpacity
-          onPress={() =>
-            router.push("/shopper/deliveryOrder/deliveryOrderMonitoring")
-          }
-          style={tw`mt-2 bg-primaryShopper px-4 py-1.5 rounded-lg`}
-        >
-          <Text style={tw`text-white font-PoppinsMedium text-sm`}>
-            View details
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-
+  const renderItem = ({ item }) => {
+    return (
+      <OrderedCard
+        key={item?.order_id}
+        customerName={item?.user_name}
+        orderStatus={"Delivered"}
+        orderId={item?.order_id}
+        totalPrice={item?.total_price}
+        onPress={() => router.push("/shopper/deliveryOrder/pickUp")}
+      />
+    );
+  };
   return (
     <View>
       <FlatList
         ListHeaderComponent={headerComponent}
-        data={CartData}
+        data={recentOrder?.data}
         renderItem={renderItem}
-        keyExtractor={(item) => item?.id.toLocaleString()}
+        keyExtractor={(item) => item?.order_id.toString()}
+        ListEmptyComponent={() => (
+          <View style={tw`my-3 justify-center items-center`}>
+            <Text style={tw`font-PoppinsMedium text-regularText text-center`}>
+              No Delivered Order
+            </Text>
+          </View>
+        )}
       />
     </View>
   );
