@@ -549,7 +549,10 @@ export const IconFAQShopper = `<svg width="20" height="20" viewBox="0 0 20 20" f
 export const IconRightArrowShopper = `<svg width="8" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M7.071 7.20723L1.414 12.8642L0 11.4502L4.95 6.50023L0 1.55023L1.414 0.13623L7.071 5.79323C7.25847 5.98076 7.36379 6.23507 7.36379 6.50023C7.36379 6.76539 7.25847 7.0197 7.071 7.20723Z" fill="#0080DC"/>
 </svg>
-
+`;
+export const IconRightArrowShopperDown = `<svg width="13" height="9" viewBox="0 0 13 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M5.65703 7.88887L2.67029e-05 2.23187L1.41403 0.817871L6.36403 5.76787L11.314 0.817871L12.728 2.23187L7.07103 7.88887C6.8835 8.07634 6.62919 8.18166 6.36403 8.18166C6.09886 8.18166 5.84455 8.07634 5.65703 7.88887Z" fill="#0080DC"/>
+</svg>
 
 `;
 export const IconPickUpShopper = `<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">

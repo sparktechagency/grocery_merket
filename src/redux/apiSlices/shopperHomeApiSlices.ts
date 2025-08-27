@@ -10,8 +10,8 @@ const shopperHomeApiSlices = api.injectEndpoints({
       providesTags: ["order"],
     }),
     getRecentOrderDetails: builder.query({
-      query: (id) => ({
-        url: `/shopper/recentOrderDetails/${id}`,
+      query: (orderId) => ({
+        url: `/shopper/recentOrderDetails/${orderId}`,
         method: "GET",
       }),
       providesTags: ["order"],
@@ -39,8 +39,8 @@ const shopperHomeApiSlices = api.injectEndpoints({
       providesTags: ["order"],
     }),
     getPendingOrderDetails: builder.query({
-      query: (id) => ({
-        url: `/shopper/pendingOrderDetails/${id}`,
+      query: (orderId) => ({
+        url: `/shopper/pendingOrderDetails/${orderId}`,
         method: "GET",
       }),
       providesTags: ["order"],

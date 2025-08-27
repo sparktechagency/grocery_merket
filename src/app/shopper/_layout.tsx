@@ -1,4 +1,3 @@
-import React from "react";
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native";
@@ -17,6 +16,9 @@ const RootLayout = () => {
           }}
         >
           <Stack.Screen name="home/home" />
+          <Stack.Screen name="settings" />
+          <Stack.Screen name="profile" />
+          <Stack.Screen name="orderDeliverSuccess" />
         </Stack>
       </GestureHandlerRootView>
     </SafeAreaView>

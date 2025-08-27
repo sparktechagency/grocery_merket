@@ -16,7 +16,12 @@ const DeliveryOrder = () => {
   const renderItem = ({ item }) => (
     <OrderedCard
       onPress={() =>
-        router.push("/shopper/deliveryOrder/deliveryOrderMonitoring")
+        router.push({
+          pathname: "/shopper/deliveryOrder/deliveryOrderMonitoring",
+          params: {
+            orderId: item?.order_id,
+          },
+        })
       }
       customerName={item?.user_name}
       orderStatus={"Pending"}

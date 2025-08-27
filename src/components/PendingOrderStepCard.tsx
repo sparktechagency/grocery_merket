@@ -8,13 +8,13 @@ import TButton from "@/src/lib/buttons/TButton";
 import { useGetPendingOrderDetailsQuery } from "@/src/redux/apiSlices/shopperHomeApiSlices";
 import PendingOrderStepCard from "@/src/components/PendingOrderStepCard";
 import { PrimaryColor } from "@/utils/utils";
-// import polyline from "@mapbox/polyline";
-import { GoogleMaps } from "expo-maps";
+import polyline from "@mapbox/polyline";
+import { MapView, Marker, Polyline } from "expo-maps";
 
 const DeliveryOrderMonitoring = () => {
   const { orderId } = useLocalSearchParams();
-  const [pickUpTime, setPickUpTime] = useState<any>();
-  const [dropUpTime, setDropUpTime] = useState<any>();
+  const [pickUpTime, setPickUpTime] = useState();
+  const [dropUpTime, setDropUpTime] = useState();
   const [routeCoords, setRouteCoords] = useState([]);
   const mapRef = useRef(null);
 
@@ -58,6 +58,15 @@ const DeliveryOrderMonitoring = () => {
         `https://maps.googleapis.com/maps/api/directions/json?origin=${pickUpLocation.latitude},${pickUpLocation.longitude}&destination=${dropUpLocation.latitude},${dropUpLocation.longitude}&key=YOUR_GOOGLE_MAPS_API_KEY`
       );
       const data = await response.json();
+
+      if (data.routes?.length) {
+        const points = polyline.decode(data.routes[0].overview_polyline.points);
+        const routeCoordinates = points.map(([latitude, longitude]) => ({
+          latitude,
+          longitude,
+        }));
+        setRouteCoords(routeCoordinates);
+      }
     } catch (err) {
       console.log("Route Fetch Error:", err);
     }
@@ -137,13 +146,24 @@ const DeliveryOrderMonitoring = () => {
 
           {/* Map */}
           <View style={tw`h-[60%] my-4 bg-[#e3e7eb] rounded-lg`}>
-            <GoogleMaps
+            <MapView
+              ref={mapRef}
               style={tw`flex-1 rounded-sm border`}
               initialCamera={{
                 center: pickUpLocation,
                 zoom: 12,
               }}
-            />
+            >
+              <Marker coordinate={pickUpLocation} title="Pickup Location" />
+              <Marker coordinate={dropUpLocation} title="Drop-off Location" />
+              {routeCoords.length > 0 && (
+                <Polyline
+                  coordinates={routeCoords}
+                  strokeColor="red"
+                  strokeWidth={4}
+                />
+              )}
+            </MapView>
           </View>
 
           {/* Buttons */}

@@ -1,23 +1,30 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { SvgXml } from "react-native-svg";
 import { IconLocationWhite, IconRightArrowShopper } from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
 import { CartData } from "@/src/components/CardData";
 import Collapsible from "react-native-collapsible";
 import TButton from "@/src/lib/buttons/TButton";
+import { useGetPendingOrderDetailsQuery } from "@/src/redux/apiSlices/shopperHomeApiSlices";
 
 const pickUp = () => {
+  const { orderId } = useLocalSearchParams();
   const [viewOrderDetails, setViewOrderDetails] = React.useState(true);
+
+  // ====================== api ======================
+  const { data: pendingOrderDetails, isLoading } =
+    useGetPendingOrderDetailsQuery(Number(orderId));
+
   return (
     <ScrollView>
       <BackWithComponent onPress={() => router.back()} title={"Pick-Up"} />
       <View style={tw`px-5`}>
         <View style={tw`p-4 rounded-md bg-[#e3e7eb]`}>
           <Text style={tw`font-PoppinsRegular text-base text-black mb-1`}>
-            Store name: <Text style={tw`font-PoppinsMedium`}>Swapno</Text>
+            Store name: <Text style={tw`font-PoppinsMedium`}></Text>
           </Text>
           <View style={tw`flex-row gap-1`}>
             <SvgXml xml={IconLocationWhite} />

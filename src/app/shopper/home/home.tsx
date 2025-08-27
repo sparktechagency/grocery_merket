@@ -151,7 +151,14 @@ const ShopperHome = () => {
         orderStatus={"Delivered"}
         orderId={item?.order_id}
         totalPrice={item?.total_price}
-        onPress={() => router.push("/shopper/deliveryOrder/pickUp")}
+        onPress={() =>
+          router.push({
+            pathname: "/shopper/orderDeliverSuccess",
+            params: {
+              orderId: item?.order_id,
+            },
+          })
+        }
       />
     );
   };
