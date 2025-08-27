@@ -6,8 +6,10 @@ import tw from "../lib/tailwind";
 import { Provider } from "react-redux";
 import store from "../redux/store";
 import { StripeProvider } from "@stripe/stripe-react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const RootLayout = () => {
+  const { bottom, top } = useSafeAreaInsets();
   return (
     <SafeAreaView style={tw`flex-1`}>
       <Provider store={store}>

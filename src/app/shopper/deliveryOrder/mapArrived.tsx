@@ -1,61 +1,120 @@
-import { View, Text } from "react-native";
-import React, { useRef } from "react";
+import { View, Text, ActivityIndicator } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import tw from "@/src/lib/tailwind";
 import { SvgXml } from "react-native-svg";
 import { IconClockShopper, IconLocationWhite } from "@/assets/icon";
 import TButton from "@/src/lib/buttons/TButton";
-import { router } from "expo-router";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { router, useLocalSearchParams } from "expo-router";
 import BackButton from "@/src/lib/backHeader/BackButton";
-
-// ------ map related data ----------------------------------------------------
-
-const INITIAL_REGION = {
-  latitude: 37.33,
-  longitude: -122,
-  latitudeDelta: 2,
-  longitudeDelta: 2,
-};
-
-const markers = [
-  // San Francisco
-  {
-    latitude: 37.7749,
-    longitude: -122.4194,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-    name: "San Francisco City Center",
-  },
-  {
-    latitude: 37.8077,
-    longitude: -122.475,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-    name: "Golden Gate Bridge",
-  },
-  {
-    latitude: 37.8077,
-    longitude: -122.475,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-    name: "Golden house",
-  },
-];
+import { useGetPendingOrderDetailsQuery } from "@/src/redux/apiSlices/shopperHomeApiSlices";
+import { GoogleMaps } from "expo-maps";
+import polyline from "@mapbox/polyline";
+import { PrimaryColor } from "@/utils/utils";
+import { decode } from "@/utils/decode";
+import useLocation from "@/src/hook/useLocation";
+import { useSetUserLocationMutation } from "@/src/redux/apiSlices/homePageApiSlices";
 
 // ------ map related data end hare ----------------------------------------------------
 
 const mapArrived = () => {
-  const mapRef = useRef<any>(null);
-  const focusMap = () => {
-    const GreenBayStadium = {
-      latitude: 44.5013,
-      longitude: -88.0622,
-      latitudeDelta: 0.1,
-      longitudeDelta: 0.1,
-    };
+  const { orderId } = useLocalSearchParams();
+  const [routeCoordinates, setRouteCoordinates] = useState([]);
+  const { longitude, latitude, errorMsg } = useLocation();
+  const [currentLocation, setCurrentLocation] = useState(null);
 
-    mapRef.current?.animateToRegion(GreenBayStadium);
+  const stgLongitude = longitude?.toString() ?? "";
+  const stgLatitude = latitude?.toString() ?? "";
+
+  console.log(
+    "stgLongitude------------",
+    stgLongitude,
+    "stgLatitude",
+    stgLatitude
+  );
+  console.log("currentLocation---------------", currentLocation);
+
+  // ====================== api ======================
+  const { data: pendingOrderDetails, isLoading } =
+    useGetPendingOrderDetailsQuery(Number(orderId));
+  const [location] = useSetUserLocationMutation();
+
+  const pickUpLocation = pendingOrderDetails?.data?.pick_up_location
+    ? {
+        latitude: Number(pendingOrderDetails?.data?.pick_up_location?.latitude),
+        longitude: Number(
+          pendingOrderDetails?.data?.pick_up_location?.longitude
+        ),
+      }
+    : null;
+
+  const dropUpLocation = pendingOrderDetails?.data?.drop_off_location
+    ? {
+        latitude: Number(
+          pendingOrderDetails?.data?.drop_off_location?.latitude
+        ),
+        longitude: Number(
+          pendingOrderDetails?.data?.drop_off_location?.longitude
+        ),
+      }
+    : null;
+
+  const getRoute = async () => {
+    if (!pickUpLocation || !dropUpLocation) return;
+
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${pickUpLocation.latitude},${pickUpLocation.longitude}&destination=${dropUpLocation.latitude},${dropUpLocation.longitude}&alternatives=true&key=AIzaSyD7W--YFEbz4g57zww14j2DNm9mwqGYLjM`
+      );
+      const data = await response.json();
+
+      if (data.routes.length) {
+        const points = decode(data.routes[0].overview_polyline.points);
+        setRouteCoordinates(points);
+      }
+    } catch (err) {
+      console.log("Route Fetch Error:", err);
+    }
   };
+
+  if (isLoading || !pickUpLocation || !dropUpLocation || !currentLocation) {
+    return (
+      <View style={tw`flex-1 justify-center items-center`}>
+        <ActivityIndicator size="large" color={PrimaryColor} />
+      </View>
+    );
+  }
+
+  const calculateMidpoint = (loc1: any, loc2: any) => {
+    return {
+      latitude: (loc1.latitude + loc2.latitude) / 2,
+      longitude: (loc1.longitude + loc2.longitude) / 2,
+    };
+  };
+
+  useEffect(() => {
+    if (!stgLatitude && !stgLongitude) {
+      const setLocation = async () => {
+        if (!longitude || !latitude) return;
+        try {
+          await location({
+            longitude: stgLongitude,
+            latitude: stgLatitude,
+          }).unwrap();
+        } catch (error) {
+          console.log(error, "set user location not match -------------------");
+        }
+      };
+      setLocation();
+    } else {
+      setCurrentLocation({
+        latitude: stgLatitude,
+        longitude: stgLongitude,
+      });
+    }
+
+    getRoute();
+  }, [pendingOrderDetails, longitude, latitude]);
+
   return (
     <View style={tw`relative flex-1`}>
       <BackButton
@@ -63,20 +122,28 @@ const mapArrived = () => {
         onPress={() => router.back()}
       />
       {/*  =============== map start hare =-========================== */}
-      <View style={tw`flex-1  `}>
-        <MapView
-          style={tw`flex-1 rounded-sm border`}
-          provider={PROVIDER_GOOGLE}
-          initialRegion={INITIAL_REGION}
-          showsUserLocation
-          showsMyLocationButton
-          ref={focusMap}
-        >
-          {markers.map((marker, index) => (
-            <Marker key={index} title="You are here" coordinate={marker} />
-          ))}
-        </MapView>
-      </View>
+
+      <GoogleMaps.View
+        cameraPosition={{
+          coordinates: calculateMidpoint(pickUpLocation, dropUpLocation),
+        }}
+        uiSettings={{
+          compassEnabled: false,
+        }}
+        markers={[
+          { coordinates: pickUpLocation },
+          { coordinates: dropUpLocation },
+        ]}
+        polylines={[
+          {
+            coordinates: routeCoordinates,
+            geodesic: true,
+            color: "blue",
+            width: 4,
+          },
+        ]}
+        style={tw` h-full w-full`}
+      />
 
       {/*  ===================== map end hare ================================= */}
 
@@ -90,7 +157,7 @@ const mapArrived = () => {
           <View style={tw`flex-row items-center gap-1`}>
             <SvgXml xml={IconLocationWhite} />
             <Text style={tw`font-PoppinsMedium text-sm text-regularText`}>
-              Fairbanks North Star
+              {pendingOrderDetails?.data?.nearest_store?.name}
             </Text>
           </View>
 
@@ -103,18 +170,20 @@ const mapArrived = () => {
                 <SvgXml xml={IconClockShopper} width={16} height={16} />
               </View>
               <View
-                style={tw`w-px h-12 border-l border-dashed border-[#FEB97A]`}
+                style={tw`w-px h-8 border-l border-dashed border-[#FEB97A]`}
               />
               <View style={tw`w-2 h-2 bg-[#0A0A28] rounded-full mt-1`} />
             </View>
 
-            {/* Text info */}
+            {/*  =================== Text info */}
             <View style={tw`ml-4`}>
-              <Text style={tw`text-sm font-semibold text-gray-900`}>
+              {/* <Text style={tw`text-sm font-semibold text-gray-900`}>
                 Estimated Time
               </Text>
-              <Text style={tw`text-xl font-bold text-gray-900`}>20 min</Text>
-              <Text style={tw`text-sm text-regularText mt-1`}>Swapno</Text>
+              <Text style={tw`text-xl font-bold text-gray-900`}>20 min</Text> */}
+              <Text style={tw`text-sm text-regularText mt-1`}>
+                {pendingOrderDetails?.data?.nearest_store?.name}
+              </Text>
               <Text style={tw`text-sm text-regularText`}>Rider location</Text>
             </View>
           </View>

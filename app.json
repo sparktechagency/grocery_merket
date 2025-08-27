@@ -8,6 +8,7 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
+    "edgeToEdgeEnabled": true,
     "ios": {
       "supportsTablet": true
     },
@@ -56,7 +57,9 @@
           "locationAlwaysAndWhenInUsePermission": "Allow  Grocery Application to use your location."
         }
       ],
-      "expo-maps"
+      "expo-maps",
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

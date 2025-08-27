@@ -3,9 +3,12 @@ import React from "react";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router, useLocalSearchParams } from "expo-router";
 import { SvgXml } from "react-native-svg";
-import { IconLocationWhite, IconRightArrowShopper } from "@/assets/icon";
+import {
+  IconLocationWhite,
+  IconRightArrowShopper,
+  IconRightArrowShopperDown,
+} from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
-import { CartData } from "@/src/components/CardData";
 import Collapsible from "react-native-collapsible";
 import TButton from "@/src/lib/buttons/TButton";
 import { useGetPendingOrderDetailsQuery } from "@/src/redux/apiSlices/shopperHomeApiSlices";
@@ -23,13 +26,18 @@ const pickUp = () => {
       <BackWithComponent onPress={() => router.back()} title={"Pick-Up"} />
       <View style={tw`px-5`}>
         <View style={tw`p-4 rounded-md bg-[#e3e7eb]`}>
-          <Text style={tw`font-PoppinsRegular text-base text-black mb-1`}>
-            Store name: <Text style={tw`font-PoppinsMedium`}></Text>
-          </Text>
+          <View style={tw`flex-row gap-1  items-center`}>
+            <Text style={tw`font-PoppinsRegular text-base text-black mb-1`}>
+              Store name:
+            </Text>
+            <Text style={tw`font-PoppinsMedium text-xs `}>
+              {pendingOrderDetails?.data?.nearest_store?.name}
+            </Text>
+          </View>
           <View style={tw`flex-row gap-1`}>
             <SvgXml xml={IconLocationWhite} />
             <Text style={tw`font-PoppinsMedium text-base text-regularText`}>
-              Fairbanks North Star
+              {pendingOrderDetails?.data?.nearest_store?.address?.addressLine1}
             </Text>
           </View>
         </View>
@@ -40,37 +48,61 @@ const pickUp = () => {
           >
             Order Details
           </Text>
+
           <View>
-            <Text
-              style={tw`font-PoppinsRegular text-base text-regularText mb-1`}
-            >
-              Order id: <Text style={tw`font-PoppinsSemiBold`}>#500 </Text>
-            </Text>
-            <Text
-              style={tw`font-PoppinsRegular text-base text-regularText mb-1`}
-            >
-              Customer name: Benjamin Wilkison
-            </Text>
-            <Text
-              style={tw`font-PoppinsRegular text-base text-regularText mb-1`}
-            >
-              Email:
-              <Text style={tw`font-PoppinsSemiBold`}> example@gmail.com</Text>
-            </Text>
-            <Text
-              style={tw`font-PoppinsRegular text-base text-regularText mb-1`}
-            >
-              Address:{" "}
-              <Text style={tw`font-PoppinsSemiBold`}>Kodiak Island</Text>
-            </Text>
-            <Text
-              style={tw`font-PoppinsRegular text-base text-regularText mb-1`}
-            >
-              Amount:{" "}
-              <Text style={tw`font-PoppinsSemiBold text-lg text-black`}>
-                $50.00
+            <View style={tw`flex-row gap-1 items-center`}>
+              <Text
+                style={tw`font-PoppinsRegular text-base text-regularText mb-1`}
+              >
+                Order id:
               </Text>
-            </Text>
+              <Text style={tw`font-PoppinsMedium text-base`}>
+                # {pendingOrderDetails?.data?.order_id}
+              </Text>
+            </View>
+
+            <View style={tw`flex-row gap-1 items-center`}>
+              <Text
+                style={tw`font-PoppinsRegular text-base text-regularText mb-1`}
+              >
+                Customer name:
+              </Text>
+              <Text style={tw`font-PoppinsMedium text-base`}>
+                {pendingOrderDetails?.data?.customer?.name}
+              </Text>
+            </View>
+
+            <View style={tw`flex-row gap-1 items-center`}>
+              <Text
+                style={tw`font-PoppinsRegular text-base text-regularText mb-1`}
+              >
+                Email:
+              </Text>
+              <Text style={tw`font-PoppinsMedium text-base`}>
+                {pendingOrderDetails?.data?.customer?.email}
+              </Text>
+            </View>
+
+            <View style={tw`flex-row gap-1 items-center`}>
+              <Text
+                style={tw`font-PoppinsRegular text-base text-regularText mb-1`}
+              >
+                Address:
+              </Text>
+              <Text style={tw`font-PoppinsMedium text-base`}>
+                {pendingOrderDetails?.data?.customer?.address}
+              </Text>
+            </View>
+            <View style={tw`flex-row gap-1 items-center`}>
+              <Text
+                style={tw`font-PoppinsRegular text-base text-regularText mb-1`}
+              >
+                Amount:
+              </Text>
+              <Text style={tw`font-PoppinsMedium text-base`}>
+                $ {pendingOrderDetails?.data?.total_price}
+              </Text>
+            </View>
           </View>
 
           <View>
@@ -82,35 +114,40 @@ const pickUp = () => {
               <Text
                 style={tw`font-PoppinsMedium text-primaryShopper text-base `}
               >
-                View order items ({CartData?.length})
+                View order items {pendingOrderDetails?.data?.items?.length}
               </Text>
-              <SvgXml xml={IconRightArrowShopper} />
+              <SvgXml
+                xml={
+                  viewOrderDetails
+                    ? IconRightArrowShopper
+                    : IconRightArrowShopperDown
+                }
+              />
             </TouchableOpacity>
 
             <Collapsible collapsed={viewOrderDetails}>
-              {CartData?.map((data) => (
+              {pendingOrderDetails?.data?.items?.map((item) => (
                 <TouchableOpacity
-                  key={data.id}
-                  style={tw`flex-row items-center px-2 py-1 rounded-xl bg-white mb-3 shadow-sm`}
+                  key={item.id}
+                  style={tw`flex-row items-center px-2 py-1 rounded-xl bg-white mb-3 shadow-sm h-16`}
                 >
                   <Image
-                    source={data.image}
+                    source={{ uri: item?.product_image }}
                     style={tw`w-14 h-14 rounded-md`}
                     resizeMode="contain"
                   />
                   <View style={tw`ml-4`}>
-                    <Text style={tw`font-PoppinsSemiBold text-sm text-black`}>
-                      {data.title}
-                    </Text>
                     <Text
-                      style={tw`font-PoppinsRegular text-xs text-regularText`}
+                      numberOfLines={1}
+                      style={tw`flex-1 font-PoppinsSemiBold text-sm text-black`}
                     >
-                      {data.weight}
+                      {item?.product_name}
                     </Text>
+
                     <Text
                       style={tw`font-PoppinsSemiBold text-sm text-primary mt-1`}
                     >
-                      ${data.price}
+                      ${item?.unit_price}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -133,13 +170,11 @@ const pickUp = () => {
             </View>
             <View style={tw`flex-row justify-start items-center gap-2`}>
               <Text style={tw`font-PoppinsRegular text-base text-regularText`}>
-                {" "}
                 Payment:
               </Text>
               <Text
                 style={tw`font-PoppinsMedium px-1 py-0.5 rounded-md text-primary bg-[#E8FFEE] `}
               >
-                {" "}
                 Online paid
               </Text>
             </View>
@@ -147,7 +182,14 @@ const pickUp = () => {
             <View style={tw`rounded-full mt-3 h-12`}>
               <TButton
                 // onPress={handleSubmit(onSubmit)}
-                onPress={() => router.push("/shopper/deliveryOrder/mapArrived")}
+                onPress={() =>
+                  router.push({
+                    pathname: "/shopper/deliveryOrder/mapArrived",
+                    params: {
+                      orderId: pendingOrderDetails?.data?.order_id,
+                    },
+                  })
+                }
                 title="Go to Store"
                 containerStyle={tw`rounded-md bg-primaryShopper`}
               />

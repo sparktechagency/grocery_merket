@@ -8,7 +8,7 @@ import Collapsible from "react-native-collapsible";
 import TButton from "@/src/lib/buttons/TButton";
 import { router } from "expo-router";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+// import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 // ------ map related data ----------------------------------------------------
 
@@ -124,7 +124,7 @@ const goToLocation = () => {
 
             {/*  =============== map start hare =-========================== */}
             <View style={tw`h-56 my-4  bg-[#e3e7eb] rounded-lg`}>
-              <MapView
+              {/* <MapView
                 style={tw`flex-1 rounded-sm border`}
                 provider={PROVIDER_GOOGLE}
                 initialRegion={INITIAL_REGION}
@@ -140,7 +140,7 @@ const goToLocation = () => {
                     // onPress={() => onMarkerSelected(marker)}
                   />
                 ))}
-              </MapView>
+              </MapView> */}
             </View>
 
             {/*  ===================== map end hare ================================= */}

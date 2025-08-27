@@ -10,7 +10,7 @@ import {
 import TButton from "@/src/lib/buttons/TButton";
 import { router } from "expo-router";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+// import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 // ------ map related data ----------------------------------------------------
 
@@ -77,7 +77,7 @@ const goToCustomerLocation = () => {
 
       {/*  =============== map start hare =-========================== */}
       <View style={tw`flex-1  `}>
-        <MapView
+        {/* <MapView
           style={tw`flex-1 rounded-sm border`}
           provider={PROVIDER_GOOGLE}
           initialRegion={INITIAL_REGION}
@@ -88,7 +88,7 @@ const goToCustomerLocation = () => {
           {markers.map((marker, index) => (
             <Marker key={index} title="You are here" coordinate={marker} />
           ))}
-        </MapView>
+        </MapView> */}
       </View>
 
       {/*  ===================== map end hare ================================= */}
