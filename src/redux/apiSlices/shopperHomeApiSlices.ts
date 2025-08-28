@@ -61,6 +61,29 @@ const shopperHomeApiSlices = api.injectEndpoints({
       }),
       invalidatesTags: ["order"],
     }),
+    sendDeliveryRequest: builder.mutation({
+      query: (orderId) => ({
+        url: `/shopper/sendDeliveryRequest`,
+        method: "POST",
+        body: { orderId },
+      }),
+      invalidatesTags: ["order"],
+    }),
+    activeInactiveStatus: builder.mutation({
+      query: (status) => ({
+        url: `/shopper/activeInactiveShopper`,
+        method: "POST",
+        body: { status },
+      }),
+      invalidatesTags: ["order"],
+    }),
+    getShopperStatus: builder.query({
+      query: () => ({
+        url: `/shopper/getShopperStatus`,
+        method: "GET",
+      }),
+      providesTags: ["order"],
+    }),
   }),
 });
 
@@ -73,4 +96,7 @@ export const {
   useGetPendingOrderDetailsQuery,
   useGetShopperAllOrderQuery,
   useOrderPickedUpMutation,
+  useSendDeliveryRequestMutation,
+  useActiveInactiveStatusMutation,
+  useGetShopperStatusQuery,
 } = shopperHomeApiSlices;

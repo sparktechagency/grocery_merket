@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import React from "react";
 import tw from "@/src/lib/tailwind";
@@ -36,7 +37,10 @@ const pickUpItems = () => {
 
   const handleArrived = async () => {
     try {
-      const response = await itemId(selectedStores.toString()).unwrap();
+      const response = await itemId({
+        order_id: orderId,
+        order_item_id: selectedStores,
+      }).unwrap();
       if (response) {
         console.log(response, "this is response");
         router.push({
@@ -61,8 +65,8 @@ const pickUpItems = () => {
   const renderItem = ({ item }) => {
     const isChecked = selectedStores.includes(item?.id);
     return (
-      <View
-        //   onPress={() => router.push("/user/storeProducts/productDetails")}
+      <Pressable
+        onPress={() => handleItemsCheckBox(item?.id)}
         style={tw`flex-1 flex-row justify-between items-center px-3 py-1  rounded-xl bg-white mb-3 shadow-sm`}
       >
         <View style={tw`flex-row gap-4 h-16 w-full justify-start items-center`}>
@@ -99,7 +103,7 @@ const pickUpItems = () => {
         >
           {isChecked ? <Text style={tw`text-white text-sm`}>✔</Text> : null}
         </TouchableOpacity>
-      </View>
+      </Pressable>
     );
   };
 
@@ -120,8 +124,9 @@ const pickUpItems = () => {
       ListFooterComponent={() => (
         <View style={tw`rounded-full my-3 h-12`}>
           <TButton
+            disabled={selectedStores.length === 0}
             onPress={() => handleArrived()}
-            title="Picked up all"
+            title="Picked up "
             containerStyle={tw`rounded-md bg-primaryShopper`}
           />
         </View>

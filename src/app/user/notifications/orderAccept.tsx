@@ -1,6 +1,6 @@
-import { View, Text, Image, ScrollView } from "react-native";
-import React from "react";
-import { router } from "expo-router";
+import { View, Text, Image, ScrollView, ActivityIndicator } from "react-native";
+import React, { use, useEffect } from "react";
+import { router, useLocalSearchParams } from "expo-router";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import tw from "@/src/lib/tailwind";
 import {
@@ -10,6 +10,9 @@ import {
   ImgOrderTwo,
 } from "@/assets/images";
 import TButton from "@/src/lib/buttons/TButton";
+import { usePickedUpItemsMutation } from "@/src/redux/apiSlices/homePageApiSlices";
+import { PrimaryColor } from "@/utils/utils";
+import { useUpdateOrderMutation } from "@/src/redux/apiSlices/orderSlices";
 
 const orderData = [
   {
@@ -38,21 +41,86 @@ const orderData = [
   },
 ];
 
-const orderAccept = () => {
+const OrderAccept = () => {
+  const { orderId } = useLocalSearchParams();
+  const [orderItems, setOrderItems] = React.useState([]);
+
+  // ===================== api j=-===================
+  const [requestedData, { isLoading }] = usePickedUpItemsMutation();
+  const [orderStatus] = useUpdateOrderMutation();
+
+  useEffect(() => {
+    const readRequestedData = async () => {
+      try {
+        const response = await requestedData({ order_id: orderId }).unwrap();
+        if (response) {
+          setOrderItems(response);
+        }
+      } catch (error) {
+        console.error(error, "this is error");
+      }
+    };
+    readRequestedData();
+  }, [requestedData, orderId]);
+
+  // -------- render section --------
+  if (isLoading) {
+    return (
+      <View style={tw`flex-1 justify-center items-center`}>
+        <ActivityIndicator size={"large"} color={PrimaryColor} />
+      </View>
+    );
+  }
+
+  const HandleReceivedOrder = async () => {
+    try {
+      const response = await orderStatus({
+        id: orderId,
+        status: "order_delivered",
+      }).unwrap();
+      if (response?.success) {
+        router.push({
+          pathname: "/user/notifications/orderReceived",
+        });
+      }
+    } catch (error) {
+      console.error(error, "this is error");
+      router.push({
+        pathname: "/Toaster",
+        params: { res: error?.message || error },
+      });
+    }
+  };
+
   return (
     <View style={tw`flex-1`}>
       <BackWithComponent onPress={() => router.back()} title={"Notification"} />
       <ScrollView>
         <View style={tw`flex-row flex-wrap justify-between mx-5 mt-10`}>
-          {orderData.map((order) => (
+          {orderItems?.data?.map((order, index) => (
             <View
-              key={order?.id}
-              style={tw`flex-row gap-1 mb-4 bg-[#e8dcfa] px-5 py-4 w-[48%] rounded-2xl`}
+              key={index}
+              style={tw`flex-row items-center gap-2 mb-4 bg-[#e8dcfa] h-20 px-5 py-4 w-[48%] rounded-2xl`}
             >
-              <Image style={tw`w-16 h-10`} source={order.image} />
+              <Image
+                style={tw`w-14 h-14`}
+                source={{ uri: order.product_image }}
+                resizeMode="contain"
+              />
               <View>
-                <Text>{order.name}</Text>
-                <Text>{order.weight}</Text>
+                <Text style={tw`font-PoppinsSemiBold text-base`}>
+                  {order.product_name.slice(0, 10)}
+                </Text>
+
+                <View style={tw`flex-row items-center gap-2`}>
+                  <Text style={tw`font-PoppinsRegular text-sm`}>Quantity:</Text>
+                  <Text
+                    style={tw`font-PoppinsSemiBold text-sm
+                    `}
+                  >
+                    {order.quantity}
+                  </Text>
+                </View>
               </View>
             </View>
           ))}
@@ -66,7 +134,7 @@ const orderAccept = () => {
           </Text>
           <TButton
             // onPress={handleSubmit(onSubmit)}
-            onPress={() => router.push("/user/notifications/orderReceived")}
+            onPress={() => HandleReceivedOrder()}
             title="Receive order"
             containerStyle={tw`rounded-full bg-[#5802D0]`}
           />
@@ -76,4 +144,4 @@ const orderAccept = () => {
   );
 };
 
-export default orderAccept;
+export default OrderAccept;

@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import React, { useEffect, useRef } from "react";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import tw from "@/src/lib/tailwind";
 import { SvgXml } from "react-native-svg";
 import {
@@ -8,37 +8,143 @@ import {
   IconMessage,
 } from "@/assets/icon";
 import TButton from "@/src/lib/buttons/TButton";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
-// import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import {
+  useGetPendingOrderDetailsQuery,
+  useSendDeliveryRequestMutation,
+} from "@/src/redux/apiSlices/shopperHomeApiSlices";
+import { GoogleMaps } from "expo-maps";
+import { useGetUserLocationQuery } from "@/src/redux/apiSlices/homePageApiSlices";
+import { decode } from "@/utils/decode";
+import { PrimaryColor } from "@/utils/utils";
 
 // ------ map related data end hare ----------------------------------------------------
 
-const goToCustomerLocation = () => {
-  const [isVisibleModal, setIsVisibleModal] = React.useState(false);
-  const mapRef = useRef<any>(null);
-  const focusMap = () => {
-    const GreenBayStadium = {
-      latitude: 44.5013,
-      longitude: -88.0622,
-      latitudeDelta: 0.1,
-      longitudeDelta: 0.1,
-    };
+const GoToCustomerLocation = () => {
+  const { orderId } = useLocalSearchParams();
+  const [routeCoordinates, setRouteCoordinates] = useState([]);
+  const [pickUpTime, setPickUpTime] = useState<any>();
+  const [itemOrderId] = useSendDeliveryRequestMutation();
 
-    mapRef.current?.animateToRegion(GreenBayStadium);
+  // ++++++++++++++++++++++++++++++ api ++++++++++++++++++++++++++++++
+  const { data: pendingOrderDetails, isLoading } =
+    useGetPendingOrderDetailsQuery(Number(orderId));
+  const { data: currentLocation } = useGetUserLocationQuery({});
+
+  const handleDeliveryRequest = async () => {
+    try {
+      const response = await itemOrderId(Number(orderId)).unwrap();
+      if (response) {
+        router.push({
+          pathname: "/shopper/deliveryOrder/pendingOrSuccessDeliver",
+          params: { orderId: orderId },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      router.push({
+        pathname: "/Toaster",
+        params: { res: error?.message || error },
+      });
+    }
+  };
+
+  const shopperCurrentLocation = currentLocation?.data
+    ? {
+        latitude: 64.944729,
+        longitude: -147.69017,
+        // latitude: Number(currentLocation?.data?.latitude),
+        // longitude: Number(currentLocation?.data?.longitude),
+      }
+    : null;
+
+  const pickUpLocation = pendingOrderDetails?.data?.pick_up_location
+    ? {
+        latitude: Number(pendingOrderDetails?.data?.pick_up_location?.latitude),
+        longitude: Number(
+          pendingOrderDetails?.data?.pick_up_location?.longitude
+        ),
+      }
+    : null;
+  const getRoute = async () => {
+    if (!shopperCurrentLocation || !pickUpLocation) return;
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${pickUpLocation.latitude},${pickUpLocation.longitude}&destination=${shopperCurrentLocation.latitude},${shopperCurrentLocation.longitude}&alternatives=true&key=AIzaSyD7W--YFEbz4g57zww14j2DNm9mwqGYLjM`
+      );
+      const data = await response.json();
+
+      if (data.routes.length) {
+        const points = decode(data.routes[0].overview_polyline.points);
+        setRouteCoordinates(points);
+      }
+    } catch (err) {
+      console.log("Route Fetch Error:", err);
+    }
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsVisibleModal(true);
-    }, 500);
-  });
+    if (pendingOrderDetails?.data) {
+      if (pendingOrderDetails?.data?.pick_up_location?.eta_minutes >= 60) {
+        setPickUpTime(
+          Math.floor(
+            pendingOrderDetails?.data?.pick_up_location?.eta_minutes / 60
+          ) +
+            " hr " +
+            (pendingOrderDetails?.data?.pick_up_location?.eta_minutes % 60) +
+            " min"
+        );
+      }
+    }
+    getRoute();
+  }, [pendingOrderDetails]);
+
+  if (isLoading || !currentLocation || !pickUpLocation) {
+    return (
+      <View style={tw`flex-1 justify-center items-center`}>
+        <ActivityIndicator size="large" color={PrimaryColor} />
+      </View>
+    );
+  }
+
+  const calculateMidpoint = (loc1: any, loc2: any) => {
+    return {
+      latitude: (loc1.latitude + loc2.latitude) / 2,
+      longitude: (loc1.longitude + loc2.longitude) / 2,
+    };
+  };
   return (
     <View style={tw`relative flex-1`}>
       <BackWithComponent
         containerStyle={tw`absolute top-0 left-0 z-20`}
         onPress={() => router.back()}
-        title={"Customer Location"}
+      />
+      {/*  =============== map start hare =-========================== */}
+
+      <GoogleMaps.View
+        cameraPosition={{
+          coordinates: calculateMidpoint(
+            shopperCurrentLocation,
+            pickUpLocation
+          ),
+        }}
+        uiSettings={{
+          compassEnabled: false,
+        }}
+        markers={[
+          { coordinates: shopperCurrentLocation },
+          { coordinates: pickUpLocation },
+        ]}
+        polylines={[
+          {
+            coordinates: routeCoordinates,
+            geodesic: true,
+            color: "blue",
+            width: 4,
+          },
+        ]}
+        style={tw` h-full w-full`}
       />
 
       {/*  ===================== map end hare ================================= */}
@@ -53,26 +159,21 @@ const goToCustomerLocation = () => {
             >
               <View>
                 <Text style={tw`font-PoppinsSemiBold text-xl text-black mb-1`}>
-                  Benjamin Wilkison
+                  {pendingOrderDetails?.data?.customer?.name}
                 </Text>
                 <View style={tw`flex-row items-center gap-1`}>
                   <SvgXml xml={IconLocationWhite} />
                   <Text style={tw`font-PoppinsMedium text-sm text-regularText`}>
-                    Kodiak Island
+                    {pendingOrderDetails?.data?.customer?.address}
                   </Text>
                 </View>
               </View>
 
               <TouchableOpacity
                 onPress={() => router.push("/user/messaging/messaging")}
-                style={tw`relative w-10 h-10 bg-white shadow-xl rounded-xl justify-center items-center`}
+                style={tw` w-10 h-10 bg-white shadow-xl rounded-xl justify-center items-center`}
               >
                 <SvgXml xml={IconMessage} />
-                <Text
-                  style={tw`absolute top-0 right-0 text-white w-5 h-5 text-center bg-yellow-500 rounded-full`}
-                >
-                  2
-                </Text>
               </TouchableOpacity>
             </View>
 
@@ -95,8 +196,12 @@ const goToCustomerLocation = () => {
                 <Text style={tw`text-sm font-semibold text-gray-900`}>
                   Estimated Time
                 </Text>
-                <Text style={tw`text-xl font-bold text-gray-900`}>20 min</Text>
-                <Text style={tw`text-sm text-regularText mt-1`}>Swapno</Text>
+                <Text style={tw`text-xl font-bold text-gray-900`}>
+                  {pickUpTime}
+                </Text>
+                <Text style={tw`text-sm text-regularText mt-1`}>
+                  {pendingOrderDetails?.data?.nearest_store?.name}
+                </Text>
                 <Text style={tw`text-sm text-regularText`}>Rider location</Text>
               </View>
             </View>
@@ -104,10 +209,7 @@ const goToCustomerLocation = () => {
 
           <View style={tw`rounded-full mt-3 h-12 `}>
             <TButton
-              // onPress={handleSubmit(onSubmit)}
-              onPress={() =>
-                router.push("/shopper/deliveryOrder/pendingOrSuccessDeliver")
-              }
+              onPress={() => handleDeliveryRequest()}
               title="Deliver"
               containerStyle={tw`rounded-md bg-primaryShopper`}
             />
@@ -118,4 +220,4 @@ const goToCustomerLocation = () => {
   );
 };
 
-export default goToCustomerLocation;
+export default GoToCustomerLocation;

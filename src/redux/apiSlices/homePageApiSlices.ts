@@ -137,6 +137,13 @@ const homePageApiSlices = api.injectEndpoints({
       }),
       providesTags: ["getRecommendationProducts"],
     }),
+    pickedUpItems: build.mutation({
+      query: (orderId) => ({
+        url: `/app/orders/pickedUpItems`,
+        method: "POST",
+        body: orderId,
+      }),
+    }),
   }),
 });
 
@@ -157,4 +164,5 @@ export const {
   useSetUserLocationMutation,
   useGetUserLocationQuery,
   useGetRecommendationProductsQuery,
+  usePickedUpItemsMutation,
 } = homePageApiSlices;

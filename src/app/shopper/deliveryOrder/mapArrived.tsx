@@ -10,10 +10,7 @@ import { useGetPendingOrderDetailsQuery } from "@/src/redux/apiSlices/shopperHom
 import { GoogleMaps } from "expo-maps";
 import { PrimaryColor } from "@/utils/utils";
 import { decode } from "@/utils/decode";
-import useLocation from "@/src/hook/useLocation";
 import { useGetUserLocationQuery } from "@/src/redux/apiSlices/homePageApiSlices";
-
-// ------ map related data end hare ----------------------------------------------------
 
 const mapArrived = () => {
   const { orderId } = useLocalSearchParams();
@@ -27,10 +24,17 @@ const mapArrived = () => {
 
   const shopperCurrentLocation = currentLocation?.data
     ? {
-        latitude: Number(currentLocation?.data?.latitude),
-        longitude: Number(currentLocation?.data?.longitude),
+        latitude: 64.944729,
+        longitude: -147.69017,
+        // latitude: Number(currentLocation?.data?.latitude),
+        // longitude: Number(currentLocation?.data?.longitude),
       }
     : null;
+
+  console.log(
+    shopperCurrentLocation,
+    "shopperCurrentLocation ===================>"
+  );
 
   const pickUpLocation = pendingOrderDetails?.data?.pick_up_location
     ? {
@@ -40,17 +44,6 @@ const mapArrived = () => {
         ),
       }
     : null;
-
-  // const dropUpLocation = pendingOrderDetails?.data?.drop_off_location
-  //   ? {
-  //       latitude: Number(
-  //         pendingOrderDetails?.data?.drop_off_location?.latitude
-  //       ),
-  //       longitude: Number(
-  //         pendingOrderDetails?.data?.drop_off_location?.longitude
-  //       ),
-  //     }
-  //   : null;
 
   const getRoute = async () => {
     if (!shopperCurrentLocation || !pickUpLocation) return;

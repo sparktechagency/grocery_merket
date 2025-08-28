@@ -17,13 +17,14 @@ const orderSlices = api.injectEndpoints({
       providesTags: ["order"],
     }),
     updateOrder: builder.mutation({
-      query: (data) => ({
-        url: `/app/orders/${data.id}/status`,
-        method: "PUT",
-        body: data,
+      query: ({ id, status }) => ({
+        url: `/app/orders/${id}/status`,
+        method: "POST",
+        body: { status },
       }),
       invalidatesTags: ["order"],
     }),
+
     getTruckOrders: builder.query({
       query: (id) => ({
         url: `/app/orders/${id}/track`,

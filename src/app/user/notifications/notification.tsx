@@ -49,10 +49,10 @@ const notification = () => {
               return (
                 <TouchableOpacity
                   onPress={() =>
-                    notification.type === "arrived"
+                    notification.type === "shopper arrive"
                       ? router.push({
                           pathname: "/user/notifications/orderAccept",
-                          params: { shopperId: notification?.shopper_id },
+                          params: { orderId: notification?.order_id },
                         })
                       : notification.type === "order pickedup"
                       ? router.push({

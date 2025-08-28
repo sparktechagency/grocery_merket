@@ -22,6 +22,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useGetProfileQuery } from "@/src/redux/apiSlices/profileSlieces";
 import { useGetShopperNotificationsQuery } from "@/src/redux/apiSlices/shopperNotificationsSlices";
 import {
+  useGetActiveInactiveStatusQuery,
   useGetPendingOrderQuery,
   useGetRecentOrderQuery,
 } from "@/src/redux/apiSlices/shopperHomeApiSlices";
@@ -30,9 +31,11 @@ import useLocation from "@/src/hook/useLocation";
 import { useSetUserLocationMutation } from "@/src/redux/apiSlices/homePageApiSlices";
 
 const ShopperHome = () => {
-  const [isEnabled, setIsEnabled] = React.useState(false);
+  const [isEnabled, setIsEnabled] = React.useState("inactive");
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
   const { longitude, latitude, errorMsg } = useLocation();
+
+  console.log(isEnabled, "isEnabled status ------------->");
 
   //  -------------- api  ----------------
   const { data: getUserProfileData } = useGetProfileQuery({});
@@ -130,6 +133,9 @@ const ShopperHome = () => {
           </Text>
           <Text style={tw`text-regularText font-PoppinsRegular text-xs`}>
             Open to deliver any order.
+          </Text>
+          <Text style={tw`text-regularText font-PoppinsRegular text-xs`}>
+            When you close the app please off the active status.
           </Text>
         </View>
         <View>
