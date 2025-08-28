@@ -1,3 +1,5 @@
+import { View, Text } from "react-native";
+import React from "react";
 import { Stack } from "expo-router";
 
 const _layout = () => {
@@ -7,9 +9,7 @@ const _layout = () => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="profileShopper" />
-      <Stack.Screen name="privacyAndPolicy" />
-      <Stack.Screen name="myOrderStatus" />
+      <Stack.Screen name="shopperNotification" />
     </Stack>
   );
 };

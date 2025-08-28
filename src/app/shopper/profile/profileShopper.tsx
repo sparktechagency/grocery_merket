@@ -98,7 +98,7 @@ const profileShopper = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => router.push("/user/users/userOrder")}
+          onPress={() => router.push("/shopper/profile/myOrderStatus")}
           style={tw`flex-row justify-between items-center`}
         >
           <View style={tw`flex-row justify-start items-center gap-3`}>
@@ -112,7 +112,7 @@ const profileShopper = () => {
             </Text>
           </View>
           <Pressable
-            onPress={() => router.push("/user/users/userOrder")}
+            onPress={() => router.push("/shopper/profile/myOrderStatus")}
             style={tw`py-2.5 px-3.5 bg-white rounded-full`}
           >
             <SvgXml xml={IconGetterThen} />

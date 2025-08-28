@@ -1,6 +1,13 @@
-import { View, Text, TouchableOpacity, Image, Switch } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Switch,
+  Pressable,
+  FlatList,
+} from "react-native";
 import React, { useEffect } from "react";
-import { FlatList, Pressable } from "react-native-gesture-handler";
 import tw from "@/src/lib/tailwind";
 import { router } from "expo-router";
 import { SvgXml } from "react-native-svg";
@@ -81,7 +88,9 @@ const ShopperHome = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => router.push("/user/notifications/notification")}
+            onPress={() =>
+              router.push("/shopper/shopperNotifications/shopperNotification")
+            }
             style={tw`relative p-3 bg-white shadow-lg rounded-lg`}
           >
             <SvgXml xml={IconNotification} />

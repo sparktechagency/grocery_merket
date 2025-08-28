@@ -125,7 +125,7 @@ const homePageApiSlices = api.injectEndpoints({
     }),
     getUserLocation: build.query({
       query: () => ({
-        url: `/app/kroger/getUserLocation`,
+        url: `/app/getUserLocation`,
         method: "GET",
       }),
       providesTags: ["userLocation"],

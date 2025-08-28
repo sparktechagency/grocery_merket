@@ -45,6 +45,14 @@ const shopperHomeApiSlices = api.injectEndpoints({
       }),
       providesTags: ["order"],
     }),
+
+    getShopperAllOrder: builder.query({
+      query: () => ({
+        url: `/shopper/allShopperOrders`,
+        method: "GET",
+      }),
+      providesTags: ["order"],
+    }),
   }),
 });
 
@@ -55,4 +63,6 @@ export const {
   useUpdateOrderStatusMutation,
   useGetPendingOrderQuery,
   useGetPendingOrderDetailsQuery,
+  useGetShopperAllOrderQuery,
+  F,
 } = shopperHomeApiSlices;

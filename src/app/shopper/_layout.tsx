@@ -19,6 +19,7 @@ const RootLayout = () => {
           <Stack.Screen name="settings" />
           <Stack.Screen name="profile" />
           <Stack.Screen name="orderDeliverSuccess" />
+          <Stack.Screen name="shopperNotifications" />
         </Stack>
       </GestureHandlerRootView>
     </SafeAreaView>

@@ -1,5 +1,5 @@
 import { View, Text, ActivityIndicator } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import tw from "@/src/lib/tailwind";
 import { SvgXml } from "react-native-svg";
 import { IconClockShopper, IconLocationWhite } from "@/assets/icon";
@@ -8,35 +8,29 @@ import { router, useLocalSearchParams } from "expo-router";
 import BackButton from "@/src/lib/backHeader/BackButton";
 import { useGetPendingOrderDetailsQuery } from "@/src/redux/apiSlices/shopperHomeApiSlices";
 import { GoogleMaps } from "expo-maps";
-import polyline from "@mapbox/polyline";
 import { PrimaryColor } from "@/utils/utils";
 import { decode } from "@/utils/decode";
 import useLocation from "@/src/hook/useLocation";
-import { useSetUserLocationMutation } from "@/src/redux/apiSlices/homePageApiSlices";
+import { useGetUserLocationQuery } from "@/src/redux/apiSlices/homePageApiSlices";
 
 // ------ map related data end hare ----------------------------------------------------
 
 const mapArrived = () => {
   const { orderId } = useLocalSearchParams();
   const [routeCoordinates, setRouteCoordinates] = useState([]);
-  const { longitude, latitude, errorMsg } = useLocation();
-  const [currentLocation, setCurrentLocation] = useState(null);
-
-  const stgLongitude = longitude?.toString() ?? "";
-  const stgLatitude = latitude?.toString() ?? "";
-
-  console.log(
-    "stgLongitude------------",
-    stgLongitude,
-    "stgLatitude",
-    stgLatitude
-  );
-  console.log("currentLocation---------------", currentLocation);
+  const [pickUpTime, setPickUpTime] = useState<any>();
 
   // ====================== api ======================
   const { data: pendingOrderDetails, isLoading } =
     useGetPendingOrderDetailsQuery(Number(orderId));
-  const [location] = useSetUserLocationMutation();
+  const { data: currentLocation } = useGetUserLocationQuery({});
+
+  const shopperCurrentLocation = currentLocation?.data
+    ? {
+        latitude: Number(currentLocation?.data?.latitude),
+        longitude: Number(currentLocation?.data?.longitude),
+      }
+    : null;
 
   const pickUpLocation = pendingOrderDetails?.data?.pick_up_location
     ? {
@@ -47,23 +41,23 @@ const mapArrived = () => {
       }
     : null;
 
-  const dropUpLocation = pendingOrderDetails?.data?.drop_off_location
-    ? {
-        latitude: Number(
-          pendingOrderDetails?.data?.drop_off_location?.latitude
-        ),
-        longitude: Number(
-          pendingOrderDetails?.data?.drop_off_location?.longitude
-        ),
-      }
-    : null;
+  // const dropUpLocation = pendingOrderDetails?.data?.drop_off_location
+  //   ? {
+  //       latitude: Number(
+  //         pendingOrderDetails?.data?.drop_off_location?.latitude
+  //       ),
+  //       longitude: Number(
+  //         pendingOrderDetails?.data?.drop_off_location?.longitude
+  //       ),
+  //     }
+  //   : null;
 
   const getRoute = async () => {
-    if (!pickUpLocation || !dropUpLocation) return;
-
+    if (!shopperCurrentLocation || !pickUpLocation) return;
+    console.log(currentLocation?.data, "currentLocation ============");
     try {
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${pickUpLocation.latitude},${pickUpLocation.longitude}&destination=${dropUpLocation.latitude},${dropUpLocation.longitude}&alternatives=true&key=AIzaSyD7W--YFEbz4g57zww14j2DNm9mwqGYLjM`
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${pickUpLocation.latitude},${pickUpLocation.longitude}&destination=${shopperCurrentLocation.latitude},${shopperCurrentLocation.longitude}&alternatives=true&key=AIzaSyD7W--YFEbz4g57zww14j2DNm9mwqGYLjM`
       );
       const data = await response.json();
 
@@ -76,7 +70,23 @@ const mapArrived = () => {
     }
   };
 
-  if (isLoading || !pickUpLocation || !dropUpLocation || !currentLocation) {
+  useEffect(() => {
+    if (pendingOrderDetails?.data) {
+      if (pendingOrderDetails?.data?.pick_up_location?.eta_minutes >= 60) {
+        setPickUpTime(
+          Math.floor(
+            pendingOrderDetails?.data?.pick_up_location?.eta_minutes / 60
+          ) +
+            " hr " +
+            (pendingOrderDetails?.data?.pick_up_location?.eta_minutes % 60) +
+            " min"
+        );
+      }
+    }
+    getRoute();
+  }, [pendingOrderDetails]);
+
+  if (isLoading || !currentLocation || !pickUpLocation) {
     return (
       <View style={tw`flex-1 justify-center items-center`}>
         <ActivityIndicator size="large" color={PrimaryColor} />
@@ -91,30 +101,6 @@ const mapArrived = () => {
     };
   };
 
-  useEffect(() => {
-    if (!stgLatitude && !stgLongitude) {
-      const setLocation = async () => {
-        if (!longitude || !latitude) return;
-        try {
-          await location({
-            longitude: stgLongitude,
-            latitude: stgLatitude,
-          }).unwrap();
-        } catch (error) {
-          console.log(error, "set user location not match -------------------");
-        }
-      };
-      setLocation();
-    } else {
-      setCurrentLocation({
-        latitude: stgLatitude,
-        longitude: stgLongitude,
-      });
-    }
-
-    getRoute();
-  }, [pendingOrderDetails, longitude, latitude]);
-
   return (
     <View style={tw`relative flex-1`}>
       <BackButton
@@ -125,14 +111,17 @@ const mapArrived = () => {
 
       <GoogleMaps.View
         cameraPosition={{
-          coordinates: calculateMidpoint(pickUpLocation, dropUpLocation),
+          coordinates: calculateMidpoint(
+            shopperCurrentLocation,
+            pickUpLocation
+          ),
         }}
         uiSettings={{
           compassEnabled: false,
         }}
         markers={[
+          { coordinates: shopperCurrentLocation },
           { coordinates: pickUpLocation },
-          { coordinates: dropUpLocation },
         ]}
         polylines={[
           {
@@ -170,17 +159,19 @@ const mapArrived = () => {
                 <SvgXml xml={IconClockShopper} width={16} height={16} />
               </View>
               <View
-                style={tw`w-px h-8 border-l border-dashed border-[#FEB97A]`}
+                style={tw`w-px h-12 border-l border-dashed border-[#FEB97A]`}
               />
               <View style={tw`w-2 h-2 bg-[#0A0A28] rounded-full mt-1`} />
             </View>
 
             {/*  =================== Text info */}
             <View style={tw`ml-4`}>
-              {/* <Text style={tw`text-sm font-semibold text-gray-900`}>
+              <Text style={tw`text-sm font-semibold text-gray-900`}>
                 Estimated Time
               </Text>
-              <Text style={tw`text-xl font-bold text-gray-900`}>20 min</Text> */}
+              <Text style={tw`text-base font-PoppinsSemiBold text-gray-900`}>
+                {pickUpTime}
+              </Text>
               <Text style={tw`text-sm text-regularText mt-1`}>
                 {pendingOrderDetails?.data?.nearest_store?.name}
               </Text>
