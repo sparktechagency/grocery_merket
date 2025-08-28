@@ -182,7 +182,12 @@ const mapArrived = () => {
 
         <View style={tw`rounded-full mt-3 h-12`}>
           <TButton
-            onPress={() => router.push("/shopper/deliveryOrder/pickUpItems")}
+            onPress={() =>
+              router.push({
+                pathname: "/shopper/deliveryOrder/pickUpItems",
+                params: { orderId: pendingOrderDetails?.data?.order_id },
+              })
+            }
             title="Pick-up items"
             containerStyle={tw`rounded-md bg-primaryShopper`}
           />

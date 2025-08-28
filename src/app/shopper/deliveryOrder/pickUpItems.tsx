@@ -1,15 +1,29 @@
-import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import React from "react";
-import { CartData } from "@/src/components/CardData";
 import tw from "@/src/lib/tailwind";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import TButton from "@/src/lib/buttons/TButton";
+import {
+  useGetPendingOrderDetailsQuery,
+  useOrderPickedUpMutation,
+} from "@/src/redux/apiSlices/shopperHomeApiSlices";
+import { Image } from "expo-image";
 
 const pickUpItems = () => {
+  const { orderId } = useLocalSearchParams();
   const [selectedStores, setSelectedStores] = React.useState<string[]>([]);
 
-  console.log(selectedStores, "selected stores");
+  // ++++++++++++++++++++++++++++++ api ++++++++++++++++++++++++++++++
+  const [itemId] = useOrderPickedUpMutation();
+  const { data: pendingOrderDetails, isLoading } =
+    useGetPendingOrderDetailsQuery(Number(orderId));
 
   //  selected item --------------------------
   const handleItemsCheckBox = (selectedItemId: string) => {
@@ -20,6 +34,24 @@ const pickUpItems = () => {
     );
   };
 
+  const handleArrived = async () => {
+    try {
+      const response = await itemId(selectedStores.toString()).unwrap();
+      if (response) {
+        console.log(response, "this is response");
+        router.push({
+          pathname: "/shopper/deliveryOrder/goToCustomerLocation",
+          params: { orderId: orderId },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      router.push({
+        pathname: "/Toaster",
+        params: { res: error?.message || error },
+      });
+    }
+  };
   // ========================= render items ==========================
 
   const headerRender = () => (
@@ -31,24 +63,27 @@ const pickUpItems = () => {
     return (
       <View
         //   onPress={() => router.push("/user/storeProducts/productDetails")}
-        style={tw`flex-row justify-between items-center px-3 py-1  rounded-xl bg-white mb-3 shadow-sm`}
+        style={tw`flex-1 flex-row justify-between items-center px-3 py-1  rounded-xl bg-white mb-3 shadow-sm`}
       >
-        <View style={tw`flex-row gap-4`}>
+        <View style={tw`flex-row gap-4 h-16 w-full justify-start items-center`}>
           <Image
-            source={item?.image}
+            source={item?.product_image}
             style={tw`w-14 h-14 rounded-md`}
-            resizeMode="contain"
+            contentFit="contain"
           />
           <View>
-            <Text style={tw`font-PoppinsMedium text-lg text-black`}>
-              {item?.title}
+            <Text
+              numberOfLines={1}
+              style={tw`flex-1 flex-row  font-PoppinsMedium text-sm text-black pr-4`}
+            >
+              {item?.product_name}
             </Text>
             <View>
               <Text style={tw`font-PoppinsRegular text-sm text-regularText`}>
-                1kg
+                Quantity: {item?.quantity}
               </Text>
               <Text style={tw`font-PoppinsSemiBold text-base text-primary`}>
-                $ {item.price}
+                $ {item.total_price}
               </Text>
             </View>
           </View>
@@ -58,7 +93,7 @@ const pickUpItems = () => {
         <TouchableOpacity
           onPress={() => handleItemsCheckBox(item?.id)}
           style={tw.style(
-            `border w-5 h-5  justify-center items-center rounded-sm`,
+            `border w-5 h-5  justify-end  items-center rounded-sm `,
             isChecked ? `bg-primary border-0` : `bg-transparent`
           )}
         >
@@ -68,17 +103,24 @@ const pickUpItems = () => {
     );
   };
 
+  if (isLoading) {
+    return (
+      <View style={tw`justify-center items-center`}>
+        <ActivityIndicator size="large" color={tw.color("red-500")} />
+      </View>
+    );
+  }
+
   return (
     <FlatList
-      data={CartData}
+      data={pendingOrderDetails?.data?.items}
       keyExtractor={(item) => item.id.toString()}
       renderItem={renderItem}
       ListHeaderComponent={headerRender}
       ListFooterComponent={() => (
         <View style={tw`rounded-full my-3 h-12`}>
           <TButton
-            // onPress={handleSubmit(onSubmit)}
-            onPress={() => router.push("/shopper/deliveryOrder/goToLocation")}
+            onPress={() => handleArrived()}
             title="Picked up all"
             containerStyle={tw`rounded-md bg-primaryShopper`}
           />

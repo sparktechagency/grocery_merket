@@ -12,40 +12,6 @@ import { router } from "expo-router";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 // import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
-// ------ map related data ----------------------------------------------------
-
-const INITIAL_REGION = {
-  latitude: 37.33,
-  longitude: -122,
-  latitudeDelta: 2,
-  longitudeDelta: 2,
-};
-
-const markers = [
-  // San Francisco
-  {
-    latitude: 37.7749,
-    longitude: -122.4194,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-    name: "San Francisco City Center",
-  },
-  {
-    latitude: 37.8077,
-    longitude: -122.475,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-    name: "Golden Gate Bridge",
-  },
-  {
-    latitude: 37.8077,
-    longitude: -122.475,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-    name: "Golden house",
-  },
-];
-
 // ------ map related data end hare ----------------------------------------------------
 
 const goToCustomerLocation = () => {
@@ -74,22 +40,6 @@ const goToCustomerLocation = () => {
         onPress={() => router.back()}
         title={"Customer Location"}
       />
-
-      {/*  =============== map start hare =-========================== */}
-      <View style={tw`flex-1  `}>
-        {/* <MapView
-          style={tw`flex-1 rounded-sm border`}
-          provider={PROVIDER_GOOGLE}
-          initialRegion={INITIAL_REGION}
-          showsUserLocation
-          showsMyLocationButton
-          ref={focusMap}
-        >
-          {markers.map((marker, index) => (
-            <Marker key={index} title="You are here" coordinate={marker} />
-          ))}
-        </MapView> */}
-      </View>
 
       {/*  ===================== map end hare ================================= */}
 

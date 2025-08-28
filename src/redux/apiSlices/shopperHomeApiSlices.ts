@@ -53,6 +53,14 @@ const shopperHomeApiSlices = api.injectEndpoints({
       }),
       providesTags: ["order"],
     }),
+    orderPickedUp: builder.mutation({
+      query: (data) => ({
+        url: `/shopper/orderPickedUp`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["order"],
+    }),
   }),
 });
 
@@ -64,5 +72,5 @@ export const {
   useGetPendingOrderQuery,
   useGetPendingOrderDetailsQuery,
   useGetShopperAllOrderQuery,
-  F,
+  useOrderPickedUpMutation,
 } = shopperHomeApiSlices;
