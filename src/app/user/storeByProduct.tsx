@@ -1,9 +1,10 @@
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
-import React, { useEffect } from "react";
-import tw from "@/src/lib/tailwind";
-import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { router, useLocalSearchParams } from "expo-router";
+import React, { useEffect } from "react";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
+
 import ProductCard from "@/src/components/ProductCard";
+import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
+import tw from "@/src/lib/tailwind";
 import { useProductByStoreMutation } from "@/src/redux/apiSlices/homePageApiSlices";
 
 const StoreByProduct = () => {
@@ -52,7 +53,7 @@ const StoreByProduct = () => {
             </Text>
           )
         }
-        renderItem={({ item, index }) => {
+        renderItem={({ item, index }: any) => {
           const parsedCategories = JSON.parse(item?.categories);
           const firstCategory = parsedCategories[0];
           return (
