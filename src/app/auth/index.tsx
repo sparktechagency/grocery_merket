@@ -37,16 +37,17 @@ const login = () => {
         await AsyncStorage.setItem("loginInfo", JSON.stringify(data));
       }
       const response = await credentials(data).unwrap();
-      console.log(
-        response,
-        "this is response ===================================>"
-      );
-      if (response) {
-        await AsyncStorage.setItem("token", response?.token);
 
+      if (response?.user?.role === role) {
+        await AsyncStorage.setItem("token", response?.token);
         router.replace(
           role === "shopper" ? "/shopper/home/home" : "/user/drawer/home"
         );
+      } else {
+        router.push({
+          pathname: "/Toaster",
+          params: { res: "Invalid User Role" },
+        });
       }
     } catch (error) {
       console.log(error, "Login error ----->");

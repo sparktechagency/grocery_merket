@@ -118,6 +118,7 @@ export const api = createApi({
     "getRecommendationProducts",
     "getFAQ",
     "getAboutUs",
+    "status",
   ],
 });
 

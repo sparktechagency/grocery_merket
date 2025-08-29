@@ -78,28 +78,6 @@ const settings = () => {
             <SvgXml xml={IconGetterThen} />
           </Pressable>
         </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => router.push("/shopper/shopperChat/shopperChatting")}
-          style={tw`flex-row justify-between items-center`}
-        >
-          <View style={tw`flex-row justify-start items-center gap-3`}>
-            <View
-              style={tw`w-10 h-10 justify-center text-center items-center bg-[#D8EFFF] mr-5 rounded-full`}
-            >
-              <SvgXml xml={IconFAQShopper} />
-            </View>
-            <Text style={tw`font-PoppinsMedium text-base text-black`}>
-              Messing
-            </Text>
-          </View>
-          <Pressable
-            onPress={() => router.push("/shopper/shopperChat/shopperChatting")}
-            style={tw`py-2.5 px-3.5 bg-white rounded-full`}
-          >
-            <SvgXml xml={IconGetterThen} />
-          </Pressable>
-        </TouchableOpacity>
       </View>
     </View>
   );

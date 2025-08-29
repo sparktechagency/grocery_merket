@@ -6,6 +6,7 @@ import {
   Switch,
   Pressable,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect } from "react";
 import tw from "@/src/lib/tailwind";
@@ -22,33 +23,63 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useGetProfileQuery } from "@/src/redux/apiSlices/profileSlieces";
 import { useGetShopperNotificationsQuery } from "@/src/redux/apiSlices/shopperNotificationsSlices";
 import {
-  useGetActiveInactiveStatusQuery,
+  useActiveInactiveStatusMutation,
   useGetPendingOrderQuery,
   useGetRecentOrderQuery,
+  useGetShopperStatusQuery,
 } from "@/src/redux/apiSlices/shopperHomeApiSlices";
 import OrderedCard from "@/src/components/OrderedCard";
 import useLocation from "@/src/hook/useLocation";
 import { useSetUserLocationMutation } from "@/src/redux/apiSlices/homePageApiSlices";
+import { PrimaryColor } from "@/utils/utils";
 
 const ShopperHome = () => {
-  const [isEnabled, setIsEnabled] = React.useState("inactive");
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  const [isEnabled, setIsEnabled] = React.useState(false);
   const { longitude, latitude, errorMsg } = useLocation();
-
-  console.log(isEnabled, "isEnabled status ------------->");
 
   //  -------------- api  ----------------
   const { data: getUserProfileData } = useGetProfileQuery({});
   const { data: notifications } = useGetShopperNotificationsQuery({});
-  const { data: recentOrder } = useGetRecentOrderQuery({});
-  const { data: getPendingOrder } = useGetPendingOrderQuery({});
+  const { data: recentOrder, isLoading: recentOrderLoading } =
+    useGetRecentOrderQuery({});
+  const { data: getPendingOrder, isLoading: getPendingOrderLoading } =
+    useGetPendingOrderQuery({});
   const [location] = useSetUserLocationMutation();
+  const { data: getActiveStatus, isLoading: getActiveStatusLoading } =
+    useGetShopperStatusQuery({});
+  const [status] = useActiveInactiveStatusMutation();
+
+  // ========================= switch the toggling ===================
+  const updateStatus = async (statusValue) => {
+    try {
+      const formData = new FormData();
+      formData.append("status", statusValue);
+      const response = await status(formData).unwrap();
+      return response;
+    } catch (error) {
+      console.log(
+        JSON.stringify(error),
+        "status update failed -----------------"
+      );
+    }
+  };
+  const toggleSwitch = async () => {
+    const newStatus = isEnabled ? "inactive" : "active";
+    setIsEnabled(!isEnabled);
+    await updateStatus(newStatus);
+  };
 
   const stgLongitude = longitude?.toString() ?? "";
   const stgLatitude = latitude?.toString() ?? "";
 
   useEffect(() => {
     const setLocation = async () => {
+      if (getActiveStatus?.data?.status === "active") {
+        setIsEnabled(true);
+      } else if (getActiveStatus?.data?.status === "inactive") {
+        setIsEnabled(false);
+      }
+
       if (!longitude || !latitude) return;
       try {
         await location({
@@ -60,7 +91,15 @@ const ShopperHome = () => {
       }
     };
     setLocation();
-  }, [longitude, latitude]);
+  }, [longitude, latitude, getActiveStatus]);
+
+  if (getActiveStatusLoading || getPendingOrderLoading || recentOrderLoading) {
+    return (
+      <View style={tw`flex-1 items-center justify-center`}>
+        <ActivityIndicator size={"large"} color={PrimaryColor} />
+      </View>
+    );
+  }
 
   const headerComponent = () => (
     <View style={tw`flex-1 px-5`}>
@@ -144,9 +183,6 @@ const ShopperHome = () => {
             thumbColor={isEnabled ? "#FFFFFF" : "#f4f3f4"}
             ios_backgroundColor="#3e3e3e"
             onValueChange={toggleSwitch}
-            // style={{
-            //   transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
-            // }}
             value={isEnabled}
           />
         </View>

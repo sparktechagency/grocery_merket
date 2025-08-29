@@ -70,19 +70,22 @@ const shopperHomeApiSlices = api.injectEndpoints({
       invalidatesTags: ["order"],
     }),
     activeInactiveStatus: builder.mutation({
-      query: (status) => ({
-        url: `/shopper/activeInactiveShopper`,
+      query: (formData) => ({
+        url: "/shopper/activeInactiveShopper",
         method: "POST",
-        body: { status },
+        body: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }),
-      invalidatesTags: ["order"],
+      invalidatesTags: ["status"],
     }),
     getShopperStatus: builder.query({
       query: () => ({
         url: `/shopper/getShopperStatus`,
         method: "GET",
       }),
-      providesTags: ["order"],
+      providesTags: ["status"],
     }),
   }),
 });
