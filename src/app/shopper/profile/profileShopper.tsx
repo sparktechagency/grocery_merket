@@ -17,17 +17,23 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useGetProfileQuery } from "@/src/redux/apiSlices/profileSlieces";
 import { Image } from "expo-image";
 import { ImgNoShopper } from "@/assets/images";
+import { useLogoutMutation } from "@/src/redux/apiSlices/authSlices";
 
 const profileShopper = () => {
   // =-================== apis =====================
   const { data: getUserProfileData } = useGetProfileQuery({});
+  const [logout] = useLogoutMutation();
 
   const removeRoleData = async () => {
+    const token = await AsyncStorage.getItem("token");
     try {
+      await logout(token).unwrap();
       await AsyncStorage.removeItem("role");
       await AsyncStorage.removeItem("token");
       router.replace("/role/role");
     } catch (e) {
+      // remove error
+      console.log("Error reading role from AsyncStorage", e);
       router.push({
         pathname: "/Toaster",
         params: { res: e?.message || e },

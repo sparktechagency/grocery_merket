@@ -144,6 +144,20 @@ const homePageApiSlices = api.injectEndpoints({
         body: orderId,
       }),
     }),
+    getFAQ: build.query({
+      query: () => ({
+        url: `/app/getAllFaqApp`,
+        method: "GET",
+      }),
+      providesTags: ["getFAQ"],
+    }),
+    getAboutUs: build.query({
+      query: () => ({
+        url: `/app/getAboutApp`,
+        method: "GET",
+      }),
+      providesTags: ["getAboutUs"],
+    }),
   }),
 });
 
@@ -165,4 +179,6 @@ export const {
   useGetUserLocationQuery,
   useGetRecommendationProductsQuery,
   usePickedUpItemsMutation,
+  useGetFAQQuery,
+  useGetAboutUsQuery,
 } = homePageApiSlices;

@@ -1,97 +1,71 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
-import tw from "../lib/tailwind";
+import React, { useRef, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Animated,
+  StyleSheet,
+  LayoutAnimation,
+  Platform,
+  UIManager,
+} from "react-native";
 import { SvgXml } from "react-native-svg";
 import { IconDownArrow, IconUpArrow } from "@/assets/icon";
-import Collapsible from "react-native-collapsible";
+import tw from "../lib/tailwind";
 
-export const OnCollapsable = () => {
-  const [pleaseOrder, setPleaseOrder] = React.useState(true);
-  const [pleaseMethods, SetPleaseMethods] = React.useState(true);
-  const [pleaseDelivery, SetPleaseDelivery] = React.useState(true);
+// ANDROID এ smooth animation এর জন্য এটা দরকার
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+interface Props {
+  question: string;
+  answer: string;
+  index: number;
+}
+
+export const OnCollapsable = ({
+  answer,
+  question,
+  index,
+}: Props): JSX.Element => {
+  const [expanded, setExpanded] = useState(false);
+  const animatedHeight = useRef(new Animated.Value(0)).current;
+
+  const toggleExpand = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setExpanded(!expanded);
+  };
   return (
     <View style={tw`my-5`}>
       <View
         style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-3 py-4 rounded-xl`}
       >
         <Text style={tw`font-PoppinsSemiBold text-sm text-black`}>
-          1. How do I place an order?
+          {index + 1}. {question}
         </Text>
         <TouchableOpacity
-          onPress={() => setPleaseOrder(!pleaseOrder)}
+          onPress={toggleExpand}
           style={tw`w-8 h-8 justify-center items-center bg-white rounded-full shadow-lg`}
         >
-          {pleaseOrder ? (
-            <SvgXml xml={IconDownArrow} />
-          ) : (
+          {expanded ? (
             <SvgXml xml={IconUpArrow} />
+          ) : (
+            <SvgXml xml={IconDownArrow} />
           )}
         </TouchableOpacity>
       </View>
-      <Collapsible collapsed={pleaseOrder}>
-        <Text
-          style={tw` px-5 py-4 bg-white rounded-lg font-PoppinsRegular text-sm`}
-        >
-          Placing an order is easy! Simply browse through our categories, add
-          items to your cart, and proceed to checkout. Select your delivery
-          address, choose a payment method, and confirm your order. We’ll take
-          care of the rest!
-        </Text>
-      </Collapsible>
-      <View
-        style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-3 py-4 rounded-xl mt-4`}
-      >
-        <Text style={tw`font-PoppinsSemiBold text-sm text-black`}>
-          2. What payment methods do you accept?
-        </Text>
-        <TouchableOpacity
-          onPress={() => SetPleaseMethods(!pleaseMethods)}
-          style={tw`w-8 h-8 justify-center items-center bg-white rounded-full shadow-lg`}
-        >
-          {pleaseMethods ? (
-            <SvgXml xml={IconDownArrow} />
-          ) : (
-            <SvgXml xml={IconUpArrow} />
-          )}
-        </TouchableOpacity>
-      </View>
-      <Collapsible collapsed={pleaseMethods}>
-        <Text
-          style={tw` px-5 py-4 bg-white rounded-lg font-PoppinsRegular text-sm`}
-        >
-          Placing an order is easy! Simply browse through our categories, add
-          items to your cart, and proceed to checkout. Select your delivery
-          address, choose a payment method, and confirm your order. We’ll take
-          care of the rest!
-        </Text>
-      </Collapsible>
-      <View
-        style={tw`flex-row justify-between items-center bg-[#d6d9dd] px-3 py-4 rounded-xl mt-4`}
-      >
-        <Text style={tw`font-PoppinsSemiBold text-sm text-black`}>
-          3. How long does delivery take?
-        </Text>
-        <TouchableOpacity
-          onPress={() => SetPleaseDelivery(!pleaseDelivery)}
-          style={tw`w-8 h-8 justify-center items-center bg-white rounded-full shadow-lg`}
-        >
-          {pleaseDelivery ? (
-            <SvgXml xml={IconDownArrow} />
-          ) : (
-            <SvgXml xml={IconUpArrow} />
-          )}
-        </TouchableOpacity>
-      </View>
-      <Collapsible collapsed={pleaseDelivery}>
-        <Text
-          style={tw` px-5 py-4 bg-white rounded-lg font-PoppinsRegular text-sm`}
-        >
-          Placing an order is easy! Simply browse through our categories, add
-          items to your cart, and proceed to checkout. Select your delivery
-          address, choose a payment method, and confirm your order. We’ll take
-          care of the rest!
-        </Text>
-      </Collapsible>
+
+      {expanded && (
+        <View style={tw`px-5 py-4 bg-white rounded-lg`}>
+          <Text style={tw`font-PoppinsRegular text-black text-sm`}>
+            {answer}
+          </Text>
+        </View>
+      )}
     </View>
   );
 };

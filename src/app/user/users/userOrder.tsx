@@ -84,7 +84,7 @@ const userOrder = () => {
 
                       <View>
                         <Text
-                          style={tw`flex-1 font-semibold text-base text-primary`}
+                          style={tw`flex-1 font-semibold text-sm text-primary`}
                         >
                           Order id: {item?.order_number}
                         </Text>
@@ -166,7 +166,7 @@ const userOrder = () => {
                       </Text>
                     </View>
 
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                       onPress={() => router.push("/user/addToCart/cart")}
                     >
                       <Text
@@ -174,7 +174,7 @@ const userOrder = () => {
                       >
                         Re-order
                       </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                   </View>
                 </View>
 

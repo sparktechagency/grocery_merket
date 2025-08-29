@@ -116,6 +116,8 @@ export const api = createApi({
     "order",
     "shopper",
     "getRecommendationProducts",
+    "getFAQ",
+    "getAboutUs",
   ],
 });
 

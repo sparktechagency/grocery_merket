@@ -21,9 +21,12 @@ const authSlices = api.injectEndpoints({
         invalidatesTags: ["user"],
       }),
       logout: build.mutation({
-        query: () => ({
+        query: (token) => ({
           url: "/auth/logout",
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }),
         invalidatesTags: ["user"],
       }),
