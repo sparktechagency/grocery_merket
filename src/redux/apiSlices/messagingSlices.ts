@@ -50,4 +50,5 @@ export const {
   useReceivedMessagesQuery,
   useConnectMutation,
   useGetMessagesQuery,
+  useLazyGetMessagesQuery,
 } = messagingApiSlices;

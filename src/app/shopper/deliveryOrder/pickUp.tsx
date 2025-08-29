@@ -57,7 +57,7 @@ const pickUp = () => {
                 Order id:
               </Text>
               <Text style={tw`font-PoppinsMedium text-base`}>
-                # {pendingOrderDetails?.data?.order_id}
+                # {pendingOrderDetails?.data?.order_number}
               </Text>
             </View>
 
@@ -129,21 +129,25 @@ const pickUp = () => {
               {pendingOrderDetails?.data?.items?.map((item) => (
                 <TouchableOpacity
                   key={item.id}
-                  style={tw`flex-row items-center px-2 py-1 rounded-xl bg-white mb-3 shadow-sm h-16`}
+                  style={tw`flex-row items-center px-3 py-2 rounded-xl bg-white mb-3 shadow-sm h-20`}
                 >
                   <Image
                     source={{ uri: item?.product_image }}
                     style={tw`w-14 h-14 rounded-md`}
                     resizeMode="contain"
                   />
-                  <View style={tw`ml-4`}>
+                  <View style={tw`ml-4 flex-1`}>
                     <Text
                       numberOfLines={1}
-                      style={tw`flex-1 font-PoppinsSemiBold text-sm text-black`}
+                      style={tw` font-PoppinsSemiBold text-sm text-black`}
                     >
                       {item?.product_name}
                     </Text>
-
+                    <Text
+                      style={tw`font-PoppinsRegular text-sm text-regularText`}
+                    >
+                      Quantity: {item?.quantity}
+                    </Text>
                     <Text
                       style={tw`font-PoppinsSemiBold text-sm text-primary mt-1`}
                     >

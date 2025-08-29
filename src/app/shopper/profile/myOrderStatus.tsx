@@ -22,7 +22,7 @@ const myOrderStatus = () => {
       >
         <View style={tw`flex-1`}>
           <Text style={tw`text-black font-PoppinsSemiBold`}>
-            Order id:{" "}
+            Order id:
             <Text style={tw`font-PoppinsBold`}> #{item?.order_number}</Text>
           </Text>
           <Text style={tw`text-regularText`}>

@@ -39,7 +39,7 @@ const pickUpItems = () => {
     try {
       const response = await itemId({
         order_id: orderId,
-        order_item_id: selectedStores,
+        order_item_id: selectedStores.toString(),
       }).unwrap();
       if (response) {
         console.log(response, "this is response");
@@ -67,18 +67,19 @@ const pickUpItems = () => {
     return (
       <Pressable
         onPress={() => handleItemsCheckBox(item?.id)}
-        style={tw`flex-1 flex-row justify-between items-center px-3 py-1  rounded-xl bg-white mb-3 shadow-sm`}
+        style={tw`flex-row justify-between items-center px-3 py-2 rounded-xl bg-white mb-3 shadow-sm`}
       >
-        <View style={tw`flex-row gap-4 h-16 w-full justify-start items-center`}>
+        {/* Left: Product Info */}
+        <View style={tw`flex-row gap-4 h-16 flex-1 items-center`}>
           <Image
             source={item?.product_image}
             style={tw`w-14 h-14 rounded-md`}
             contentFit="contain"
           />
-          <View>
+          <View style={tw`flex-1`}>
             <Text
               numberOfLines={1}
-              style={tw`flex-1 flex-row  font-PoppinsMedium text-sm text-black pr-4`}
+              style={tw`font-PoppinsMedium text-sm text-black pr-4`}
             >
               {item?.product_name}
             </Text>
@@ -93,12 +94,12 @@ const pickUpItems = () => {
           </View>
         </View>
 
-        {/* =================== checkbox  ================ */}
+        {/* Right: Checkbox */}
         <TouchableOpacity
           onPress={() => handleItemsCheckBox(item?.id)}
           style={tw.style(
-            `border w-5 h-5  justify-end  items-center rounded-sm `,
-            isChecked ? `bg-primary border-0` : `bg-transparent`
+            `w-6 h-6 ml-2 border justify-center items-center rounded-md`,
+            isChecked ? `bg-primary border-0` : `bg-transparent border-gray-400`
           )}
         >
           {isChecked ? <Text style={tw`text-white text-sm`}>✔</Text> : null}

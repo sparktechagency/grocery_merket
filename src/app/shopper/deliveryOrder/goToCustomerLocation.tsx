@@ -170,7 +170,16 @@ const GoToCustomerLocation = () => {
               </View>
 
               <TouchableOpacity
-                onPress={() => router.push("/user/messaging/messaging")}
+                onPress={() =>
+                  router.push({
+                    pathname: "/shopper/shopperChat/shopperChatting",
+                    params: {
+                      userId: pendingOrderDetails?.data?.customer?.id,
+                      userName: pendingOrderDetails?.data?.customer?.name,
+                      userImage: pendingOrderDetails?.data?.customer?.photo,
+                    },
+                  })
+                }
                 style={tw` w-10 h-10 bg-white shadow-xl rounded-xl justify-center items-center`}
               >
                 <SvgXml xml={IconMessage} />

@@ -1,24 +1,20 @@
-import { Alert, FlatList, Image, Text, TextInput, View } from "react-native";
-
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { View, Text, FlatList, TextInput } from "react-native";
 import React, { useCallback } from "react";
 import tw from "@/src/lib/tailwind";
-import TButton from "@/src/lib/buttons/TButton";
 import BackButton from "@/src/lib/backHeader/BackButton";
-import {
-  useGetProfileQuery,
-  useGetShopperDetailsQuery,
-} from "@/src/redux/apiSlices/profileSlieces";
-import { io } from "socket.io-client";
-
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { Image } from "expo-image";
+import TButton from "@/src/lib/buttons/TButton";
+import { IMessageInterface } from "@/src/redux/interface/interface";
+import { useGetProfileQuery } from "@/src/redux/apiSlices/profileSlieces";
 import {
   useLazyGetMessagesQuery,
   useSendMessageMutation,
 } from "@/src/redux/apiSlices/messagingSlices";
-import { IMessageInterface } from "@/src/redux/interface/interface";
+import { io } from "socket.io-client";
 
-const Message = () => {
-  const { shopperId } = useLocalSearchParams();
+const ShopperChatting = () => {
+  const { userId, userName, userImage } = useLocalSearchParams();
   const router = useRouter();
   const [message, setMessage] = React.useState("");
   const [allMessages, setAllMessages] = React.useState<
@@ -26,7 +22,8 @@ const Message = () => {
   >([]);
 
   // =========================== apis ===============================
-  const { data: shopperInfo, isLoading } = useGetShopperDetailsQuery(shopperId);
+  // const { data: shopperInfo, isLoading } = useGetShopperDetailsQuery(userId);
+  console.log();
   const { data: getProfileData } = useGetProfileQuery({});
   const [getMessages, messageResults] = useLazyGetMessagesQuery();
   const [sendMessage, sendMessageResults] = useSendMessageMutation();
@@ -38,12 +35,12 @@ const Message = () => {
     if (message?.length) {
       const data = await sendMessage({
         sender_id: getProfileData?.data?.id,
-        receiver_id: shopperId,
+        receiver_id: userId,
         message: message,
       }).unwrap();
 
       socket.emit("private-message", {
-        receiverId: shopperId,
+        receiverId: userId,
         message: message,
       });
       handleGetMessages();
@@ -60,7 +57,7 @@ const Message = () => {
     //   // (getMessages?.messages && [...getMessages?.messages])?.reverse() || []
     // );
 
-    const data = await getMessages(shopperId);
+    const data = await getMessages(userId);
     setAllMessages(
       (data?.data?.messages && [...data?.data?.messages])?.reverse() || []
     );
@@ -89,12 +86,12 @@ const Message = () => {
           <Image
             style={tw`w-10 h-10 rounded-full`}
             source={{
-              uri: shopperInfo?.data?.photo,
+              uri: userImage,
             }}
           />
         </View>
         <Text style={tw`text-xl text-deepBlue400 font-PoppinsBold`}>
-          {shopperInfo?.data?.name}
+          {userName}
         </Text>
       </View>
 
@@ -190,4 +187,4 @@ const Message = () => {
   );
 };
 
-export default Message;
+export default ShopperChatting;

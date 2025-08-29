@@ -25,7 +25,7 @@ const DeliveryOrder = () => {
       }
       customerName={item?.user_name}
       orderStatus={"Pending"}
-      orderId={item?.order_id}
+      orderId={item?.order_number}
       totalPrice={item?.total_price}
     />
   );

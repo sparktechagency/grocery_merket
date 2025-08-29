@@ -11,6 +11,7 @@ import { SvgXml } from "react-native-svg";
 import { useRole } from "@/src/hook/useRole";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLoginMutation } from "@/src/redux/apiSlices/authSlices";
+import { useGetProfileQuery } from "@/src/redux/apiSlices/profileSlieces";
 const login = () => {
   const [isShow, setIsShow] = React.useState<boolean>(false);
   const [isChecked, setIsChecked] = React.useState<boolean>(false);
@@ -18,7 +19,7 @@ const login = () => {
 
   // -------------------------- all api --------------------------
   const [credentials, { isLoading, isError }] = useLoginMutation();
-
+  const { data: userInfo } = useGetProfileQuery({});
   const {
     control,
     reset,
@@ -36,6 +37,10 @@ const login = () => {
         await AsyncStorage.setItem("loginInfo", JSON.stringify(data));
       }
       const response = await credentials(data).unwrap();
+      console.log(
+        response,
+        "this is response ===================================>"
+      );
       if (response) {
         await AsyncStorage.setItem("token", response?.token);
 
