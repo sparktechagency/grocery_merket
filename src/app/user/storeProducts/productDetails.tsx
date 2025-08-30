@@ -5,6 +5,7 @@ import {
   Pressable,
   FlatList,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
@@ -20,6 +21,7 @@ import {
 import ProductCard from "@/src/components/ProductCard";
 import { Image } from "expo-image";
 import { useAddToCartMutation } from "@/src/redux/apiSlices/cartSlices";
+import { PrimaryColor } from "@/utils/utils";
 
 const productDetails = () => {
   const { productId, category: paramsCategory } = useLocalSearchParams();
@@ -30,8 +32,9 @@ const productDetails = () => {
 
   // -------------------- apis =-------------------
   const [data, { isLoading }] = useProductDetailsMutation({});
-  const [category, { isError }] = useProductByCategoryMutation();
-  const [cartData] = useAddToCartMutation();
+  const [category, { isError, isLoading: isCategoryLoading }] =
+    useProductByCategoryMutation();
+  const [cartData, { isLoading: isCartLoading }] = useAddToCartMutation();
 
   const filterByCategory = async () => {
     try {
@@ -55,6 +58,14 @@ const productDetails = () => {
     loadProductDetails();
     filterByCategory();
   }, [productId, paramsCategory]);
+
+  if (isLoading || isCategoryLoading || isCartLoading) {
+    return (
+      <View style={tw`flex-1 items-center justify-center`}>
+        <ActivityIndicator size={"large"} color={PrimaryColor} />
+      </View>
+    );
+  }
 
   // ------------------ handle add to cart ---------------
 

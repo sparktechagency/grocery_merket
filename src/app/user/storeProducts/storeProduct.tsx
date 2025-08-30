@@ -5,6 +5,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import tw from "@/src/lib/tailwind";
 import { useProductByCategoryMutation } from "@/src/redux/apiSlices/homePageApiSlices";
 import ProductCard from "@/src/components/ProductCard";
+import { PrimaryColor } from "@/utils/utils";
 
 const storeProduct = () => {
   const { categoryData } = useLocalSearchParams();
@@ -25,6 +26,14 @@ const storeProduct = () => {
     getCategory();
   }, []);
 
+  if (isLoading) {
+    return (
+      <View style={tw`flex-1 items-center justify-center`}>
+        <ActivityIndicator size={"large"} color={PrimaryColor} />
+      </View>
+    );
+  }
+
   return (
     <View style={tw`flex-1`}>
       <BackWithComponent
@@ -40,15 +49,13 @@ const storeProduct = () => {
         columnWrapperStyle={tw`gap-3 justify-between mb-3`}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        ListEmptyComponent={
-          isLoading ? (
-            <ActivityIndicator size="large" color={tw.color("red-500")} />
-          ) : (
+        ListEmptyComponent={() => {
+          return (
             <Text style={tw`text-center mt-4 text-gray-500`}>
               No products available.
             </Text>
-          )
-        }
+          );
+        }}
         renderItem={({ item, index }) => {
           return (
             <ProductCard

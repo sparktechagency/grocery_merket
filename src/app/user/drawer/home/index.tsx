@@ -36,6 +36,7 @@ import useLocation from "@/src/hook/useLocation";
 import { useDeleteAllWishlistMutation } from "@/src/redux/apiSlices/wishlistSlices";
 import { useGetNotificationsQuery } from "@/src/redux/apiSlices/notificationSlices";
 import { useGetProfileQuery } from "@/src/redux/apiSlices/profileSlieces";
+import { PrimaryColor } from "@/utils/utils";
 
 const HomeScreen = () => {
   const [randomCategoryData, setRandomCategoryData] = React.useState(null);
@@ -102,6 +103,18 @@ const HomeScreen = () => {
     randomCategoryLoad();
     setLocation();
   }, [recommendedData, stgLongitude, stgLatitude]);
+
+  if (
+    isCategoryLoading ||
+    isRandomCategoryProductLoading ||
+    isRecommendedLoading
+  ) {
+    return (
+      <View style={tw`flex-1 items-center justify-center`}>
+        <ActivityIndicator size="large" color={PrimaryColor} />
+      </View>
+    );
+  }
 
   const categoryItem = ({ item }: any) => (
     <TouchableOpacity
@@ -258,20 +271,11 @@ const HomeScreen = () => {
               contentContainerStyle={tw`gap-3 py-4 px-1`}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
-              ListEmptyComponent={
-                isRandomCategoryProductLoading ? (
-                  <View style={tw`justify-center items-center`}>
-                    <ActivityIndicator
-                      size="large"
-                      color={tw.color("red-500")}
-                    />
-                  </View>
-                ) : (
-                  <Text style={tw`text-center mt-4 text-gray-500`}>
-                    No products available.
-                  </Text>
-                )
-              }
+              ListEmptyComponent={() => (
+                <Text style={tw`text-center mt-4 text-gray-500`}>
+                  No products available.
+                </Text>
+              )}
               renderItem={({ index, item }) => {
                 return (
                   <ProductCard
@@ -334,20 +338,11 @@ const HomeScreen = () => {
               contentContainerStyle={tw`gap-3 py-4 px-1`}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
-              ListEmptyComponent={
-                isRecommendedLoading ? (
-                  <View style={tw`justify-center items-center`}>
-                    <ActivityIndicator
-                      size="large"
-                      color={tw.color("red-500")}
-                    />
-                  </View>
-                ) : (
-                  <Text style={tw`text-center mt-4 text-gray-500`}>
-                    No products available.
-                  </Text>
-                )
-              }
+              ListEmptyComponent={() => (
+                <Text style={tw`text-center mt-4 text-gray-500`}>
+                  No products available.
+                </Text>
+              )}
               renderItem={({ index, item }) => {
                 return (
                   <ProductCard

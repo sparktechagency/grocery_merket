@@ -26,6 +26,7 @@ const GoToCustomerLocation = () => {
   const [routeCoordinates, setRouteCoordinates] = useState([]);
   const [pickUpTime, setPickUpTime] = useState<any>();
   const [itemOrderId] = useSendDeliveryRequestMutation();
+  console.log(orderId, "this is order id");
 
   // ++++++++++++++++++++++++++++++ api ++++++++++++++++++++++++++++++
   const { data: pendingOrderDetails, isLoading } =

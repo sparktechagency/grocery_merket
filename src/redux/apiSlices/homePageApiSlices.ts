@@ -11,7 +11,7 @@ const homePageApiSlices = api.injectEndpoints({
     }),
     searchForPriceComparison: build.query({
       query: (search) => ({
-        url: `/app/searchForPriceComparison?search=${search}&per_page=50`,
+        url: `/app/searchForPriceComparison?search=${search}&per_page=10`,
         method: "GET",
       }),
       providesTags: ["searchForPriceComparison"],
@@ -88,7 +88,7 @@ const homePageApiSlices = api.injectEndpoints({
     }),
     searchKogerProducts: build.query({
       query: ({ query }) => ({
-        url: `app/kroger/products/search?search=${query}&per_page=100`,
+        url: `app/kroger/products/search?search=${query}&per_page=10`,
         method: "GET",
       }),
       providesTags: ["searchKogerProduct"],
@@ -110,7 +110,7 @@ const homePageApiSlices = api.injectEndpoints({
     }),
     productByStore: build.mutation({
       query: (storeName) => ({
-        url: `/app/kroger/products/stores/${storeName}?per_page=100&page=1`,
+        url: `/app/kroger/products/stores/${storeName}?per_page=10&page=1`,
         method: "POST",
       }),
       invalidatesTags: ["productByStore"],

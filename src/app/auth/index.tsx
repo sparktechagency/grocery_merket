@@ -19,7 +19,6 @@ const login = () => {
 
   // -------------------------- all api --------------------------
   const [credentials, { isLoading, isError }] = useLoginMutation();
-  const { data: userInfo } = useGetProfileQuery({});
   const {
     control,
     reset,
