@@ -111,7 +111,8 @@ const singUp = () => {
                   textInputProps={{
                     placeholder: "Enter Your Name",
                   }}
-                  containerStyle={tw``}
+                  placeholderStyle={tw`text-regularText`}
+                  inputStyle={tw`text-black`}
                 />
               )}
               name="name"
@@ -140,7 +141,8 @@ const singUp = () => {
                   textInputProps={{
                     placeholder: "example@gmail.com",
                   }}
-                  containerStyle={tw``}
+                  placeholderStyle={tw`text-regularText`}
+                  inputStyle={tw`text-black`}
                 />
               )}
               name="email"
@@ -175,6 +177,8 @@ const singUp = () => {
                   svgSecondIcon={isShow ? IconEyesShow : IconEyes}
                   svgSecondOnPress={() => setIsShow(!isShow)}
                   containerLayoutStyle={tw`mb-3`}
+                  placeholderStyle={tw`text-regularText`}
+                  inputStyle={tw`text-black`}
                 />
               )}
               name="password"
@@ -183,10 +187,10 @@ const singUp = () => {
             <View style={tw`rounded-full h-12`}>
               <TButton
                 onPress={handleSubmit(onSubmit)}
-                // onPress={() => router.push("/auth/antherAuth")}
                 isLoading={isLoading}
                 title="Register"
-                containerStyle={tw`rounded-md`}
+                titleStyle={tw`text-white`}
+                containerStyle={tw`rounded-md, bg-primary`}
               />
             </View>
           </View>

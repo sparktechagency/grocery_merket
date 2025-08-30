@@ -109,10 +109,13 @@ const homePageApiSlices = api.injectEndpoints({
       providesTags: ["kogerAllStore"],
     }),
     productByStore: build.mutation({
-      query: (storeName) => ({
-        url: `/app/kroger/products/stores/${storeName}?per_page=10&page=1`,
-        method: "POST",
-      }),
+      query: (storeName) => {
+        // console.log(storeName, "this is store name");
+        return {
+          url: `/app/kroger/products/stores/${storeName}?per_page=10&page=1`,
+          method: "POST",
+        };
+      },
       invalidatesTags: ["productByStore"],
     }),
     setUserLocation: build.mutation({

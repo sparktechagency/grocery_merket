@@ -107,6 +107,7 @@ const productDetails = () => {
             containerStyle={tw`px-0`}
             fastComponentContentStyle={tw`shadow-lg`}
             endComponentContentStyle={tw`shadow-lg`}
+            onPressEndComponent={() => router.push("/user/drawer/home/search")}
           />
           <View style={tw`w-full items-center`}>
             <Image
@@ -145,7 +146,7 @@ const productDetails = () => {
             ) : (
               <View style={tw`flex-row items-center gap-1`}>
                 <Text style={tw`font-PoppinsSemiBold text-lg text-primary`}>
-                  $ {productDetail?.product?.regular_price}
+                  $ {productDetail?.product?.regular_price || "00"}
                 </Text>
               </View>
             )}

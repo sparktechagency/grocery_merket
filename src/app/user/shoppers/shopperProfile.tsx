@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   Modal,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
@@ -14,26 +15,24 @@ import { router, useLocalSearchParams } from "expo-router";
 import BackWithComponent from "@/src/lib/backHeader/BackWithCoponent";
 import { useProductByStoreMutation } from "@/src/redux/apiSlices/homePageApiSlices";
 import ProductCard from "@/src/components/ProductCard";
+import { PrimaryColor } from "@/utils/utils";
 
 const shopperProfile = () => {
   const { storeName } = useLocalSearchParams();
+  // console.log(storeName, "this is store name");
   const [modalVisible, setModalVisible] = React.useState(false);
   const [productStoreData, setProductStoreData] = useState(null);
-  console.log(
-    productStoreData,
-    "ther is productStoreData console-=____________>"
-  );
 
   //  ------------------ all api ---------------------
-  const [store] = useProductByStoreMutation();
+  const [store, { isLoading }] = useProductByStoreMutation();
 
   const loadProductByStore = async () => {
     try {
-      const response = await store({ storeName }).unwrap();
+      const response = await store(storeName).unwrap();
       if (response?.status) {
         setProductStoreData(response?.data);
       }
-      console.log(response, "hare is product by store response --------->");
+      // console.log(response, "hare is product by store response --------->");
     } catch (error) {
       console.log(error, "Product by store not load --------->");
     }
@@ -42,6 +41,14 @@ const shopperProfile = () => {
   useEffect(() => {
     loadProductByStore();
   }, []);
+
+  if (isLoading || !productStoreData) {
+    return (
+      <View style={tw`flex-1 items-center justify-center`}>
+        <ActivityIndicator size={"large"} color={PrimaryColor} />
+      </View>
+    );
+  }
 
   const renderHeader = () => (
     <View>
@@ -82,23 +89,33 @@ const shopperProfile = () => {
         ListFooterComponentStyle={tw`w-full`}
         contentContainerStyle={tw`gap-1 items-center justify-between px-5  bg-white`}
         columnWrapperStyle={tw`gap-1 justify-between mb-3`}
-        renderItem={(item) => {
-          <ProductCard
-            onPress={() =>
-              router.push({
-                pathname: "/user/storeProducts/productDetails",
-                // params: { productId: item?.id, category: categoryData },
-              })
-            }
-            productName={item.name}
-            productImg={item?.images}
-            productPrice={item?.regular_price}
-            promoPrice={item?.promo_price}
-            shopName={item.storeName}
-            productWidth={item.size}
-            shopOnPress={() => setModalVisible(true)}
-          />;
+        renderItem={({ item }) => {
+          console.log(item?.name, "this is item================>");
+          return (
+            <ProductCard
+              onPress={() =>
+                router.push({
+                  pathname: "/user/storeProducts/productDetails",
+                  // params: { productId: item?.id, category: categoryData },
+                })
+              }
+              productName={item.name}
+              productImg={item?.images}
+              productPrice={item?.regular_price}
+              promoPrice={item?.promo_price}
+              shopName={item.storeName}
+              productWidth={item.size}
+              shopOnPress={() => setModalVisible(true)}
+            />
+          );
         }}
+        ListEmptyComponent={
+          <View style={tw`flex-1 items-center justify-center`}>
+            <Text style={tw`font-PoppinsRegular text-base text-black`}>
+              No product found
+            </Text>
+          </View>
+        }
       />
 
       {/* ================= modal ================ */}

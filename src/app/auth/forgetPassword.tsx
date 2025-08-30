@@ -80,7 +80,9 @@ const forgetPassword = () => {
                 textInputProps={{
                   placeholder: "example@gmail.com",
                 }}
-                containerStyle={tw``}
+                inputStyle={tw`text-black`}
+                placeholderStyle={tw`text-regularText`}
+                containerStyle={tw`rounded-md`}
               />
             )}
             name="email"

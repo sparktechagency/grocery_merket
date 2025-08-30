@@ -41,6 +41,8 @@ const priceComparison = () => {
             placeholder: "Search for Product",
           }}
           containerStyle={tw`rounded-full mt-4`}
+          placeholderStyle={tw`text-regularText`}
+          inputStyle={tw`text-black`}
         />
 
         {searchValue ? (

@@ -11,7 +11,6 @@ import { SvgXml } from "react-native-svg";
 import { useRole } from "@/src/hook/useRole";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLoginMutation } from "@/src/redux/apiSlices/authSlices";
-import { useGetProfileQuery } from "@/src/redux/apiSlices/profileSlieces";
 const login = () => {
   const [isShow, setIsShow] = React.useState<boolean>(false);
   const [isChecked, setIsChecked] = React.useState<boolean>(false);
@@ -49,10 +48,25 @@ const login = () => {
         });
       }
     } catch (error) {
-      console.log(error, "Login error ----->");
+      console.log("Login error ----->", JSON.stringify(error, null, 2));
+
+      let errMsg = "Something went wrong";
+
+      if (error?.data?.message) {
+        errMsg = error.data.message;
+      } else if (error?.error) {
+        errMsg = error.error;
+      } else if (error?.message) {
+        errMsg = error.message;
+      } else if (error) {
+        errMsg = error;
+      } else if (error) {
+        errMsg = JSON.stringify(error, null, 2);
+      }
+
       router.push({
         pathname: "/Toaster",
-        params: { res: error?.message || error },
+        params: { res: error?.message || errMsg },
       });
     }
   };
@@ -127,6 +141,8 @@ const login = () => {
                   onBlur={onBlur}
                   touched
                   errorText={errors?.email?.message}
+                  placeholderStyle={tw`text-regularText`}
+                  inputStyle={tw`text-black`}
                   textInputProps={{
                     placeholder: "Email",
                   }}
@@ -157,9 +173,10 @@ const login = () => {
                   onBlur={onBlur}
                   touched
                   errorText={errors?.password?.message}
+                  placeholderStyle={tw`text-regularText`}
+                  inputStyle={tw`text-black`}
                   textInputProps={{
                     placeholder: "******",
-
                     secureTextEntry: isShow ? false : true,
                   }}
                   secureTextEntry={isShow ? false : true}
@@ -198,7 +215,8 @@ const login = () => {
                 onPress={handleSubmit(onSubmit)}
                 isLoading={isLoading}
                 title="Sign in"
-                containerStyle={tw`rounded-md`}
+                titleStyle={tw`text-white`}
+                containerStyle={tw`rounded-md, bg-primary`}
               />
             </View>
           </View>

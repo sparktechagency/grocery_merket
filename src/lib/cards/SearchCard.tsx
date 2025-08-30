@@ -25,7 +25,8 @@ const SearchCard = ({ search, setSearch }: SearchCardProps) => {
         value={search}
         onChangeText={(text) => setSearch && setSearch(text)}
         placeholder="Search"
-        style={tw`text-black`}
+        placeholderStyle={tw`text-regularText`}
+        inputStyle={tw`text-black`}
         containerStyle={tw` border border-gray-500 rounded-full h-12 flex-1`}
       />
     </View>

@@ -25,8 +25,8 @@ const baseQueryWithRath: BaseQueryFn<BaseQueryArgs, unknown, unknown> = async (
 
     const result: AxiosResponse = await axios({
       // ----------- live base url ------------------
-      // baseURL: "http://10.10.10.63:8001/api",
-      baseURL: "http://103.186.20.114:8010/api",
+      baseURL: "http://10.10.10.63:8001/api",
+      // baseURL: "http://103.186.20.114:8010/api",
       ...args,
       url: args.url,
       method: args.method,

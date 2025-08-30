@@ -113,9 +113,9 @@ const changePassword = () => {
                   secureTextEntry={showEyeNew ? false : true}
                   svgSecondIcon={showEyeNew ? IconEyesShow : IconEyes}
                   svgSecondOnPress={() => setShowEyeNew(!showEyeNew)}
-                  containerStyle={tw`rounded-xl `}
+                  containerStyle={tw`rounded-xl text-black `}
                   inputStyle={tw`font-PoppinsRegular`}
-                  placeholderStyle={tw`text-gray-700`}
+                  placeholderStyle={tw`text-regularText`}
                 />
               )}
               name="new_password"
@@ -147,9 +147,9 @@ const changePassword = () => {
                   secureTextEntry={showEyeConfirm ? false : true}
                   svgSecondIcon={showEyeConfirm ? IconEyesShow : IconEyes}
                   svgSecondOnPress={() => setShowEyeConfirm(!showEyeConfirm)}
-                  placeholderStyle={tw`text-gray-700`}
+                  placeholderStyle={tw`text-regularText`}
                   containerStyle={tw`rounded-xl `}
-                  inputStyle={tw`font-PoppinsRegular`}
+                  inputStyle={tw`font-PoppinsRegular text-black `}
                   textXOutRangeFirst={5}
                 />
               )}

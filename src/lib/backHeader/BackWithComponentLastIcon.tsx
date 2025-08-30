@@ -6,6 +6,7 @@ import tw from "../tailwind";
 
 interface BackButtonProps {
   onPress?: () => void;
+  onPressEndComponent?: () => void;
   titleStyle?: any;
   title?: any;
   containerStyle?: any;
@@ -18,6 +19,7 @@ interface BackButtonProps {
 
 const BackWithComponentLastIcon = ({
   onPress,
+  onPressEndComponent,
   containerStyle,
   titleStyle,
   ComponentBtn,
@@ -104,7 +106,7 @@ const BackWithComponentLastIcon = ({
         ComponentBtn
       ) : (
         <TouchableOpacity
-          onPress={onPress}
+          onPress={onPressEndComponent}
           style={[
             tw`bg-white w-10 h-10 justify-center items-center rounded-lg`,
             endComponentContentStyle,
