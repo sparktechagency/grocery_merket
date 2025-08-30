@@ -65,7 +65,10 @@ const shopperHomeApiSlices = api.injectEndpoints({
       query: (orderId) => ({
         url: `/shopper/sendDeliveryRequest`,
         method: "POST",
-        body: { orderId },
+        body: { order_id: orderId },
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }),
       invalidatesTags: ["order"],
     }),

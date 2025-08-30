@@ -24,10 +24,10 @@ const mapArrived = () => {
 
   const shopperCurrentLocation = currentLocation?.data
     ? {
-        latitude: 64.944729,
-        longitude: -147.69017,
-        // latitude: Number(currentLocation?.data?.latitude),
-        // longitude: Number(currentLocation?.data?.longitude),
+        // latitude: 64.944729,
+        // longitude: -147.69017,
+        latitude: Number(currentLocation?.data?.latitude),
+        longitude: Number(currentLocation?.data?.longitude),
       }
     : null;
 

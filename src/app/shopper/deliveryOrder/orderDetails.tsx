@@ -6,7 +6,6 @@ import { SvgXml } from "react-native-svg";
 import { IconLocationWhite, IconRightArrowShopper } from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
 import { CartData } from "@/src/components/CardData";
-import Collapsible from "react-native-collapsible";
 import TButton from "@/src/lib/buttons/TButton";
 
 const orderDetails = () => {
@@ -83,35 +82,39 @@ const orderDetails = () => {
               <SvgXml xml={IconRightArrowShopper} />
             </TouchableOpacity>
 
-            <Collapsible collapsed={viewOrderDetails}>
-              {CartData?.map((data) => (
-                <TouchableOpacity
-                  key={data?.id}
-                  style={tw`flex-row items-center p-3 rounded-2xl bg-white mb-3 shadow-md`}
-                >
-                  <Image
-                    source={data.image}
-                    style={tw`w-14 h-14 rounded-md`}
-                    resizeMode="contain"
-                  />
-                  <View style={tw`ml-4`}>
-                    <Text style={tw`font-PoppinsSemiBold text-base text-black`}>
-                      {data.title}
-                    </Text>
-                    <Text
-                      style={tw`font-PoppinsRegular text-sm text-regularText`}
-                    >
-                      {data.weight}
-                    </Text>
-                    <Text
-                      style={tw`font-PoppinsSemiBold text-base text-primary mt-1`}
-                    >
-                      ${data.price}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </Collapsible>
+            {!viewOrderDetails ? (
+              <View>
+                {CartData?.map((data) => (
+                  <TouchableOpacity
+                    key={data?.id}
+                    style={tw`flex-row items-center p-3 rounded-2xl bg-white mb-3 shadow-md`}
+                  >
+                    <Image
+                      source={data.image}
+                      style={tw`w-14 h-14 rounded-md`}
+                      resizeMode="contain"
+                    />
+                    <View style={tw`ml-4`}>
+                      <Text
+                        style={tw`font-PoppinsSemiBold text-base text-black`}
+                      >
+                        {data.title}
+                      </Text>
+                      <Text
+                        style={tw`font-PoppinsRegular text-sm text-regularText`}
+                      >
+                        {data.weight}
+                      </Text>
+                      <Text
+                        style={tw`font-PoppinsSemiBold text-base text-primary mt-1`}
+                      >
+                        ${data.price}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ) : null}
 
             <Text style={tw`border-b border-[#C8C8C8] w-full`}></Text>
 

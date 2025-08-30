@@ -15,17 +15,9 @@ const pendingOrSuccessDeliver = () => {
   // ====================== api ======================
   const { data: truckOrderDetails, isLoading } = useGetTruckOrdersQuery({});
 
-  if (isLoading) {
-    return (
-      <View style={tw`flex-1 justify-center items-center`}>
-        <ActivityIndicator size={"large"} color={PrimaryColor} />
-      </View>
-    );
-  }
-
   const handleRefreshOrderStatus = () => {
     try {
-      const response = truckOrderDetails({ orderId }).unwrap();
+      const response = truckOrderDetails({ orderId });
       if (response?.success) {
         setIsDelivery(true);
       }
@@ -41,6 +33,14 @@ const pendingOrSuccessDeliver = () => {
   React.useEffect(() => {
     handleRefreshOrderStatus();
   }, [truckOrderDetails]);
+
+  if (isLoading) {
+    return (
+      <View style={tw`flex-1 justify-center items-center`}>
+        <ActivityIndicator size={"large"} color={PrimaryColor} />
+      </View>
+    );
+  }
 
   return (
     <View style={tw`flex-1`}>

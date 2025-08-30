@@ -9,7 +9,6 @@ import {
   IconRightArrowShopperDown,
 } from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
-import Collapsible from "react-native-collapsible";
 import TButton from "@/src/lib/buttons/TButton";
 import { useGetPendingOrderDetailsQuery } from "@/src/redux/apiSlices/shopperHomeApiSlices";
 
@@ -108,7 +107,9 @@ const pickUp = () => {
           <View>
             <Text style={tw`border-b border-[#C8C8C8] w-full`}></Text>
             <TouchableOpacity
-              onPress={() => setViewOrderDetails(!viewOrderDetails)}
+              onPress={() => {
+                setViewOrderDetails(!viewOrderDetails);
+              }}
               style={tw`flex-row justify-start items-center gap-2 my-2`}
             >
               <Text
@@ -125,38 +126,40 @@ const pickUp = () => {
               />
             </TouchableOpacity>
 
-            <Collapsible collapsed={viewOrderDetails}>
-              {pendingOrderDetails?.data?.items?.map((item) => (
-                <TouchableOpacity
-                  key={item.id}
-                  style={tw`flex-row items-center px-3 py-2 rounded-xl bg-white mb-3 shadow-sm h-20`}
-                >
-                  <Image
-                    source={{ uri: item?.product_image }}
-                    style={tw`w-14 h-14 rounded-md`}
-                    resizeMode="contain"
-                  />
-                  <View style={tw`ml-4 flex-1`}>
-                    <Text
-                      numberOfLines={1}
-                      style={tw` font-PoppinsSemiBold text-sm text-black`}
-                    >
-                      {item?.product_name}
-                    </Text>
-                    <Text
-                      style={tw`font-PoppinsRegular text-sm text-regularText`}
-                    >
-                      Quantity: {item?.quantity}
-                    </Text>
-                    <Text
-                      style={tw`font-PoppinsSemiBold text-sm text-primary mt-1`}
-                    >
-                      ${item?.unit_price}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </Collapsible>
+            {!viewOrderDetails ? (
+              <View>
+                {pendingOrderDetails?.data?.items?.map((item) => (
+                  <TouchableOpacity
+                    key={item.id}
+                    style={tw`flex-row items-center px-3 py-2 rounded-xl bg-white mb-3 shadow-sm h-20`}
+                  >
+                    <Image
+                      source={{ uri: item?.product_image }}
+                      style={tw`w-14 h-14 rounded-md`}
+                      resizeMode="contain"
+                    />
+                    <View style={tw`ml-4 flex-1`}>
+                      <Text
+                        numberOfLines={1}
+                        style={tw` font-PoppinsSemiBold text-sm text-black`}
+                      >
+                        {item?.product_name}
+                      </Text>
+                      <Text
+                        style={tw`font-PoppinsRegular text-sm text-regularText`}
+                      >
+                        Quantity: {item?.quantity}
+                      </Text>
+                      <Text
+                        style={tw`font-PoppinsSemiBold text-sm text-primary mt-1`}
+                      >
+                        ${item?.unit_price}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ) : null}
 
             <Text style={tw`border-b border-[#C8C8C8] w-full`}></Text>
 

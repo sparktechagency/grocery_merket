@@ -2,7 +2,6 @@ import {
   View,
   Text,
   Pressable,
-  TouchableOpacity,
   ScrollView,
   ActivityIndicator,
 } from "react-native";
@@ -18,8 +17,8 @@ import {
 } from "@/assets/icon";
 import { SvgXml } from "react-native-svg";
 import tw from "@/src/lib/tailwind";
-import Collapsible from "react-native-collapsible";
 import { useGetAllOrdersQuery } from "@/src/redux/apiSlices/orderSlices";
+import Animated from "react-native-reanimated";
 
 const userOrder = () => {
   const [expanded, setExpanded] = React.useState({});
@@ -73,100 +72,105 @@ const userOrder = () => {
 
             return (
               <View key={key} style={tw`mx-5 gap-2`}>
-                <View style={tw`bg-[#e8eaec] rounded-lg px-5 py-4`}>
-                  <View style={tw`flex-row justify-between items-center`}>
-                    <View style={tw`flex-row justify-start items-center gap-3`}>
+                <View style={tw`pt-4`}>
+                  <View style={tw`bg-[#e8eaec] rounded-lg px-5 py-2 `}>
+                    <View style={tw`flex-row justify-between items-center`}>
                       <View
-                        style={tw`p-3 border-2 border-white bg-[#e8fdee] rounded-full shadow-lg`}
+                        style={tw`flex-row justify-start items-center gap-3`}
                       >
-                        <SvgXml xml={IconDeliver} />
-                      </View>
-
-                      <View>
-                        <Text
-                          style={tw`flex-1 font-semibold text-sm text-primary`}
+                        <View
+                          style={tw`p-3 border-2 border-white bg-[#e8fdee] rounded-full shadow-lg`}
                         >
-                          Order id: {item?.order_number}
-                        </Text>
-
-                        <View style={tw`flex-row gap-1`}>
-                          <Text
-                            style={tw`font-PoppinsRegular text-sm text-black`}
-                          >
-                            Placed on:
-                          </Text>
-                          <Text style={tw`flex-1 font-semibold text-sm`}>
-                            {formattedDate}
-                          </Text>
+                          <SvgXml xml={IconDeliver} />
                         </View>
 
                         <View>
-                          <View style={tw`flex-row gap-5`}>
-                            <View style={tw`flex-row gap-1`}>
-                              <Text
-                                style={tw`font-PoppinsRegular text-sm text-black`}
-                              >
-                                Items:
-                              </Text>
-                              <Text style={tw`font-semibold text-sm`}>
-                                {item?.items}
-                              </Text>
-                            </View>
-                            <View style={tw`flex-row gap-1`}>
-                              <Text
-                                style={tw`font-PoppinsRegular text-sm text-black`}
-                              >
-                                price:
-                              </Text>
-                              <Text style={tw`font-semibold text-sm`}>
-                                $ {item?.price}
-                              </Text>
+                          <Text
+                            style={tw`flex-1 font-semibold text-sm text-primary`}
+                          >
+                            Order id: {item?.order_number}
+                          </Text>
+
+                          <View style={tw`flex-row gap-1`}>
+                            <Text
+                              style={tw`font-PoppinsRegular text-sm text-black`}
+                            >
+                              Placed on:
+                            </Text>
+                            <Text style={tw`flex-1 font-semibold text-sm`}>
+                              {formattedDate}
+                            </Text>
+                          </View>
+
+                          <View>
+                            <View style={tw`flex-row gap-5`}>
+                              <View style={tw`flex-row gap-1`}>
+                                <Text
+                                  style={tw`font-PoppinsRegular text-sm text-black`}
+                                >
+                                  Items:
+                                </Text>
+                                <Text style={tw`font-semibold text-sm`}>
+                                  {item?.items}
+                                </Text>
+                              </View>
+                              <View style={tw`flex-row gap-1`}>
+                                <Text
+                                  style={tw`font-PoppinsRegular text-sm text-black`}
+                                >
+                                  price:
+                                </Text>
+                                <Text style={tw`font-semibold text-sm`}>
+                                  $ {item?.price}
+                                </Text>
+                              </View>
                             </View>
                           </View>
                         </View>
                       </View>
-                    </View>
 
-                    <Pressable
-                      onPress={() => toggle(key)}
-                      style={tw`p-2 bg-white rounded-full shadow-lg`}
-                    >
-                      {isOpen ? (
-                        <SvgXml xml={IconUpArrow} />
-                      ) : (
-                        <SvgXml xml={IconDownArrow} />
-                      )}
-                    </Pressable>
-                  </View>
-
-                  <View
-                    style={tw`flex-row justify-between mt-6 bg-white rounded-lg w-full p-4`}
-                  >
-                    <View style={tw`flex-row justify-start items-center gap-1`}>
-                      <Text
-                        style={[
-                          tw`w-4 h-4 rounded-full `,
-                          item?.status_timeline?.order_delivered?.completed
-                            ? tw`bg-primary`
-                            : tw`bg-darkGreen`,
-                        ]}
-                      />
-
-                      <Text
-                        style={[
-                          tw`font-PoppinsRegular text-sm  mr-3`,
-                          item?.status_timeline?.order_delivered?.completed
-                            ? tw`text-primary`
-                            : tw`text-darkGreen`,
-                        ]}
+                      <Pressable
+                        onPress={() => toggle(key)}
+                        style={tw`p-2 bg-white rounded-full shadow-lg`}
                       >
-                        {item?.status_timeline?.order_delivered?.completed
-                          ? "Delivered"
-                          : "Pending"}
-                      </Text>
+                        {isOpen ? (
+                          <SvgXml xml={IconUpArrow} />
+                        ) : (
+                          <SvgXml xml={IconDownArrow} />
+                        )}
+                      </Pressable>
                     </View>
 
-                    {/* <TouchableOpacity
+                    <View
+                      style={tw`flex-row justify-between mt-6 bg-white rounded-lg w-full p-4`}
+                    >
+                      <View
+                        style={tw`flex-row justify-start items-center gap-1`}
+                      >
+                        <Text
+                          style={[
+                            tw`w-4 h-4 rounded-full `,
+                            item?.status_timeline?.order_delivered?.completed
+                              ? tw`bg-primary`
+                              : tw`bg-darkGreen`,
+                          ]}
+                        />
+
+                        <Text
+                          style={[
+                            tw`font-PoppinsRegular text-sm  mr-3`,
+                            item?.status_timeline?.order_delivered?.completed
+                              ? tw`text-primary`
+                              : tw`text-darkGreen`,
+                          ]}
+                        >
+                          {item?.status_timeline?.order_delivered?.completed
+                            ? "Delivered"
+                            : "Pending"}
+                        </Text>
+                      </View>
+
+                      {/* <TouchableOpacity
                       onPress={() => router.push("/user/addToCart/cart")}
                     >
                       <Text
@@ -175,13 +179,16 @@ const userOrder = () => {
                         Re-order
                       </Text>
                     </TouchableOpacity> */}
+                    </View>
                   </View>
                 </View>
-
                 {/* ------------------- when open this item show only toggling ------------------- */}
-                <Collapsible collapsed={!isOpen}>
+
+                {isOpen ? (
                   <Pressable>
-                    <View style={tw`px-7 py-2 bg-white rounded-lg gap-2`}>
+                    <Animated.View
+                      style={[tw`px-7 py-2 bg-white rounded-lg gap-2`]}
+                    >
                       <View style={tw`flex-row justify-between`}>
                         <Text
                           style={[
@@ -284,9 +291,9 @@ const userOrder = () => {
                           ]}
                         />
                       </View>
-                    </View>
+                    </Animated.View>
                   </Pressable>
-                </Collapsible>
+                ) : null}
               </View>
             );
           })

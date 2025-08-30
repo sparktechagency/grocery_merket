@@ -26,7 +26,6 @@ const GoToCustomerLocation = () => {
   const [routeCoordinates, setRouteCoordinates] = useState([]);
   const [pickUpTime, setPickUpTime] = useState<any>();
   const [itemOrderId] = useSendDeliveryRequestMutation();
-  console.log(orderId, "this is order id");
 
   // ++++++++++++++++++++++++++++++ api ++++++++++++++++++++++++++++++
   const { data: pendingOrderDetails, isLoading } =
@@ -35,7 +34,9 @@ const GoToCustomerLocation = () => {
 
   const handleDeliveryRequest = async () => {
     try {
-      const response = await itemOrderId(Number(orderId)).unwrap();
+      const response = await itemOrderId({
+        order_id: orderId,
+      }).unwrap();
       if (response) {
         router.push({
           pathname: "/shopper/deliveryOrder/pendingOrSuccessDeliver",
@@ -53,10 +54,10 @@ const GoToCustomerLocation = () => {
 
   const shopperCurrentLocation = currentLocation?.data
     ? {
-        latitude: 64.944729,
-        longitude: -147.69017,
-        // latitude: Number(currentLocation?.data?.latitude),
-        // longitude: Number(currentLocation?.data?.longitude),
+        // latitude: 64.944729,
+        // longitude: -147.69017,
+        latitude: Number(currentLocation?.data?.latitude),
+        longitude: Number(currentLocation?.data?.longitude),
       }
     : null;
 

@@ -15,10 +15,8 @@ import {
   IconRightArrowShopperDown,
 } from "@/assets/icon";
 import tw from "@/src/lib/tailwind";
-import { CartData } from "@/src/components/CardData";
-import Collapsible from "react-native-collapsible";
 import TButton from "@/src/lib/buttons/TButton";
-import React, { useEffect } from "react";
+import React from "react";
 import { useLocalSearchParams } from "expo-router";
 import { useGetRecentOrderDetailsQuery } from "@/src/redux/apiSlices/shopperHomeApiSlices";
 import { PrimaryColor } from "@/utils/utils";
@@ -128,33 +126,35 @@ const OrderDeliverSuccess = () => {
                 />
               </TouchableOpacity>
 
-              <Collapsible collapsed={viewOrderDetails}>
-                {orderDetails?.data?.items?.map((item, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    style={tw`flex-row items-center p-2 rounded-xl bg-white mb-3 shadow-sm`}
-                  >
-                    <Image
-                      source={{ uri: item?.product_image }}
-                      style={tw`w-14 h-14 rounded-md`}
-                      resizeMode="contain"
-                    />
-                    <View style={tw`ml-4`}>
-                      <Text
-                        numberOfLines={2}
-                        style={tw`flex-1 font-PoppinsRegular text-sm text-black pr-3`}
-                      >
-                        {item?.product_name}
-                      </Text>
-                      <Text
-                        style={tw`font-PoppinsSemiBold text-sm text-primary `}
-                      >
-                        ${item?.unit_price}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </Collapsible>
+              {!viewOrderDetails ? (
+                <View>
+                  {orderDetails?.data?.items?.map((item, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={tw`flex-row items-center p-2 rounded-xl bg-white mb-3 shadow-sm`}
+                    >
+                      <Image
+                        source={{ uri: item?.product_image }}
+                        style={tw`w-14 h-14 rounded-md`}
+                        resizeMode="contain"
+                      />
+                      <View style={tw`ml-4`}>
+                        <Text
+                          numberOfLines={2}
+                          style={tw`flex-1 font-PoppinsRegular text-sm text-black pr-3`}
+                        >
+                          {item?.product_name}
+                        </Text>
+                        <Text
+                          style={tw`font-PoppinsSemiBold text-sm text-primary `}
+                        >
+                          ${item?.unit_price}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              ) : null}
 
               <Text style={tw`border-b border-[#C8C8C8] w-full`}></Text>
 
